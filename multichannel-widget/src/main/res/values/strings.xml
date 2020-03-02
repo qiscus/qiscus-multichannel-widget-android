@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">QiscusChat</string>
+    <string name="qiscus_hint_message_mc">Type your message</string>
+    <string name="qiscus_chat_activity_label_clipboard_mc">Message</string>
+    <string name="qiscus_copied_message_mc">messages copied!</string>
+    <string name="qiscus_chat_error_failed_write_mc">Failed to write temporary picture!</string>
+    <string name="qiscus_permission_request_title_mc">Please grant permissions to make apps working properly!</string>
+    <string name="qiscus_chat_error_failed_read_picture_mc">Failed to read picture data!</string>
+    <string name="qiscus_grant_mc">Grant Permission</string>
+    <string name="qiscus_denny_mc">Denny Permission</string>
+    <string name="qiscus_add_a_caption_mc">Add caption to your image</string>
+    <string name="qiscus_chat_error_failed_open_picture_mc">Failed to open picture!</string>
+    <string name="qiscus_permission_message_mc">If you not grant permission, the apps may not be working properly. So please grant the permission for better user experienced.</string>
+    <string name="qiscus_corrupted_file_mc">Can not read file, please make sure that is not corrupted file!</string>
+    <string name="qiscus_you_mc">You</string>
+    <string name="qiscus_failed_download_file_mc">Failed to download file!</string>
+    <string name="title_activity_maps_mc">Map</string>
+    <string name="qiscus_send_image_mc">%1$s mengirim gambar</string>
+    <string name="qiscus_send_file_mc">%1$s mengirim berkas</string>
+    <string name="qiscus_send_location_mc">%1$s mengirim lokasi</string>
+    <string name="qiscus_location_mc">Location</string>
+    <string name="qiscus_document_mc">Document</string>
+    <string name="qiscus_camera_mc">Camera</string>
+    <string name="qiscus_image_mc">Image</string>
+    <string name="dot_mc">dot</string>
+    <string name="qiscus_voice_note_mc">Voice Note</string>
+    <string name="qiscus_chat_error_failed_open_file">File type not supported</string>
+    <string name="qiscus_type_not_support_mc">message type not supported</string>
+</resources>

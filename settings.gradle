@@ -1,0 +1,3 @@
+include ':app'
+include ':multichannel-widget'
+rootProject.name='Multichannel-sample'

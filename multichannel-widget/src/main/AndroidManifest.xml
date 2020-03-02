@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.qiscus.qiscusmultichannel">
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application android:theme="@style/AppTheme">
+        <activity android:name=".ui.chat.image.SendImageConfirmationActivity" />
+        <activity
+            android:name=".ui.chat.ChatRoomActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="com.qiscus.example.mybb" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https"
+                    android:host="com.qiscus.example.mybb"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="com.qiscus.example.mybb" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="link.qiscus.chat"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="com.qiscus.qiscusmultichannel.util.webView.WebViewActivity"/>
+        <receiver
+            android:name=".util.NotificationClickReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.qiscus.OPEN_COMMENT_PN" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
