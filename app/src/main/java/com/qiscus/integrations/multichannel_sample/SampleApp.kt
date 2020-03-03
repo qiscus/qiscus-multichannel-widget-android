@@ -29,6 +29,6 @@ class SampleApp: MultiDexApplication() {
 
                 })
 
-        MultichannelWidget.init(this, "karm-gzu41e4e4dv9fu3f", configMultichannel)
+        MultichannelWidget.init(this, "your app id", configMultichannel)
     }
 }
