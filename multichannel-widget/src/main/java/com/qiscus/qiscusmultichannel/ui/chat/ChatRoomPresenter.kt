@@ -1,9 +1,7 @@
 package com.qiscus.qiscusmultichannel.ui.chat
 
 import android.webkit.MimeTypeMap
-import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.R
-import com.qiscus.qiscusmultichannel.util.QiscusChatLocal
 import com.qiscus.sdk.chat.core.custom.QiscusCore
 import com.qiscus.sdk.chat.core.custom.data.local.QiscusCacheManager
 import com.qiscus.sdk.chat.core.custom.data.model.*
@@ -519,19 +517,6 @@ class ChatRoomPresenter(var room: QiscusChatRoom) : QiscusChatRoomEventHandler.S
     override fun onChangeLastRead(lastReadCommentId: Long) {
         QiscusAndroidUtil.runOnUIThread {
             view?.updateLastReadComment(lastReadCommentId)
-        }
-    }
-
-    fun newRoomChat() {
-        view?.showLoading()
-        MultichannelWidget.instance.component.chatroomRepository.getNonce(
-            QiscusCore.getQiscusAccount().email,
-            QiscusCore.getQiscusAccount().username
-        ) {
-            it.data.roomId?.toLong()?.let {
-                QiscusChatLocal.setRoomId(it)
-                view?.refreshComments()
-            }
         }
     }
 

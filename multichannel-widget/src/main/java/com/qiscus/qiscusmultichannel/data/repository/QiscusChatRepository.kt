@@ -8,7 +8,7 @@ import retrofit2.Response
 
 class QiscusChatRepository(val api: QiscusChatApi.Api) {
 
-    fun getNonce(
+    fun initiateChat(
         dataInitialChat: DataInitialChat,
         onSuccess: (ResponseInitiateChat) -> Unit,
         onError: (Throwable) -> Unit

@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,10 +29,7 @@ import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.chat.image.SendImageConfirmationActivity
 import com.qiscus.qiscusmultichannel.ui.view.QiscusChatScrollListener
-import com.qiscus.qiscusmultichannel.util.QiscusImageUtil
-import com.qiscus.qiscusmultichannel.util.QiscusPermissionsUtil
-import com.qiscus.qiscusmultichannel.util.afterTextChangedDelayed
-import com.qiscus.qiscusmultichannel.util.showToast
+import com.qiscus.qiscusmultichannel.util.*
 import com.qiscus.sdk.chat.core.custom.QiscusCore
 import com.qiscus.sdk.chat.core.custom.data.local.QiscusCacheManager
 import com.qiscus.sdk.chat.core.custom.data.model.QiscusChatRoom
@@ -117,7 +113,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
         btnSend.setOnClickListener { sendingComment() }
         btn_new_room.setOnClickListener {
-            presenter.newRoomChat()
+            activity?.finish()
         }
         btnCancelReply.setOnClickListener { rootViewSender.visibility = View.GONE }
         qiscusChatRoom?.let {
@@ -489,6 +485,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     override fun showNewChatButton(it: Boolean) {
+        QiscusChatLocal.setRoomId(0L)
         if (MultichannelWidgetConfig.isSessional()) {
             if (it) {
                 newChatPanel.visibility = View.VISIBLE
@@ -523,7 +520,6 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     private fun notifyServerTyping(typing: Boolean) {
         if (isTyping != typing) {
-            Log.d("LOG_APP", "Send TYPING")
             QiscusPusherApi.getInstance().publishTyping(qiscusChatRoom!!.id, typing)
             isTyping = typing
         }

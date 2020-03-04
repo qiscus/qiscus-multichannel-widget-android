@@ -55,34 +55,39 @@ class ChatroomRepositoryImpl : ChatroomRepository {
         QiscusPusherApi.getInstance().subsribeCustomEvent(roomId)
     }
 
-    fun getNonce(
+    fun initiateChat(
         name: String,
         userId: String,
-        responseInitiateChat: (ResponseInitiateChat) -> Unit
+        avatar: String?,
+        extras: String?,
+        responseInitiateChat: (ResponseInitiateChat) -> Unit,
+        onError: (Throwable) -> Unit
     ) {
+
+        val xtr = if (extras.isNullOrEmpty()) "{}" else extras
         QiscusApi.getInstance().jwtNonce
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                MultichannelWidget.instance.component.qiscusChatRepository.getNonce(
+                MultichannelWidget.instance.component.qiscusChatRepository.initiateChat(
                     DataInitialChat(
                         QiscusCore.getAppId(),
                         userId,
                         name,
-                        "",
+                        avatar,
                         it.nonce,
-                        "",
-                        null
+                        null,
+                        xtr
                     ), {
                         it.data.isSessional?.let {
                             MultichannelWidgetConfig.setSessional(true)
                         }
                         responseInitiateChat(it)
                     }, {
-                        it
+                        onError(it)
                     })
             }, {
-                it
+                onError(it)
             })
     }
 }

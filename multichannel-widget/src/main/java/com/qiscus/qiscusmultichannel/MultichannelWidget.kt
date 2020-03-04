@@ -2,18 +2,15 @@ package com.qiscus.qiscusmultichannel
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import com.google.firebase.messaging.RemoteMessage
 import com.qiscus.jupuk.Jupuk
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.ui.chat.ChatRoomActivity
+import com.qiscus.qiscusmultichannel.ui.loading.LoadingActivity
 import com.qiscus.qiscusmultichannel.util.PNUtil
 import com.qiscus.qiscusmultichannel.util.QiscusChatLocal
 import com.qiscus.sdk.chat.core.custom.QiscusCore
-import com.qiscus.sdk.chat.core.custom.data.model.NotificationListener
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusAccount
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusNonce
+import com.qiscus.sdk.chat.core.custom.data.model.*
 import com.qiscus.sdk.chat.core.custom.data.remote.QiscusApi
 import com.qiscus.sdk.chat.core.custom.util.QiscusFirebaseMessagingUtil
 import org.json.JSONObject
@@ -90,30 +87,35 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
         fun updateConfig(config: MultichannelWidgetConfig) {
             this.config = config
         }
+    }
 
-        fun loginMultiChannel(
-            name: String,
-            userId: String,
-            onSuccess: (QiscusAccount) -> Unit,
-            onError: (Throwable) -> Unit
-        ) {
-            instance.component.chatroomRepository.getNonce(name, userId) {
-                it.data.roomId?.toLong()?.let {
-                    QiscusChatLocal.setRoomId(it)
-                }
-                it.data.identityToken?.let {
-                    QiscusCore.setUserWithIdentityToken(it,
-                        object : QiscusCore.SetUserListener {
-                            override fun onSuccess(qiscusAccount: QiscusAccount) {
-                                onSuccess(qiscusAccount)
-                            }
+    fun loginMultiChannel(
+        name: String,
+        userId: String,
+        avatar: String?,
+        extras: String?,
+        onSuccess: (QiscusAccount) -> Unit,
+        onError: (Throwable) -> Unit
+    ) {
 
-                            override fun onError(throwable: Throwable) {
-                                onError(throwable)
-                            }
-                        })
-                }
+        instance.component.chatroomRepository.initiateChat(name, userId, avatar, extras,{
+            it.data.roomId?.toLong()?.let {
+                QiscusChatLocal.setRoomId(it)
             }
+            it.data.identityToken?.let {
+                QiscusCore.setUserWithIdentityToken(it,
+                    object : QiscusCore.SetUserListener {
+                        override fun onSuccess(qiscusAccount: QiscusAccount) {
+                            onSuccess(qiscusAccount)
+                        }
+
+                        override fun onError(throwable: Throwable) {
+                            onError(throwable)
+                        }
+                    })
+            }
+        }) {
+            onError(it)
         }
     }
 
@@ -192,11 +194,25 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
         if (!hasSetupUser()) {
             onError(Throwable("Please set user first"))
         }
+
+        openChatRoomById(roomId, {
+            ChatRoomActivity.generateIntent(context, it)
+        }, { onError(it) })
+    }
+
+    fun openChatRoomById(
+        roomId: Long,
+        onSuccess: (QiscusChatRoom) -> Unit,
+        onError: (Throwable) -> Unit
+    ) {
+        if (!hasSetupUser()) {
+            onError(Throwable("Please set user first"))
+        }
         QiscusApi.getInstance().getChatRoomInfo(roomId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                ChatRoomActivity.generateIntent(context, it)
+                onSuccess(it)
             }, {
                 onError(it)
             })
@@ -215,21 +231,9 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
         }
     }
 
-    fun initiateChat(context: Context, name: String, userId: String, onError: (Throwable) -> Unit) {
+    fun initiateChat(context: Context, name: String, userId: String, avatar: String, extras: JSONObject?) {
 
-        if (QiscusChatLocal.getRoomId() == 0L) {
-            loginMultiChannel(name, userId, {
-                openChatRoomById(context, QiscusChatLocal.getRoomId()) {
-                    onError(it)
-                }
-            }, {
-                onError(it)
-            })
-        } else {
-            openChatRoomById(context, QiscusChatLocal.getRoomId()) {
-                onError(it)
-            }
-        }
+        LoadingActivity.generateIntent(context, name, userId, avatar, extras)
     }
 
     fun firebaseMessagingUtil(remoteMessage: RemoteMessage) {

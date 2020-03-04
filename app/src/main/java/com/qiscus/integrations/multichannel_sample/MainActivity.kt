@@ -13,9 +13,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         btnOpen.setOnClickListener {
-            MultichannelWidget.instance.initiateChat(this, "taufik dev", "taufik@qiscus.net") {
-                Log.e("debug", it.message)
-            }
+            MultichannelWidget.instance.initiateChat(this, "taufik dev", "taufik@qiscus.net","", null)
         }
     }
 }
