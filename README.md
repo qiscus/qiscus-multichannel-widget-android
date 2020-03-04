@@ -29,7 +29,7 @@ dependencies {
 
 ## Setup
 
-First, initialize Multichannle in your application class
+First, initialize Multichannle in your application class. In this part you will need Qiscus Multichannel AppId. You can get the AppId [here](https://multichannel.qiscus.com/).
 
  ```
 /**
@@ -62,10 +62,10 @@ Start chatting can be done in single method, here is how you can do that
 * context (required) : context activity
 * nama (required) : username
 * userid (required) : userId from user
+* avatar (optional) : user avatar
+* extras (optional) : extra data (json)
 */
-MultichannelWidget.instance.initiateChat(context, name, userId, { throwable ->
-    //error handling
-})
+MultichannelWidget.instance.initiateChat(context, name, userId, avatar, extras)
 ```
 
 
