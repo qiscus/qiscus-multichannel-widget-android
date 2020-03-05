@@ -40,7 +40,7 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
                 if (INSTANCE == null) {
                     synchronized(MultichannelWidget::class.java) {
                         if (INSTANCE == null) {
-                            //throw RuntimeException("Please init Qiscus Chat first!")
+                            throw RuntimeException("Please init Qiscus Chat first!")
                         }
                     }
                 }
@@ -124,7 +124,7 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
      */
     fun getNonce(onSuccess: (QiscusNonce) -> Unit, onError: (Throwable) -> Unit) {
         QiscusApi.getInstance()
-            .getJWTNonce()
+            .jwtNonce
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(onSuccess, onError)
