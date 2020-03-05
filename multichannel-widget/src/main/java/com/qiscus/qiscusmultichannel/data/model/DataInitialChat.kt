@@ -1,6 +1,5 @@
 package com.qiscus.qiscusmultichannel.data.model
 
-import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -16,5 +15,5 @@ data class DataInitialChat(
     @SerializedName("avatar") val avatar: String? = "",
     @SerializedName("nonce") val nonce: String,
     @SerializedName("origin") val origin: String? = "",
-    @SerializedName("extras") val extras: JsonObject? = null
+    @SerializedName("extras") val extras: String? = null
 )
