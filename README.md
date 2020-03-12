@@ -64,7 +64,7 @@ Start chatting can be done in single method, here is how you can do that
 * userid (required) : userId from user
 * avatar (optional) : user avatar
 * extras (optional) : extra data (json)
-* userProperties (optional) : user properties for multichannel
+* userProperties (optional) : user properties for multichannel (Map)
 */
 MultichannelWidget.instance.initiateChat(context, name, userId, avatar, extras, userProperties)
 ```
