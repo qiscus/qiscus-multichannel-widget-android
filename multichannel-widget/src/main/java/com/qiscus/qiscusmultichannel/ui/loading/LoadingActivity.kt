@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.qiscus.qiscusmultichannel.R
+import com.qiscus.qiscusmultichannel.data.model.UserProperties
 import com.qiscus.qiscusmultichannel.ui.chat.ChatRoomActivity
 import com.qiscus.qiscusmultichannel.util.showToast
 import com.qiscus.sdk.chat.core.custom.data.model.QiscusChatRoom
@@ -18,24 +19,27 @@ import org.json.JSONObject
 
 class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
 
-    lateinit var presenter: LoadingPresenter
+    private lateinit var presenter: LoadingPresenter
     lateinit var username: String
     lateinit var userId: String
     lateinit var extras: String
     lateinit var avatar: String
+    lateinit var userProp: ArrayList<UserProperties>
 
     companion object {
         private val PARAM_USERNAME = "username"
         private val PARAM_USERID = "userid"
         private val PARAM_AVATAR = "avatar"
         private val PARAM_EXTRAS = "extras"
+        private val PARAM_USER_PROPERTIES = "user_properties"
 
-        fun generateIntent(context: Context, username: String, userId: String, avatar: String?, extras: JSONObject?) {
+        fun generateIntent(context: Context, username: String, userId: String, avatar: String?, extras: JSONObject?, userProp: List<UserProperties>) {
             val intent = Intent(context, LoadingActivity::class.java)
             intent.putExtra(PARAM_USERNAME, username)
             intent.putExtra(PARAM_USERID, userId)
             intent.putExtra(PARAM_AVATAR, avatar)
             intent.putExtra(PARAM_EXTRAS, extras?.toString() ?: "{}")
+            intent.putExtra(PARAM_USER_PROPERTIES, ArrayList(userProp))
             context.startActivity(intent)
         }
     }
@@ -50,6 +54,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
             userId = it.getStringExtra(PARAM_USERID)
             extras = it.getStringExtra(PARAM_EXTRAS)
             avatar = it.getStringExtra(PARAM_AVATAR)
+            userProp = it.getSerializableExtra(PARAM_USER_PROPERTIES) as ArrayList<UserProperties>
         }
     }
 
@@ -57,7 +62,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
         super.onResume()
         presenter.attachView(this)
 
-        presenter.initiateChat(username, userId, avatar, extras)
+        presenter.initiateChat(username, userId, avatar, extras, userProp.toList())
     }
 
     override fun onStop() {

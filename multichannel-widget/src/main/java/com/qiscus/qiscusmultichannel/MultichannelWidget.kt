@@ -5,6 +5,7 @@ import android.content.Context
 import com.google.firebase.messaging.RemoteMessage
 import com.qiscus.jupuk.Jupuk
 import com.qiscus.nirmana.Nirmana
+import com.qiscus.qiscusmultichannel.data.model.UserProperties
 import com.qiscus.qiscusmultichannel.ui.chat.ChatRoomActivity
 import com.qiscus.qiscusmultichannel.ui.loading.LoadingActivity
 import com.qiscus.qiscusmultichannel.util.PNUtil
@@ -93,12 +94,13 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
         name: String,
         userId: String,
         avatar: String?,
-        extras: String?,
+        extras: String,
+        userProperties: List<UserProperties>,
         onSuccess: (QiscusAccount) -> Unit,
         onError: (Throwable) -> Unit
     ) {
 
-        instance.component.chatroomRepository.initiateChat(name, userId, avatar, extras,{
+        instance.component.chatroomRepository.initiateChat(name, userId, avatar, extras, userProperties, {
             it.data.roomId?.toLong()?.let {
                 QiscusChatLocal.setRoomId(it)
             }
@@ -231,9 +233,16 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
         }
     }
 
-    fun initiateChat(context: Context, name: String, userId: String, avatar: String, extras: JSONObject?) {
+    fun initiateChat(context: Context, name: String, userId: String, avatar: String, extras: JSONObject?, userProperties: Map<String, String>?) {
+        var userProp: MutableList<UserProperties> = ArrayList()
+        userProperties?.let {
+             for ((k,v) in it) {
+                 val obj = UserProperties(k, v)
+                 userProp.add(obj)
+             }
+         }
 
-        LoadingActivity.generateIntent(context, name, userId, avatar, extras)
+        LoadingActivity.generateIntent(context, name, userId, avatar, extras, userProp)
     }
 
     fun firebaseMessagingUtil(remoteMessage: RemoteMessage) {

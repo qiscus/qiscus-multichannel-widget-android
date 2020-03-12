@@ -3,6 +3,7 @@ package com.qiscus.qiscusmultichannel.data.repository.impl
 import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.data.model.DataInitialChat
+import com.qiscus.qiscusmultichannel.data.model.UserProperties
 import com.qiscus.qiscusmultichannel.data.repository.ChatroomRepository
 import com.qiscus.qiscusmultichannel.data.repository.response.ResponseInitiateChat
 import com.qiscus.sdk.chat.core.custom.QiscusCore
@@ -59,12 +60,12 @@ class ChatroomRepositoryImpl : ChatroomRepository {
         name: String,
         userId: String,
         avatar: String?,
-        extras: String?,
+        extras: String,
+        userProp: List<UserProperties>,
         responseInitiateChat: (ResponseInitiateChat) -> Unit,
         onError: (Throwable) -> Unit
     ) {
 
-        val xtr = if (extras.isNullOrEmpty()) "{}" else extras
         QiscusApi.getInstance().jwtNonce
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -77,7 +78,8 @@ class ChatroomRepositoryImpl : ChatroomRepository {
                         avatar,
                         it.nonce,
                         null,
-                        xtr
+                        extras,
+                        userProp
                     ), {
                         it.data.isSessional?.let {
                             MultichannelWidgetConfig.setSessional(true)
