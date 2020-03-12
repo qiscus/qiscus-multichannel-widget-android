@@ -28,7 +28,6 @@ class SampleApp: MultiDexApplication() {
                     }
 
                 })
-
         MultichannelWidget.init(this, "YOUR-MULTICHANNEL-APP-ID", configMultichannel)
     }
 }
