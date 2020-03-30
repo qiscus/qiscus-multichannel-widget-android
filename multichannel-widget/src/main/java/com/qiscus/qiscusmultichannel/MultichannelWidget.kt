@@ -50,12 +50,12 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
             }
 
         @JvmStatic
-        fun init(application: Application, applicationId: String) {
-            init(application, applicationId, MultichannelWidgetConfig)
+        fun setup(application: Application, applicationId: String) {
+            setup(application, applicationId, MultichannelWidgetConfig)
         }
 
         @JvmStatic
-        fun init(
+        fun setup(
             application: Application,
             applicationId: String,
             config: MultichannelWidgetConfig

@@ -17,6 +17,6 @@ class SampleApp: MultiDexApplication() {
         val configMultichannel: MultichannelWidgetConfig =
             MultichannelWidgetConfig.setEnableLog(BuildConfig.DEBUG)
                 .setNotificationListener(null)
-        MultichannelWidget.init(this, "karm-gzu41e4e4dv9fu3f", configMultichannel)
+        MultichannelWidget.setup(this, "karm-gzu41e4e4dv9fu3f", configMultichannel)
     }
 }
