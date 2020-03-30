@@ -16,7 +16,7 @@ object MultichannelWidgetConfig {
     fun isEnableLog() = enableLog
     fun isSessional() = isSessional
     fun setSessional(isSessional: Boolean) = apply { this.isSessional = isSessional }
-    fun setNotificationListener(multichannelNotificationListener: MultichannelNotificationListener) = apply { this.multichannelNotificationListener = multichannelNotificationListener }
+    fun setNotificationListener(multichannelNotificationListener: MultichannelNotificationListener?) = apply { this.multichannelNotificationListener = multichannelNotificationListener }
     fun getNotificationListener() = multichannelNotificationListener
 
 }
