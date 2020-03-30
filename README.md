@@ -1,3 +1,5 @@
+
+This doc already deprecated. read completed documentation [here](https://github.com/Qiscus-Integration/android-multichannel-widget/wiki/Index).
 # Android Multichannel-widget
 
 This is unofficial sdk for implement [Qiscus multichannel](https://www.qiscus.com/customer-service-chat) to your android apps. Your apps must using androidx and requires minimum Android API 16 (Jelly Bean).

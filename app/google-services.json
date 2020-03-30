@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "488860885723",
+    "firebase_url": "https://multichannel-widget.firebaseio.com",
+    "project_id": "multichannel-widget",
+    "storage_bucket": "multichannel-widget.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488860885723:android:04ca547e507db92752e2fe",
+        "android_client_info": {
+          "package_name": "com.qiscus.integrations.multichannel_sample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488860885723-vsug80p5sla97lnhblh17h8pvs0ep1bd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrfCX5kR-3qb0EFF3c4s5_utwftGKXtzA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "488860885723-vsug80p5sla97lnhblh17h8pvs0ep1bd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
