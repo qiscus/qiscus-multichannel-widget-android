@@ -17,7 +17,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.qiscus.sdk.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/qiscus_provider_paths" />
+        </provider>
         <service android:name=".service.FirebaseServices">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
