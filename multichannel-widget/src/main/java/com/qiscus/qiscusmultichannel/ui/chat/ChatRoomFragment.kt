@@ -1,6 +1,5 @@
 package com.qiscus.qiscusmultichannel.ui.chat
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.*
@@ -447,17 +446,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         commentsAdapter.addOrUpdate(comment)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onUserTyping(email: String?, isTyping: Boolean) {
-        /* QiscusAndroidUtil.runOnUIThread {
-             if (isTyping) {
-                 tvTyping.visibility = View.VISIBLE
-                 tvTyping.text = "$email is typing..."
-             } else {
-                 tvTyping.visibility = View.GONE
-             }
-         }
-         userTypingListener?.onUserTyping(email, isTyping)*/
+        userTypingListener?.onUserTyping(email, isTyping)
     }
 
     override fun onFileDownloaded(file: File, mimeType: String?) {

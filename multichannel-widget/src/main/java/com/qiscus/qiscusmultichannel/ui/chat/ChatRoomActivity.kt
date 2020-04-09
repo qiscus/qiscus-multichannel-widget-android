@@ -28,6 +28,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
 
     lateinit var qiscusChatRoom: QiscusChatRoom
     private val users: MutableSet<String> = HashSet()
+    private var memberList: String = ""
 
     companion object {
         val CHATROOM_KEY = "chatroom_key"
@@ -106,7 +107,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     }
 
     override fun onUserTyping(email: String?, isTyping: Boolean) {
-        //tvSubtitle?.text = if (isTyping) "typing..." else "Online"
+        tvMemberList?.text = if (isTyping) "typing..." else memberList
     }
 
     private fun bindRoomData() {
@@ -127,8 +128,8 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
                 chatRoom.member.forEach {
                     listMember.add(it.username)
                 }
-
-                tvMemberList.text = listMember.joinToString()
+                this.memberList = listMember.joinToString()
+                tvMemberList.text = memberList
             }
     }
 
