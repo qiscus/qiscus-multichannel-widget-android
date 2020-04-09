@@ -8,6 +8,7 @@ import com.qiscus.sdk.chat.core.custom.data.model.*
 import com.qiscus.sdk.chat.core.custom.data.remote.QiscusApi
 import com.qiscus.sdk.chat.core.custom.data.remote.QiscusPusherApi
 import com.qiscus.sdk.chat.core.custom.event.QiscusChatRoomEvent
+import com.qiscus.sdk.chat.core.custom.event.QiscusCommentDeletedEvent
 import com.qiscus.sdk.chat.core.custom.event.QiscusCommentReceivedEvent
 import com.qiscus.sdk.chat.core.custom.presenter.QiscusChatRoomEventHandler
 import com.qiscus.sdk.chat.core.custom.util.QiscusAndroidUtil
@@ -440,6 +441,12 @@ class ChatRoomPresenter(var room: QiscusChatRoom) : QiscusChatRoomEventHandler.S
                 }
             }
         }
+    }
+
+    @Subscribe
+    public fun onMessageDeleted(event: QiscusCommentDeletedEvent) {
+        QiscusCore.getDataStore().delete(event.qiscusComment)
+        QiscusAndroidUtil.runOnUIThread { view?.onCommentDeleted(event.qiscusComment) }
     }
 
     private fun onGotNewComment(qiscusComment: QiscusComment) {
