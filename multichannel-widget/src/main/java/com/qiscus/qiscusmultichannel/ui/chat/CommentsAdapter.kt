@@ -58,6 +58,7 @@ class CommentsAdapter(val context: Context) :
             QiscusComment.Type.SYSTEM_EVENT -> return TYPE_EVENT
             QiscusComment.Type.CARD -> return TYPE_CARD
             QiscusComment.Type.CAROUSEL -> return TYPE_CAROUSEL
+            QiscusComment.Type.LINK -> return TYPE_OPPONENT_TEXT
             else -> return TYPE_NOT_SUPPORT
         }
     }
