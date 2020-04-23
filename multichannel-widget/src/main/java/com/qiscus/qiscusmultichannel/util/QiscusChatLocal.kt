@@ -50,4 +50,20 @@ object QiscusChatLocal {
         return Gson().fromJson(param, Array<UserProperties>::class.java).toList()
     }
 
+    fun saveUserId(userId: String) {
+        getEditor().putString("qm_user_id", userId).apply()
+    }
+
+    fun getUserId(): String {
+        return getPref().getString("qm_user_id","") ?: ""
+    }
+
+    fun saveAvatar(avatar: String?) {
+        getEditor().putString("qm_avatar", avatar).apply()
+    }
+
+    fun getAvatar(): String? {
+        return getPref().getString("qm_avatar","") ?: null
+    }
+
 }

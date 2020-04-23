@@ -70,7 +70,10 @@ class ChatroomRepositoryImpl : ChatroomRepository {
         QiscusApi.getInstance().jwtNonce
             .doOnNext {
                 QiscusChatLocal.saveExtras(extras)
-                QiscusChatLocal.saveUserProps(userProp) }
+                QiscusChatLocal.saveUserProps(userProp)
+                QiscusChatLocal.saveUserId(userId)
+                QiscusChatLocal.saveAvatar(avatar)
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({

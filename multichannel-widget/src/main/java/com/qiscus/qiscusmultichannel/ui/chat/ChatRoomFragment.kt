@@ -116,7 +116,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         btn_new_room.setOnClickListener {
             val account = QiscusCore.getQiscusAccount()
             QiscusChatLocal.setRoomId(0)
-            LoadingActivity.generateIntent(ctx, account.username, account.id.toString(), account.avatar, QiscusChatLocal.getExtras(), QiscusChatLocal.getUserProps())
+            LoadingActivity.generateIntent(
+                ctx,
+                account.username,
+                QiscusChatLocal.getUserId(),
+                QiscusChatLocal.getAvatar(),
+                QiscusChatLocal.getExtras(),
+                QiscusChatLocal.getUserProps()
+            )
             activity?.finish()
         }
         btnCancelReply.setOnClickListener { rootViewSender.visibility = View.GONE }
@@ -480,18 +487,13 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     override fun showNewChatButton(it: Boolean) {
-//        if (MultichannelWidgetConfig.isSessional()) {
-            if (it) {
-                newChatPanel.visibility = View.VISIBLE
-                messageInputPanel.visibility = View.GONE
-            } else {
-                newChatPanel.visibility = View.GONE
-                messageInputPanel.visibility = View.VISIBLE
-            }
-//        } else {
-//            newChatPanel.visibility = View.GONE
-//            messageInputPanel.visibility = View.VISIBLE
-//        }
+        if (it) {
+            newChatPanel.visibility = View.VISIBLE
+            messageInputPanel.visibility = View.GONE
+        } else {
+            newChatPanel.visibility = View.GONE
+            messageInputPanel.visibility = View.VISIBLE
+        }
     }
 
     override fun refreshComments() {
