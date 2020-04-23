@@ -33,7 +33,7 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-        <activity android:name=".util.webView.WebViewActivity" />
+        <activity android:name="com.qiscus.qiscusmultichannel.ui.webView.WebViewActivity" />
 
         <receiver
             android:name=".util.NotificationClickReceiver"

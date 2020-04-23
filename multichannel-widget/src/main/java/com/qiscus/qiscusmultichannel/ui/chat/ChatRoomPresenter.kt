@@ -467,6 +467,8 @@ class ChatRoomPresenter(var room: QiscusChatRoom) : QiscusChatRoomEventHandler.S
                 }
             }
             view?.onNewComment(qiscusComment)
+            handleIsResolvedMsg(qiscusComment)
+
         }
         if (qiscusComment.type == QiscusComment.Type.SYSTEM_EVENT) {
             QiscusApi.getInstance().getChatRoomInfo(room.id)
@@ -477,6 +479,13 @@ class ChatRoomPresenter(var room: QiscusChatRoom) : QiscusChatRoomEventHandler.S
                         view?.showNewChatButton(it)
                     }
                 }
+        }
+    }
+
+    private fun handleIsResolvedMsg(qiscusComment: QiscusComment) {
+        if (qiscusComment.type == QiscusComment.Type.LINK) {
+            val url = qiscusComment.extras.getString("survey_link")
+            view?.openWebview(url)
         }
     }
 
@@ -559,5 +568,7 @@ class ChatRoomPresenter(var room: QiscusChatRoom) : QiscusChatRoomEventHandler.S
         fun onFileDownloaded(file: File, mimeType: String?)
         fun showNewChatButton(it: Boolean)
         fun refreshComments()
+
+        fun openWebview(url: String)
     }
 }

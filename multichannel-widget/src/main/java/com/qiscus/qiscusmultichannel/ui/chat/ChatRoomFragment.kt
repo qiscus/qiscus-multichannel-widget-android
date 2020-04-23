@@ -27,7 +27,9 @@ import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.chat.image.SendImageConfirmationActivity
+import com.qiscus.qiscusmultichannel.ui.loading.LoadingActivity
 import com.qiscus.qiscusmultichannel.ui.view.QiscusChatScrollListener
+import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
 import com.qiscus.qiscusmultichannel.util.*
 import com.qiscus.sdk.chat.core.custom.QiscusCore
 import com.qiscus.sdk.chat.core.custom.data.local.QiscusCacheManager
@@ -112,6 +114,9 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
         btnSend.setOnClickListener { sendingComment() }
         btn_new_room.setOnClickListener {
+            val account = QiscusCore.getQiscusAccount()
+            QiscusChatLocal.setRoomId(0)
+            LoadingActivity.generateIntent(ctx, account.username, account.id.toString(), account.avatar, QiscusChatLocal.getExtras(), QiscusChatLocal.getUserProps())
             activity?.finish()
         }
         btnCancelReply.setOnClickListener { rootViewSender.visibility = View.GONE }
@@ -475,8 +480,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     override fun showNewChatButton(it: Boolean) {
-        QiscusChatLocal.setRoomId(0L)
-        if (MultichannelWidgetConfig.isSessional()) {
+//        if (MultichannelWidgetConfig.isSessional()) {
             if (it) {
                 newChatPanel.visibility = View.VISIBLE
                 messageInputPanel.visibility = View.GONE
@@ -484,10 +488,10 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                 newChatPanel.visibility = View.GONE
                 messageInputPanel.visibility = View.VISIBLE
             }
-        } else {
-            newChatPanel.visibility = View.GONE
-            messageInputPanel.visibility = View.VISIBLE
-        }
+//        } else {
+//            newChatPanel.visibility = View.GONE
+//            messageInputPanel.visibility = View.VISIBLE
+//        }
     }
 
     override fun refreshComments() {
@@ -581,7 +585,11 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         )
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, @NonNull permissions: Array<String>, @NonNull grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        @NonNull permissions: Array<String>,
+        @NonNull grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         QiscusPermissionsUtil.onRequestPermissionsResult(
             requestCode,
@@ -637,6 +645,10 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun showError(message: String) {
         ctx.showToast(message)
+    }
+
+    override fun openWebview(url: String) {
+        WebViewHelper.launchUrl(ctx, Uri.parse(url))
     }
 
     override fun onDestroy() {

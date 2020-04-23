@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.core.util.PatternsCompat
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.util.DateUtil
-import com.qiscus.qiscusmultichannel.util.webView.WebViewHelper
+import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
 import com.qiscus.sdk.chat.core.custom.QiscusCore
 import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
 import java.util.regex.Matcher

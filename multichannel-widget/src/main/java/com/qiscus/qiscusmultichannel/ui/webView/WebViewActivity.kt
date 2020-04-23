@@ -1,4 +1,4 @@
-package com.qiscus.qiscusmultichannel.util.webView
+package com.qiscus.qiscusmultichannel.ui.webView
 
 import android.content.Intent
 import android.net.Uri
@@ -57,10 +57,6 @@ class WebViewActivity : AppCompatActivity() {
         webViewClient = WebViewClient()
         val url = intent.getStringExtra("url")
         webview.loadUrl(url)
-        /*webview.addJavascriptInterface(
-            MyJavaScriptInterface(),
-            "android"
-        )*/
 
         with(webview.settings) {
             setAppCacheEnabled(true)
@@ -73,13 +69,6 @@ class WebViewActivity : AppCompatActivity() {
         webview.webViewClient = mWebViewClient
         btn_back.setOnClickListener { finish() }
     }
-
-    /* internal inner class MyJavaScriptInterface {
-         @JavascriptInterface
-         fun onUrlChange(url: String) {
-             tv_url.text = url
-         }
-     }*/
 
     override fun onDestroy() {
         super.onDestroy()

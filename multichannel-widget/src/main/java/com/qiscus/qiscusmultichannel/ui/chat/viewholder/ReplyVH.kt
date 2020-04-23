@@ -11,7 +11,7 @@ import androidx.core.util.PatternsCompat
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.R
-import com.qiscus.qiscusmultichannel.util.webView.WebViewHelper
+import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
 import com.qiscus.sdk.chat.core.custom.QiscusCore
 import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
 import kotlinx.android.synthetic.main.item_my_reply_mc.view.*

@@ -6,6 +6,7 @@ import com.qiscus.qiscusmultichannel.data.model.DataInitialChat
 import com.qiscus.qiscusmultichannel.data.model.UserProperties
 import com.qiscus.qiscusmultichannel.data.repository.ChatroomRepository
 import com.qiscus.qiscusmultichannel.data.repository.response.ResponseInitiateChat
+import com.qiscus.qiscusmultichannel.util.QiscusChatLocal
 import com.qiscus.sdk.chat.core.custom.QiscusCore
 import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
 import com.qiscus.sdk.chat.core.custom.data.remote.QiscusApi
@@ -67,6 +68,9 @@ class ChatroomRepositoryImpl : ChatroomRepository {
     ) {
 
         QiscusApi.getInstance().jwtNonce
+            .doOnNext {
+                QiscusChatLocal.saveExtras(extras)
+                QiscusChatLocal.saveUserProps(userProp) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({

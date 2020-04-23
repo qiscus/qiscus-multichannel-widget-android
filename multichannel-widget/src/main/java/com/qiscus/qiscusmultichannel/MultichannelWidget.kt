@@ -101,8 +101,8 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
     ) {
 
         instance.component.chatroomRepository.initiateChat(name, userId, avatar, extras, userProperties, {
-            it.data.roomId?.toLong()?.let {
-                QiscusChatLocal.setRoomId(it)
+            it.data.roomId?.toLong()?.let { id ->
+                QiscusChatLocal.setRoomId(id)
             }
             it.data.identityToken?.let {
                 QiscusCore.setUserWithIdentityToken(it,

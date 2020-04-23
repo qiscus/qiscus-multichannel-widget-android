@@ -2,7 +2,10 @@ package com.qiscus.qiscusmultichannel.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.gson.Gson
 import com.qiscus.qiscusmultichannel.MultichannelWidget
+import com.qiscus.qiscusmultichannel.data.model.UserProperties
+import org.json.JSONObject
 
 /**
  * Created on : 28/08/19
@@ -27,5 +30,24 @@ object QiscusChatLocal {
     }
 
     fun getRoomId() = getPref().getLong("roomId", 0)
+
+    fun saveExtras(extras: String) {
+        getEditor().putString("qm_extras", extras).apply()
+    }
+
+    fun getExtras(): JSONObject? {
+        val param = getPref().getString("qm_extras", null)
+        return if (param == null) null else JSONObject(param)
+    }
+
+    fun saveUserProps(userProps: List<UserProperties>) {
+        val param = Gson().toJson(userProps)
+        getEditor().putString("qm_props", param).apply()
+    }
+
+    fun getUserProps(): List<UserProperties> {
+        val param = getPref().getString("qm_props", "")
+        return Gson().fromJson(param, Array<UserProperties>::class.java).toList()
+    }
 
 }
