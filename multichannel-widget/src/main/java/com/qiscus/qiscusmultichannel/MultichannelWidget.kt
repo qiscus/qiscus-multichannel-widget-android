@@ -66,6 +66,10 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
                 .setEnableFcmPushNotification(true)
                 .setNotificationListener { context, qiscusComment ->
 
+                    if (!config.isEnableNotification()) {
+                        return@setNotificationListener
+                    }
+
                     if (config.multichannelNotificationListener != null) {
                         config.getNotificationListener()
                             ?.handleMultichannelListener(context, qiscusComment)
