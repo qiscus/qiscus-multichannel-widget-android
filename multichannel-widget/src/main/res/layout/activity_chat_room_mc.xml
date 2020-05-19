@@ -68,7 +68,6 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
-                android:text="Blue Bie"
                 android:textAllCaps="false"
                 android:textColor="@color/qiscus_white_mc"
                 android:textSize="16sp"
