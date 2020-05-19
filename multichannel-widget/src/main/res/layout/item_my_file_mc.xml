@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:gravity="end"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="8dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -114,6 +114,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:src="@drawable/ic_qiscus_upload_file_mc" />
 
