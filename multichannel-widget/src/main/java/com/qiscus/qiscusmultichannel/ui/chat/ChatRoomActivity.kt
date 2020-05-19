@@ -80,6 +80,8 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         btn_action_reply.setOnClickListener { getChatFragment().replyComment() }
         btn_action_reply_cancle.setOnClickListener { getChatFragment().clearSelectedComment() }
         setBarInfo()
+
+        tvTitle.text = qiscusChatRoom.name
     }
 
     override fun onResume() {
