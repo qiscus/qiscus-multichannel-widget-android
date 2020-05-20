@@ -81,7 +81,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         btn_action_reply_cancle.setOnClickListener { getChatFragment().clearSelectedComment() }
         setBarInfo()
 
-        tvTitle.text = qiscusChatRoom.name
+        tvTitle.text = MultichannelWidget.config.getRoomTitle() ?: qiscusChatRoom.name
     }
 
     override fun onResume() {
