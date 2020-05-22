@@ -45,7 +45,7 @@ class TextVH(itemView: View) : BaseViewHolder(itemView) {
 
     @SuppressLint("DefaultLocale")
     private fun setUpLinks() {
-        val text = message.text.toString().toLowerCase()
+        val text = message.text.toString()
         val matcher: Matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(text)
         while (matcher.find()) {
             val start: Int = matcher.start()
