@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#0071BB</color>
     <color name="colorAccent">#9E9E9E</color>
 
+    <color name="qiscus_text_reply_mc">#808080</color>
+
     <color name="qiscus_primary_text_mc">#FFFFFF</color>
     <color name="qiscus_secondary_text_mc">#F4F4F4</color>
     <color name="qiscus_light_grey_mc">#D8D8D8</color>

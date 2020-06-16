@@ -88,6 +88,7 @@
                     android:layout_marginLeft="1dp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:textColor="@color/qiscus_text_reply_mc"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:visibility="visible"
@@ -118,6 +119,7 @@
                         android:layout_marginBottom="4dp"
                         android:ellipsize="end"
                         android:maxLines="2"
+                        android:textColor="@color/qiscus_text_reply_mc"
                         android:textSize="12sp"
                         android:visibility="visible"
                         tools:text="Lorem Ipsum is simply" />
@@ -146,10 +148,10 @@
             android:autoLink="all"
             android:linksClickable="true"
             android:padding="8dp"
-            android:textSize="16sp"
-            android:visibility="visible"
             android:textColor="@color/qiscus_left_bubble_text_mc"
             android:textColorLink="@color/qiscus_color_opponent_link_mc"
+            android:textSize="16sp"
+            android:visibility="visible"
             tools:text="Lorem Ipsum is dddddd" />
     </LinearLayout>
 
