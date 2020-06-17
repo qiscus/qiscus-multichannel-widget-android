@@ -19,6 +19,7 @@
             android:background="@drawable/rounded_date"
             android:gravity="center"
             android:padding="10dp"
+            android:textColor="@color/qiscus_white_mc"
             android:text="Date"
             android:textSize="14sp"
             android:visibility="visible" />

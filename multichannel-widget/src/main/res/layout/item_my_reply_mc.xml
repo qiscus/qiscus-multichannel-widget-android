@@ -29,6 +29,7 @@
         android:background="@drawable/rounded_date"
         android:gravity="center"
         android:padding="10dp"
+        android:textColor="@color/qiscus_white_mc"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,9 +86,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="1dp"
                     android:layout_marginLeft="1dp"
-                    android:textColor="@color/qiscus_text_reply_mc"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:textColor="@color/qiscus_text_reply_mc"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:visibility="visible"
@@ -116,9 +117,9 @@
                         android:layout_marginStart="1dp"
                         android:layout_marginLeft="1dp"
                         android:layout_marginBottom="4dp"
-                        android:textColor="@color/qiscus_text_reply_mc"
                         android:ellipsize="end"
                         android:maxLines="2"
+                        android:textColor="@color/qiscus_text_reply_mc"
                         android:textSize="12sp"
                         android:visibility="visible"
                         tools:text="Lorem Ipsum is simply" />
@@ -133,10 +134,10 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
+                android:contentDescription="origin image"
                 android:scaleType="centerCrop"
                 android:visibility="visible"
-                tools:src="@drawable/avatar_cs"
-                android:contentDescription="origin image" />
+                tools:src="@drawable/avatar_cs" />
 
         </LinearLayout>
 

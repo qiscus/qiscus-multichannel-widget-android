@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:layout_marginStart="8dp"
     android:layout_marginLeft="8dp"
+    android:orientation="vertical"
     android:padding="4dp">
 
     <LinearLayout
@@ -22,6 +22,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="Date"
+            android:textColor="@color/qiscus_white_mc"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -29,20 +30,20 @@
         android:id="@+id/sender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:layout_marginLeft="9dp"
         android:layout_marginBottom="10dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Sender"
-        android:layout_marginStart="9dp"
-        android:layout_marginLeft="9dp"
         android:textSize="12sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
         android:layout_marginStart="9dp"
-        android:layout_marginLeft="9dp">
+        android:layout_marginLeft="9dp"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/avatar_driver"
@@ -68,10 +69,10 @@
                 android:id="@+id/message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_opponent_caption_image"
                 android:layout_gravity="end"
                 android:layout_marginTop="-8dp"
                 android:autoLink="all"
+                android:background="@drawable/bg_opponent_caption_image"
                 android:linksClickable="true"
                 android:padding="8dp"
                 android:textColor="@color/qiscus_left_bubble_text_mc"
@@ -95,8 +96,8 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="10:00"
-                android:textSize="14sp"
-                android:textColor="@color/qiscus_date_bubble_mc" />
+                android:textColor="@color/qiscus_date_bubble_mc"
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 

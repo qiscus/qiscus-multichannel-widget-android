@@ -19,6 +19,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="Date"
+            android:textColor="@color/qiscus_white_mc"
             android:textSize="14sp" />
     </LinearLayout>
 

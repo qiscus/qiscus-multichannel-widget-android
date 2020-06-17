@@ -7,9 +7,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
@@ -19,24 +19,25 @@
             android:background="@drawable/rounded_date"
             android:gravity="center"
             android:padding="10dp"
-            android:visibility="gone"
-            android:textSize="14sp" />
+            android:textColor="@color/qiscus_white_mc"
+            android:textSize="14sp"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:gravity="end"
         android:orientation="horizontal"
-        android:layout_marginTop="4dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             android:gravity="bottom|end"
             android:orientation="vertical">
 
@@ -48,8 +49,8 @@
                 android:ellipsize="end"
                 android:gravity="end"
                 android:maxLines="1"
-                android:textSize="14sp"
-                android:textColor="@color/qiscus_date_bubble_mc" />
+                android:textColor="@color/qiscus_date_bubble_mc"
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/state"

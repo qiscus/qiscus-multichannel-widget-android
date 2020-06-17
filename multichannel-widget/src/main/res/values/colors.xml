@@ -21,7 +21,7 @@
 
     <color name="read_message_mc">#0071BB</color>
     <color name="pending_message_mc">#757575</color>
-    <color name="dateBackground_mc">#E0E0E0</color>
+    <color name="dateBackground_mc">#B5B5B5</color>
     <color name="qiscus_transparent_black_mc">#88000000</color>
 
     <color name="qiscus_bottom_sheet_mc">#FAFAFA</color>
