@@ -134,6 +134,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             showNewChatButton(it.options.getBoolean("is_resolved"))
         }
         btnAttachmentOptions.setOnClickListener { showAttachmentDialog() }
+        btnAttachmentCamera.setOnClickListener { openCamera() }
+        btnAttachmentDoc.setOnClickListener { openFile() }
         etMessage.afterTextChangedDelayed({
             notifyServerTyping(true)
         }, {

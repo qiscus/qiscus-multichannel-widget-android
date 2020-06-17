@@ -142,7 +142,24 @@
                 android:layout_height="38dp"
                 android:layout_gravity="center_vertical"
                 android:padding="4dp"
+                android:visibility="gone"
                 android:src="@drawable/ic_add_circle" />
+
+            <ImageView
+                android:id="@+id/btnAttachmentCamera"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center_vertical"
+                android:padding="4dp"
+                android:src="@drawable/ic_qiscus_camera_blue" />
+
+            <ImageView
+                android:id="@+id/btnAttachmentDoc"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center_vertical"
+                android:padding="4dp"
+                android:src="@drawable/ic_qiscus_doc_blue" />
 
             <EditText
                 android:id="@+id/etMessage"
