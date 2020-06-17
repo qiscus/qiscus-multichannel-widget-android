@@ -94,7 +94,7 @@ class CommentsAdapter(val context: Context) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             TYPE_MY_TEXT, TYPE_OPPONENT_TEXT -> TextVH(getView(parent, viewType))
-            TYPE_MY_IMAGE, TYPE_OPPONENT_IMAGE -> ImageVH(getView(parent, viewType))
+            TYPE_MY_IMAGE, TYPE_OPPONENT_IMAGE -> ImageVH(getView(parent, viewType), recyclerViewItemClickListener)
             TYPE_MY_REPLY, TYPE_OPPONENT_REPLY -> ReplyVH(getView(parent, viewType))
             TYPE_EVENT -> EventVH(getView(parent, viewType))
             TYPE_MY_FILE, TYPE_OPPONENT_FILE -> FileVH(getView(parent, viewType))

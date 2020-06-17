@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.SortedList
 abstract class SortedRecyclerViewAdapter<Item, VH : RecyclerView.ViewHolder> :
     RecyclerView.Adapter<VH>() {
 
-    private var recyclerViewItemClickListener: CommentsAdapter.RecyclerViewItemClickListener? = null
+    protected var recyclerViewItemClickListener: CommentsAdapter.RecyclerViewItemClickListener? = null
 
     val data: SortedList<Item> = SortedList(itemClass, object : SortedList.Callback<Item>() {
         override fun compare(o1: Item, o2: Item): Int {

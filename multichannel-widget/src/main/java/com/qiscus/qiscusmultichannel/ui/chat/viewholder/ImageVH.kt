@@ -21,6 +21,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.R
+import com.qiscus.qiscusmultichannel.ui.chat.CommentsAdapter
 import com.qiscus.qiscusmultichannel.util.DateUtil
 import com.qiscus.qiscusmultichannel.util.QiscusImageUtil
 import com.qiscus.qiscusmultichannel.util.showToast
@@ -41,7 +42,7 @@ import java.util.regex.Matcher
  * Author     : Taufik Budi S
  * GitHub     : https://github.com/tfkbudi
  */
-class ImageVH(itemView: View) : BaseViewHolder(itemView) {
+class ImageVH(itemView: View, var listener: CommentsAdapter.RecyclerViewItemClickListener?) : BaseViewHolder(itemView) {
     private val thumbnail: ImageView = itemView.findViewById(R.id.thumbnail)
     private val message: TextView = itemView.findViewById(R.id.message)
     private val sender: TextView? = itemView.findViewById(R.id.sender)
@@ -70,21 +71,17 @@ class ImageVH(itemView: View) : BaseViewHolder(itemView) {
             }
 
             val chatRoom = QiscusCore.getDataStore().getChatRoom(comment.roomId)
-
             sender?.visibility = if (chatRoom.isGroup) View.VISIBLE else View.GONE
-
             dateOfMessage?.text = DateUtil.toFullDate(comment.time)
-
             thumbnail.setOnClickListener {
                 dialodViewImage(url, comment.sender, caption, comment.time)
-                /*val localPath = QiscusCore.getDataStore().getLocalPath(comment.id)
-                if (localPath != null) {
-                    itemView.context.showToast("Image already in the gallery")
-
-                } else {
-                    downloadFile(comment, filename, url)
-                }*/
             }
+
+            thumbnail.setOnLongClickListener {
+                listener?.onItemLongClick(itemView, adapterPosition)
+                true
+            }
+
             setUpLinks()
         } catch (t: Throwable) {
 
@@ -166,7 +163,6 @@ class ImageVH(itemView: View) : BaseViewHolder(itemView) {
         val tvSender = mDialog.findViewById<TextView>(R.id.tv_view_sender)
         val tvDescription = mDialog.findViewById<TextView>(R.id.tv_view_description)
         val tvDate = mDialog.findViewById<TextView>(R.id.tv_view_date)
-        /*val btnShare = mDialog.findViewById<ImageButton>(R.id.ibShareDialogView)*/
         tvSender.text = sender
         tvDescription.text = description
         tvDate.text = QiscusDateUtil.toFullDateFormat(date)
@@ -178,9 +174,6 @@ class ImageVH(itemView: View) : BaseViewHolder(itemView) {
             .setView(mDialog)
         val dialog = dialogBuilder.show()
 
-        /*btnShare.setOnClickListener {
-            //shareImage()
-        }*/
         ibDialogView.setOnClickListener {
             dialog.dismiss()
         }
