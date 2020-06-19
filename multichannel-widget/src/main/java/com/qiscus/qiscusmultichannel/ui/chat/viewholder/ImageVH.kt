@@ -26,6 +26,7 @@ import com.qiscus.qiscusmultichannel.util.DateUtil
 import com.qiscus.qiscusmultichannel.util.QiscusImageUtil
 import com.qiscus.qiscusmultichannel.util.showToast
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
+import com.qiscus.qiscusmultichannel.util.getAuthority
 import com.qiscus.sdk.chat.core.custom.QiscusCore
 import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
 import com.qiscus.sdk.chat.core.custom.data.remote.QiscusApi
@@ -185,12 +186,11 @@ class ImageVH(itemView: View, var listener: CommentsAdapter.RecyclerViewItemClic
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileImage))
         } else {
-            QiscusCore.getApps().packageName + ".qiscus.sdk.provider"
             intent.putExtra(
                 Intent.EXTRA_STREAM,
                 FileProvider.getUriForFile(
                     itemView.context,
-                    QiscusCore.getApps().packageName + ".qiscus.sdk.provider",
+                    getAuthority(),
                     fileImage
                 )
             )

@@ -24,7 +24,6 @@ import com.qiscus.jupuk.JupukBuilder
 import com.qiscus.jupuk.JupukConst
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.MultichannelWidget
-import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.chat.image.SendImageConfirmationActivity
 import com.qiscus.qiscusmultichannel.ui.loading.LoadingActivity
@@ -247,7 +246,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                             MediaStore.EXTRA_OUTPUT,
                             FileProvider.getUriForFile(
                                 ctx,
-                                QiscusCore.getApps().packageName + ".qiscus.sdk.provider",
+                                getAuthority(),
                                 photoFile
                             )
                         )
@@ -473,7 +472,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             intent.setDataAndType(
                 FileProvider.getUriForFile(
                     ctx,
-                    QiscusCore.getApps().packageName + ".qiscus.sdk.provider",
+                    getAuthority(),
                     file
                 ), mimeType
             )

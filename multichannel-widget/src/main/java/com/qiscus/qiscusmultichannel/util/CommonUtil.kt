@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.Toast
+import com.qiscus.sdk.chat.core.custom.QiscusCore
 
 /**
  * Created on : 29/08/19
@@ -15,6 +16,10 @@ import android.widget.Toast
 
 fun Context.showToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+}
+
+fun getAuthority(): String {
+    return QiscusCore.getApps().packageName
 }
 
 fun EditText.afterTextChangedDelayed(
