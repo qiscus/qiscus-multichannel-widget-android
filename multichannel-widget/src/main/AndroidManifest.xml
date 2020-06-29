@@ -9,7 +9,8 @@
     <application android:theme="@style/AppTheme">
         <activity android:name=".ui.loading.LoadingActivity"></activity>
         <activity android:name=".ui.chat.image.SendImageConfirmationActivity" />
-        <activity android:name=".ui.chat.ChatRoomActivity">
+        <activity android:name=".ui.chat.ChatRoomActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="com.qiscus.example.mybb" />
