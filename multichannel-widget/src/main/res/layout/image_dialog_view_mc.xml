@@ -15,7 +15,7 @@
         android:id="@+id/ivDialogView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true"
+        android:adjustViewBounds="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     <androidx.appcompat.widget.Toolbar
