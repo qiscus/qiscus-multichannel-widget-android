@@ -121,6 +121,16 @@ class PNUtil {
                         R.string.qiscus_send_location_mc,
                         qiscusComment.sender
                     )
+                } else if (qiscusComment.type == QiscusComment.Type.FILE) {
+                    return sender + context.getString(
+                        R.string.qiscus_send_file_mc,
+                        qiscusComment.sender
+                    )
+                } else if (qiscusComment.type == QiscusComment.Type.IMAGE) {
+                    return sender + context.getString(
+                        R.string.qiscus_send_image_mc,
+                        qiscusComment.sender
+                    )
                 }
                 return sender + qiscusComment.message
             }
