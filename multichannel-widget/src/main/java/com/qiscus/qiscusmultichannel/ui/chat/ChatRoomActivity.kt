@@ -3,6 +3,8 @@ package com.qiscus.qiscusmultichannel.ui.chat
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.qiscus.qiscusmultichannel.MultichannelWidget
@@ -29,7 +31,10 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     lateinit var qiscusChatRoom: QiscusChatRoom
     private val users: MutableSet<String> = HashSet()
     private var memberList: String = ""
-
+    private  var runnable =  Runnable{
+        tvMemberList?.text = memberList
+    }
+    private var handler = Handler(Looper.getMainLooper())
     companion object {
         val CHATROOM_KEY = "chatroom_key"
 
@@ -110,6 +115,11 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
 
     override fun onUserTyping(email: String?, isTyping: Boolean) {
         tvMemberList?.text = if (isTyping) "typing..." else memberList
+
+        if (isTyping) {
+            handler.removeCallbacks(runnable)
+            handler.postDelayed(runnable, 5000)
+        }
     }
 
     private fun bindRoomData() {
