@@ -15,9 +15,9 @@
     <string name="qiscus_you_mc">You</string>
     <string name="qiscus_failed_download_file_mc">Failed to download file!</string>
     <string name="title_activity_maps_mc">Map</string>
-    <string name="qiscus_send_image_mc">%1$s mengirim gambar</string>
-    <string name="qiscus_send_file_mc">%1$s mengirim berkas</string>
-    <string name="qiscus_send_location_mc">%1$s mengirim lokasi</string>
+    <string name="qiscus_send_image_mc">%1$s sent an image</string>
+    <string name="qiscus_send_file_mc">%1$s sent a file</string>
+    <string name="qiscus_send_location_mc">%1$s sent a location</string>
     <string name="qiscus_location_mc">Location</string>
     <string name="qiscus_document_mc">Document</string>
     <string name="qiscus_camera_mc">Camera</string>
