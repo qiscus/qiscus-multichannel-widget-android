@@ -68,7 +68,7 @@ class PNUtil {
                 .setContentText(getContent(context, qiscusComment))
                 .setTicker(getContent(context, qiscusComment))
                 //@TODO Change background image
-                .setSmallIcon(R.drawable.mybblogo)
+                .setSmallIcon(R.drawable.ic_qiscus_notification_icon)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setGroup("CHAT_NOTIF_" + qiscusComment.roomId)
                 .setAutoCancel(true)
