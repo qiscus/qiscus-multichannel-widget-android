@@ -32,7 +32,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     private val users: MutableSet<String> = HashSet()
     private var memberList: String = ""
     private  var runnable =  Runnable{
-        tvMemberList?.text = memberList
+        tvSubtitle?.text = MultichannelWidget.config.getRoomSubtitle() ?: memberList
     }
     private var handler = Handler(Looper.getMainLooper())
     companion object {
@@ -114,7 +114,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     }
 
     override fun onUserTyping(email: String?, isTyping: Boolean) {
-        tvMemberList?.text = if (isTyping) "typing..." else memberList
+        tvSubtitle?.text = if (isTyping) "typing..." else getSubtitle()
 
         if (isTyping) {
             handler.removeCallbacks(runnable)
@@ -141,7 +141,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
                     listMember.add(it.username)
                 }
                 this.memberList = listMember.joinToString()
-                tvMemberList.text = memberList
+                tvSubtitle.text = getSubtitle()
             }
     }
 
@@ -159,6 +159,10 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             QiscusComment.Type.SYSTEM_EVENT -> setBarInfo()
         }
 
+    }
+
+    fun getSubtitle(): String {
+        return MultichannelWidget.config.getRoomSubtitle() ?: memberList
     }
 
     override fun onDestroy() {

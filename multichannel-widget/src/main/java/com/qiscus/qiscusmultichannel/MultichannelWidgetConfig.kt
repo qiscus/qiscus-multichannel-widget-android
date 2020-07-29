@@ -13,6 +13,7 @@ object MultichannelWidgetConfig {
     var multichannelNotificationListener: MultichannelNotificationListener? = null
     private var enableNotification: Boolean = true
     private var roomTitle: String? = null
+    private var roomSubtitle: String? = null
 
     fun setEnableLog(enableLog: Boolean) = apply { this.enableLog = enableLog }
     fun isEnableLog() = enableLog
@@ -24,5 +25,7 @@ object MultichannelWidgetConfig {
     fun isEnableNotification() = enableNotification
     fun setRoomTitle(roomTitle: String?) = apply { this.roomTitle = roomTitle }
     fun getRoomTitle(): String? = roomTitle
+    fun setRoomSubtitle(roomSubtitle: String?) = apply { this.roomSubtitle = roomSubtitle }
+    fun getRoomSubtitle(): String? = roomSubtitle
 
 }

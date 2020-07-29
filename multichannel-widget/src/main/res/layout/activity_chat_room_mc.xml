@@ -29,7 +29,7 @@
             app:titleTextColor="@color/colorAccent">
 
             <TextView
-                android:id="@+id/tvMemberList"
+                android:id="@+id/tvSubtitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
