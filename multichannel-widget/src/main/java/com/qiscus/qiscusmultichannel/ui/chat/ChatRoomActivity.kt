@@ -46,7 +46,6 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             val intent = Intent(context, ChatRoomActivity::class.java)
             //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             intent.putExtra(CHATROOM_KEY, qiscusChatRoom)
-            context.startActivity(intent)
             return intent
         }
     }

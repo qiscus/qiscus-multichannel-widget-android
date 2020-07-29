@@ -2,6 +2,7 @@ package com.qiscus.qiscusmultichannel
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import com.google.firebase.messaging.RemoteMessage
 import com.qiscus.jupuk.Jupuk
 import com.qiscus.nirmana.Nirmana
@@ -195,6 +196,7 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
     fun openChatRoomById(
         context: Context,
         roomId: Long,
+        clearTaskActivity: Boolean,
         onError: (Throwable) -> Unit
     ) {
         if (!hasSetupUser()) {
@@ -202,8 +204,14 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
         }
 
         openChatRoomById(roomId, {
-            ChatRoomActivity.generateIntent(context, it)
-        }, { onError(it) })
+            val intent = ChatRoomActivity.generateIntent(context, it)
+            if (clearTaskActivity) {
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            context.startActivity(intent)
+        }, {
+            onError(it)
+        })
     }
 
     fun openChatRoomById(
@@ -228,10 +236,11 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
         return QiscusCore.getQiscusAccount()
     }
 
-    fun openChatRoomMultichannel() {
+    fun openChatRoomMultichannel(clearTaskActivity: Boolean) {
         openChatRoomById(
             application.applicationContext,
-            QiscusChatLocal.getRoomId()
+            QiscusChatLocal.getRoomId(),
+            clearTaskActivity
         ) {
             it
         }

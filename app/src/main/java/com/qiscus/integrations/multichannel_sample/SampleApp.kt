@@ -18,7 +18,8 @@ class SampleApp: MultiDexApplication() {
             MultichannelWidgetConfig.setEnableLog(BuildConfig.DEBUG)
                 .setNotificationListener(null)
                 .setRoomTitle("Bot name")
+                .setRoomSubtitle("Custom subtitle")
 
-        MultichannelWidget.setup(this, "karm-gzu41e4e4dv9fu3f", configMultichannel)
+        MultichannelWidget.setup(this, "cee-8xj32ozyfbnka0arz", configMultichannel)
     }
 }

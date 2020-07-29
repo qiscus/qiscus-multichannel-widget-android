@@ -76,7 +76,8 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
     }
 
     override fun onSuccess(room: QiscusChatRoom) {
-        ChatRoomActivity.generateIntent(this, room)
+        val intent = ChatRoomActivity.generateIntent(this, room)
+        startActivity(intent)
         finish()
     }
 }

@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         val userProperties = mapOf("city" to "jogja", "job" to "developer")
 
         btnOpen.setOnClickListener {
-            MultichannelWidget.instance.initiateChat(this, "taufik dev2", "taufik2@qiscus.net","", null, userProperties)
+            MultichannelWidget.instance.initiateChat(this, "taufik", "taufik@qiscus.net","", null, userProperties)
 
         }
     }

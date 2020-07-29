@@ -499,7 +499,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun refreshComments() {
         dismissLoading()
-        MultichannelWidget.instance.openChatRoomMultichannel()
+        MultichannelWidget.instance.openChatRoomMultichannel(clearTaskActivity = false)
         activity?.finish()
     }
 
