@@ -206,7 +206,7 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
         openChatRoomById(roomId, {
             val intent = ChatRoomActivity.generateIntent(context, it)
             if (clearTaskActivity) {
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
             context.startActivity(intent)
         }, {
