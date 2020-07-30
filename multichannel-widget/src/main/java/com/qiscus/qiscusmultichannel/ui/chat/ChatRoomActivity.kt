@@ -83,7 +83,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         btn_action_copy.setOnClickListener { getChatFragment().copyComment() }
         btn_action_delete.setOnClickListener { getChatFragment().deleteComment() }
         btn_action_reply.setOnClickListener { getChatFragment().replyComment() }
-        btn_action_reply_cancle.setOnClickListener { getChatFragment().clearSelectedComment() }
+        btn_action_reply_cancel.setOnClickListener { getChatFragment().clearSelectedComment() }
         setBarInfo()
 
         tvTitle.text = MultichannelWidget.config.getRoomTitle() ?: qiscusChatRoom.name
