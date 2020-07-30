@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.sdk.chat.core.custom.data.model.QiscusChatRoom
@@ -86,6 +87,10 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         setBarInfo()
 
         tvTitle.text = MultichannelWidget.config.getRoomTitle() ?: qiscusChatRoom.name
+
+        Nirmana.getInstance().get()
+            .load(qiscusChatRoom.avatarUrl)
+            .into(ivAvatar)
     }
 
     override fun onResume() {

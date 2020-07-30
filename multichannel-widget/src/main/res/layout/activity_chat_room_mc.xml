@@ -42,7 +42,7 @@
                 android:textColor="@color/qiscus_white_mc"
                 android:textSize="11sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/avatar"
+                app:layout_constraintStart_toEndOf="@+id/ivAvatar"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitle"
                 tools:text="Customer, Key Accout Qiscus, Abah, Rifki Reinaldo, Yoga Setiawan" />
 
@@ -72,19 +72,19 @@
                 android:textColor="@color/qiscus_white_mc"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/avatar"
-                app:layout_constraintTop_toTopOf="@+id/avatar" />
+                app:layout_constraintStart_toEndOf="@+id/ivAvatar"
+                app:layout_constraintTop_toTopOf="@+id/ivAvatar" />
 
             <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/avatar"
+                android:id="@+id/ivAvatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="18dp"
                 android:layout_marginLeft="18dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btn_back"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/avatar_cs" />
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

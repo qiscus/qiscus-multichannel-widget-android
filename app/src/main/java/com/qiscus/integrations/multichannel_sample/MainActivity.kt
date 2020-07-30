@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         val userProperties = mapOf("city" to "jogja", "job" to "developer")
 
         btnOpen.setOnClickListener {
-            MultichannelWidget.instance.initiateChat(this, "taufik", "taufik@qiscus.net","", null, userProperties)
+            MultichannelWidget.instance.initiateChat(this, "taufik", "taufik@qiscus.net","https://vignette.wikia.nocookie.net/fatal-fiction-fanon/images/9/9f/Doraemon.png/revision/latest?cb=20170922055255", null, userProperties)
 
         }
     }
