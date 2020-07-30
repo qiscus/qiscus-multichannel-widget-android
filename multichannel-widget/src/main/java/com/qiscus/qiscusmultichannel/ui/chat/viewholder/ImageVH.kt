@@ -155,23 +155,24 @@ class ImageVH(itemView: View, var listener: CommentsAdapter.RecyclerViewItemClic
         description: String,
         date: Date
     ) {
-        val mCotext = itemView.context
+        val mContext = itemView.context
         val mDialog =
-            LayoutInflater.from(mCotext).inflate(R.layout.image_dialog_view_mc, null)
+            LayoutInflater.from(mContext).inflate(R.layout.image_dialog_view_mc, null)
 
         val imageView = mDialog.findViewById<ImageView>(R.id.ivDialogView)
         val ibDialogView = mDialog.findViewById<ImageButton>(R.id.ibDialogView)
-        val tvSender = mDialog.findViewById<TextView>(R.id.tv_view_sender)
-        val tvDescription = mDialog.findViewById<TextView>(R.id.tv_view_description)
-        val tvDate = mDialog.findViewById<TextView>(R.id.tv_view_date)
+        val tvSender = mDialog.findViewById<TextView>(R.id.tvSender)
+        val tvDescription = mDialog.findViewById<TextView>(R.id.tvDescription)
+        val tvDate = mDialog.findViewById<TextView>(R.id.tvDate)
         tvSender.text = sender
         tvDescription.text = description
         tvDate.text = QiscusDateUtil.toFullDateFormat(date)
 
         Nirmana.getInstance().get()
             .load(localPath)
+            .fitCenter()
             .into(imageView)
-        val dialogBuilder = AlertDialog.Builder(mCotext, R.style.CustomeDialogFull)
+        val dialogBuilder = AlertDialog.Builder(mContext, R.style.CustomeDialogFull)
             .setView(mDialog)
         val dialog = dialogBuilder.show()
 
