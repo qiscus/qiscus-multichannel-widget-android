@@ -349,7 +349,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     fun deleteComment() {
         clearSelectedComment()
         commentsAdapter.getSelectedComment()?.let {
-            presenter.deleteComment(it)
+            showDialogDeleteComment(it)
         }
     }
 
@@ -383,6 +383,24 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             ctx.showToast(getString(R.string.qiscus_copied_message_mc))
         }
 
+    }
+
+    private fun showDialogDeleteComment(qiscusComment: QiscusComment) {
+        val alertDialogBuilder = AlertDialog.Builder(ctx)
+        alertDialogBuilder.setTitle(R.string.qiscus_delete_message_title)
+
+        alertDialogBuilder
+            .setMessage(R.string.qiscus_delete_message)
+            .setCancelable(false)
+            .setPositiveButton(R.string.qiscus_delete) { dialog, p ->
+                presenter.deleteComment(qiscusComment)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.qiscus_cancel) { dialog, p ->
+                dialog.dismiss()
+            }
+
+        alertDialogBuilder.create().show()
     }
 
     override fun onTopOffListMessage() {

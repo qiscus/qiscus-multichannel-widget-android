@@ -26,4 +26,8 @@
     <string name="qiscus_voice_note_mc">Voice Note</string>
     <string name="qiscus_chat_error_failed_open_file">File type not supported</string>
     <string name="qiscus_type_not_support_mc">message type not supported</string>
+    <string name="qiscus_delete_message">Are you sure want to delete this message ?</string>
+    <string name="qiscus_delete_message_title">Delete Message</string>
+    <string name="qiscus_delete">Delete</string>
+    <string name="qiscus_cancel">Cancel</string>
 </resources>
