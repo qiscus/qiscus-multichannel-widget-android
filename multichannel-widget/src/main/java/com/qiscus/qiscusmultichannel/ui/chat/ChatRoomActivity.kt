@@ -88,8 +88,9 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
 
         tvTitle.text = MultichannelWidget.config.getRoomTitle() ?: qiscusChatRoom.name
 
+        val avatar = MultichannelWidget.config.getHardcodedAvatar() ?: qiscusChatRoom.avatarUrl
         Nirmana.getInstance().get()
-            .load(qiscusChatRoom.avatarUrl)
+            .load(avatar)
             .into(ivAvatar)
     }
 

@@ -14,6 +14,7 @@ object MultichannelWidgetConfig {
     private var enableNotification: Boolean = true
     private var roomTitle: String? = null
     private var roomSubtitle: String? = null
+    private var hardcodedAvatar: String? = null
 
     fun setEnableLog(enableLog: Boolean) = apply { this.enableLog = enableLog }
     fun isEnableLog() = enableLog
@@ -27,5 +28,6 @@ object MultichannelWidgetConfig {
     fun getRoomTitle(): String? = roomTitle
     fun setRoomSubtitle(roomSubtitle: String?) = apply { this.roomSubtitle = roomSubtitle }
     fun getRoomSubtitle(): String? = roomSubtitle
-
+    fun setHardcodedAvatar(hardcodedAvatar: String) = apply { this.hardcodedAvatar = hardcodedAvatar }
+    fun getHardcodedAvatar(): String? = hardcodedAvatar
 }
