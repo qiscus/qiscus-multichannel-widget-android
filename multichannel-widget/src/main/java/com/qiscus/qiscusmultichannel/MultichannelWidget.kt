@@ -285,4 +285,9 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
     fun registerDeviceToken(token: String) {
         QiscusCore.registerDeviceToken(token)
     }
+
+    fun clearUser() {
+        QiscusCore.clearUser()
+        QiscusChatLocal.clearPreferences()
+    }
 }

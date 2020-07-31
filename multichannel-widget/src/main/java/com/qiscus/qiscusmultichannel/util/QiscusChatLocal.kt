@@ -66,4 +66,8 @@ object QiscusChatLocal {
         return getPref().getString("qm_avatar","") ?: null
     }
 
+    fun clearPreferences() {
+        getEditor().clear().apply()
+    }
+
 }
