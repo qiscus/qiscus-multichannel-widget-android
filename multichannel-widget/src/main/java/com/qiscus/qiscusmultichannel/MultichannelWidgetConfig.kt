@@ -28,6 +28,8 @@ object MultichannelWidgetConfig {
     fun getRoomTitle(): String? = roomTitle
     fun setRoomSubtitle(roomSubtitle: String?) = apply { this.roomSubtitle = roomSubtitle }
     fun getRoomSubtitle(): String? = roomSubtitle
+    @Deprecated("move using configuration from dashboard")
     fun setHardcodedAvatar(hardcodedAvatar: String) = apply { this.hardcodedAvatar = hardcodedAvatar }
+    @Deprecated("move using configuration from dashboard")
     fun getHardcodedAvatar(): String? = hardcodedAvatar
 }

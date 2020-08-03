@@ -9,6 +9,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.MultichannelWidget
+import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.sdk.chat.core.custom.data.model.QiscusChatRoom
 import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
@@ -90,7 +91,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
 
         val avatar = MultichannelWidget.config.getHardcodedAvatar() ?: qiscusChatRoom.avatarUrl
         Nirmana.getInstance().get()
-            .load(avatar)
+            .load(getAvatar())
             .into(ivAvatar)
     }
 
@@ -168,6 +169,17 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
 
     fun getSubtitle(): String {
         return MultichannelWidget.config.getRoomSubtitle() ?: memberList
+    }
+
+    fun getAvatar(): String {
+        for (member in qiscusChatRoom.member) {
+            val type = member.extras.getString("type")
+            if (type.isNotEmpty() && type == "agent"){
+                return member.avatar
+            }
+        }
+
+        return MultichannelWidgetConfig.getHardcodedAvatar() ?: qiscusChatRoom.avatarUrl
     }
 
     override fun onDestroy() {
