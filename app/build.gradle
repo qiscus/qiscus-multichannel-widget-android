@@ -43,7 +43,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation project(":multichannel-widget")
-//    implementation 'com.qiscus.integrations:multichannel-widget:0.0.2'
+//    implementation 'com.qiscus.integrations:multichannel-widget:0.0.10'
     implementation 'androidx.multidex:multidex:2.0.1'
 }
 apply plugin: 'com.google.gms.google-services'
