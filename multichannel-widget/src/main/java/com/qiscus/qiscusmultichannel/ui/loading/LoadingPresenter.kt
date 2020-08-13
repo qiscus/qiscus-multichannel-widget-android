@@ -3,7 +3,7 @@ package com.qiscus.qiscusmultichannel.ui.loading
 import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.data.model.UserProperties
 import com.qiscus.qiscusmultichannel.util.QiscusChatLocal
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusChatRoom
+import com.qiscus.sdk.chat.core.data.model.QChatRoom
 
 /**
  * Created on : 04/03/20
@@ -45,6 +45,6 @@ class LoadingPresenter {
     interface LoadingView {
         fun onError(message: String)
 
-        fun onSuccess(room: QiscusChatRoom)
+        fun onSuccess(room: QChatRoom)
     }
 }

@@ -15,7 +15,7 @@ import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
+import com.qiscus.sdk.chat.core.data.model.QMessage
 import kotlinx.android.synthetic.main.item_card_mc.view.*
 import org.json.JSONObject
 import java.util.regex.Matcher
@@ -29,9 +29,9 @@ import java.util.regex.Matcher
 
 class CardVH(itemView: View) : BaseViewHolder(itemView) {
 
-    override fun bind(comment: QiscusComment) {
+    override fun bind(comment: QMessage) {
         super.bind(comment)
-        val data = JSONObject(comment.extraPayload)
+        val data = comment.payload
         itemView.tv_title.text = data.getString("title")
         itemView.tv_message.text = data.getString("description")
 
@@ -56,10 +56,10 @@ class CardVH(itemView: View) : BaseViewHolder(itemView) {
                 when (type) {
                     "link" -> WebViewHelper.launchUrl(itemView.context, Uri.parse(url))
                     "postback" -> {
-                        val postBackMessage = QiscusComment.generatePostBackMessage(
-                            comment.roomId,
+                        val postBackMessage = QMessage.generatePostBackMessage(
+                            comment.chatRoomId,
                             postbackText,
-                            payload.toString()
+                            payload
                         )
                         sendComment(postBackMessage)
                     }
@@ -71,9 +71,9 @@ class CardVH(itemView: View) : BaseViewHolder(itemView) {
         }
     }
 
-    private fun sendComment(comment: QiscusComment) {
+    private fun sendComment(comment: QMessage) {
         MultichannelWidget.instance.component.chatroomRepository.sendComment(
-            comment.roomId,
+            comment.chatRoomId,
             comment,
             {
                 it
@@ -83,7 +83,7 @@ class CardVH(itemView: View) : BaseViewHolder(itemView) {
             })
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint("DefaultLocale", "RestrictedApi")
     private fun setUpLinks() {
         val text = itemView.tv_message.text.toString().toLowerCase()
         val matcher: Matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(text)

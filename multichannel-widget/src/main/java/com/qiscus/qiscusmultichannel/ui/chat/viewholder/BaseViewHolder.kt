@@ -12,7 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.util.DateUtil
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
+import com.qiscus.sdk.chat.core.data.model.QMessage
 
 /**
  * Created on : 22/08/19
@@ -37,7 +37,7 @@ open class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         ColorDrawable(ContextCompat.getColor(itemView.context, R.color.qiscus_selected_mc))
     var pstn = 0
 
-    open fun bind(comment: QiscusComment) {
+    open fun bind(comment: QMessage) {
         avatar?.let {
             Nirmana.getInstance().get()
                 .setDefaultRequestOptions(
@@ -46,12 +46,12 @@ open class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                         .error(R.drawable.ic_qiscus_avatar)
                         .dontAnimate()
                 )
-                .load(comment.senderAvatar)
+                .load(comment.sender.avatarUrl)
                 .into(it)
         }
-        sender?.text = comment.sender
-        date?.text = DateUtil.getTimeStringFromDate(comment.time)
-        dateOfMessage?.text = DateUtil.toFullDate(comment.time)
+        sender?.text = comment.sender.name
+        date?.text = DateUtil.getTimeStringFromDate(comment.timestamp)
+        dateOfMessage?.text = DateUtil.toFullDate(comment.timestamp)
 
         renderState(comment)
 
@@ -67,26 +67,26 @@ open class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         sender?.visibility = if (showName) View.VISIBLE else View.GONE
     }
 
-    private fun renderState(comment: QiscusComment) {
+    private fun renderState(comment: QMessage) {
         if (state != null) {
-            when (comment.state) {
-                QiscusComment.STATE_PENDING, QiscusComment.STATE_SENDING -> {
+            when (comment.status) {
+                QMessage.STATE_PENDING, QMessage.STATE_SENDING -> {
                     state.setColorFilter(pendingStateColor)
                     state.setImageResource(R.drawable.ic_qiscus_info_time)
                 }
-                QiscusComment.STATE_ON_QISCUS -> {
+                QMessage.STATE_SENT -> {
                     state.setColorFilter(pendingStateColor)
                     state.setImageResource(R.drawable.ic_qiscus_sending)
                 }
-                QiscusComment.STATE_DELIVERED -> {
+                QMessage.STATE_DELIVERED -> {
                     state.setColorFilter(pendingStateColor)
                     state.setImageResource(R.drawable.ic_qiscus_read)
                 }
-                QiscusComment.STATE_READ -> {
+                QMessage.STATE_READ -> {
                     state.setColorFilter(readStateColor)
                     state.setImageResource(R.drawable.ic_qiscus_read)
                 }
-                QiscusComment.STATE_FAILED -> {
+                QMessage.STATE_FAILED -> {
                     state.setColorFilter(failedStateColor)
                     state.setImageResource(R.drawable.ic_qiscus_sending_failed)
                 }

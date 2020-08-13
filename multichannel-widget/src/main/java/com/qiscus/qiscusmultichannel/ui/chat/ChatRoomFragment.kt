@@ -30,13 +30,10 @@ import com.qiscus.qiscusmultichannel.ui.loading.LoadingActivity
 import com.qiscus.qiscusmultichannel.ui.view.QiscusChatScrollListener
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
 import com.qiscus.qiscusmultichannel.util.*
-import com.qiscus.sdk.chat.core.custom.QiscusCore
-import com.qiscus.sdk.chat.core.custom.data.local.QiscusCacheManager
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusChatRoom
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusPhoto
-import com.qiscus.sdk.chat.core.custom.data.remote.QiscusPusherApi
-import com.qiscus.sdk.chat.core.custom.util.QiscusFileUtil
+import com.qiscus.sdk.chat.core.data.model.QChatRoom
+import com.qiscus.sdk.chat.core.data.model.QMessage
+import com.qiscus.sdk.chat.core.data.model.QiscusPhoto
+import com.qiscus.sdk.chat.core.util.QiscusFileUtil
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_chat_room_mc.*
 import org.json.JSONObject
@@ -68,11 +65,11 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     protected val GET_TEMPLATE = 5
     private lateinit var ctx: Context
     private lateinit var commentsAdapter: CommentsAdapter
-    private var qiscusChatRoom: QiscusChatRoom? = null
+    private var qiscusChatRoom: QChatRoom? = null
     private lateinit var presenter: ChatRoomPresenter
     private var commentSelectedListener: CommentSelectedListener? = null
     private var userTypingListener: OnUserTypingListener? = null
-    private var selectedComment: QiscusComment? = null
+    private var selectedComment: QMessage? = null
     private lateinit var rvMessage: RecyclerView
     private var isTyping = false
 
@@ -80,7 +77,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         const val CHATROOM_KEY = "chatroom_key"
 
 
-        fun newInstance(qiscusChatRoom: QiscusChatRoom): ChatRoomFragment {
+        fun newInstance(qiscusChatRoom: QChatRoom): ChatRoomFragment {
             val chatRoomFragment = ChatRoomFragment()
             val bundle = Bundle()
             bundle.putParcelable(CHATROOM_KEY, qiscusChatRoom)
@@ -113,11 +110,11 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
         btnSend.setOnClickListener { sendingComment() }
         btn_new_room.setOnClickListener {
-            val account = QiscusCore.getQiscusAccount()
+            val account = Const.qiscusCore()?.getQiscusAccount()!!
             QiscusChatLocal.setRoomId(0)
             LoadingActivity.generateIntent(
                 ctx,
-                account.username,
+                account.name,
                 QiscusChatLocal.getUserId(),
                 QiscusChatLocal.getAvatar(),
                 QiscusChatLocal.getExtras(),
@@ -130,7 +127,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             presenter = ChatRoomPresenter(it)
             presenter.attachView(this)
             presenter.loadComments(20)
-            showNewChatButton(it.options.getBoolean("is_resolved"))
+            showNewChatButton(it.extras.getBoolean("is_resolved"))
         }
         btnAttachmentOptions.setOnClickListener { showAttachmentDialog() }
         btnAttachmentCamera.setOnClickListener { selectImage() }
@@ -158,15 +155,15 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun onResume() {
         super.onResume()
-        QiscusCacheManager.getInstance().setLastChatActivity(true, qiscusChatRoom!!.id)
-        QiscusPusherApi.getInstance().subscribeChatRoom(qiscusChatRoom)
+        Const.qiscusCore()?.cacheManager?.setLastChatActivity(true, qiscusChatRoom!!.id)
+        Const.qiscusCore()?.pusherApi?.subscribeChatRoom(qiscusChatRoom)
         notifyLatestRead()
     }
 
     override fun onPause() {
         super.onPause()
-        QiscusPusherApi.getInstance().unsubsribeChatRoom(qiscusChatRoom)
-        QiscusCacheManager.getInstance().setLastChatActivity(false, qiscusChatRoom!!.id)
+        Const.qiscusCore()?.pusherApi?.unsubsribeChatRoom(qiscusChatRoom)
+        Const.qiscusCore()?.cacheManager?.setLastChatActivity(false, qiscusChatRoom!!.id)
     }
 
     override fun onDestroyView() {
@@ -197,11 +194,11 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         })
     }
 
-    private fun handleItemClick(comment: QiscusComment) {
+    private fun handleItemClick(comment: QMessage) {
         clearSelectedComment()
         when (comment.type) {
-            QiscusComment.Type.FILE -> {
-                val obj = JSONObject(comment.extraPayload)
+            QMessage.Type.FILE -> {
+                val obj = comment.payload
                 val url = obj.getString("url")
                 val fileName = obj.getString("file_name")
                 presenter.downloadFile(comment, url, fileName)
@@ -306,29 +303,29 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
 
-    private fun bindReplyView(origin: QiscusComment) {
-        originSender.text = origin.sender
+    private fun bindReplyView(origin: QMessage) {
+        originSender.text = origin.sender.name
         when (origin.type) {
-            QiscusComment.Type.IMAGE -> {
+            QMessage.Type.IMAGE -> {
                 originImage.visibility = View.VISIBLE
                 Nirmana.getInstance().get()
                     .load(origin.attachmentUri)
                     .into(originImage)
-                originContent.text = origin.caption
+                originContent.text = origin.payload.getString("caption")
             }
-            QiscusComment.Type.FILE -> {
+            QMessage.Type.FILE -> {
                 originContent.text = origin.attachmentName
                 originImage.visibility = View.GONE
             }
             else -> {
                 originImage.visibility = View.GONE
-                originContent.text = origin.message
+                originContent.text = origin.text
             }
         }
     }
 
-    fun toggleSelectedComment(comment: QiscusComment) {
-        if (comment.type != QiscusComment.Type.SYSTEM_EVENT || comment.type != QiscusComment.Type.CARD) {
+    fun toggleSelectedComment(comment: QMessage) {
+        if (comment.type != QMessage.Type.SYSTEM_EVENT || comment.type != QMessage.Type.CARD) {
             comment.isSelected = true
             commentsAdapter.addOrUpdate(comment)
             commentsAdapter.setSelectedComment(comment)
@@ -364,14 +361,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         clearSelectedComment()
         commentsAdapter.getSelectedComment()?.let {
             val textCopied = when (it.type) {
-                QiscusComment.Type.FILE -> it.attachmentName
-                QiscusComment.Type.IMAGE -> it.caption
-                QiscusComment.Type.CARD -> {
-                    val title = JSONObject(it.extraPayload).getString("title")
-                    val description = JSONObject(it.extraPayload).getString("description")
+                QMessage.Type.FILE -> it.attachmentName
+                QMessage.Type.IMAGE -> it.payload.getString("caption")
+                QMessage.Type.CARD -> {
+                    val title = it.payload.getString("title")
+                    val description = it.payload.getString("description")
                     title + "\n" + description
                 }
-                else -> it.message
+                else -> it.text
             }
             val clipboard = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText(
@@ -385,7 +382,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     }
 
-    private fun showDialogDeleteComment(qiscusComment: QiscusComment) {
+    private fun showDialogDeleteComment(qiscusComment: QMessage) {
         val alertDialogBuilder = AlertDialog.Builder(ctx)
         alertDialogBuilder.setTitle(R.string.qiscus_delete_message_title)
 
@@ -418,30 +415,30 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     private fun loadMoreComments() {
         if (progressBar.visibility == View.GONE && commentsAdapter.itemCount > 0) {
             val comment = commentsAdapter.data.get(commentsAdapter.itemCount - 1)
-            if (comment.id == -1L || comment.commentBeforeId > 0) {
+            if (comment.id == -1L || comment.previousMessageId > 0) {
                 presenter.loadOlderCommentThan(comment)
             }
         }
     }
 
-    override fun initRoomData(comments: List<QiscusComment>, qiscusChatRoom: QiscusChatRoom) {
+    override fun initRoomData(comments: List<QMessage>, qiscusChatRoom: QChatRoom) {
         this.qiscusChatRoom = qiscusChatRoom
         commentsAdapter.addOrUpdate(comments)
     }
 
-    override fun onLoadMoreComments(comments: List<QiscusComment>) {
+    override fun onLoadMoreComments(comments: List<QMessage>) {
         commentsAdapter.addOrUpdate(comments)
     }
 
-    override fun onSuccessSendComment(comment: QiscusComment) {
+    override fun onSuccessSendComment(comment: QMessage) {
         commentsAdapter.addOrUpdate(comment)
     }
 
-    override fun onFailedSendComment(comment: QiscusComment) {
+    override fun onFailedSendComment(comment: QMessage) {
         commentsAdapter.addOrUpdate(comment)
     }
 
-    override fun onNewComment(comment: QiscusComment) {
+    override fun onNewComment(comment: QMessage) {
         commentsAdapter.addOrUpdate(comment)
         if ((rvMessage.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() <= 2) {
             rvMessage.smoothScrollToPosition(0)
@@ -456,11 +453,11 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         progressBar.visibility = View.GONE
     }
 
-    override fun onCommentDeleted(comment: QiscusComment) {
+    override fun onCommentDeleted(comment: QMessage) {
         commentsAdapter.remove(comment)
     }
 
-    override fun onSendingComment(comment: QiscusComment) {
+    override fun onSendingComment(comment: QMessage) {
         commentsAdapter.addOrUpdate(comment)
         rvMessage.smoothScrollToPosition(0)
     }
@@ -473,7 +470,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         commentsAdapter.updateLastReadComment(lastReadCommentId)
     }
 
-    override fun updateComment(comment: QiscusComment) {
+    override fun updateComment(comment: QMessage) {
         commentsAdapter.addOrUpdate(comment)
     }
 
@@ -528,14 +525,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     private fun notifyLatestRead() {
         val qiscusComment = commentsAdapter.getLatestSentComment()
         if (qiscusComment != null && qiscusChatRoom != null) {
-            QiscusPusherApi.getInstance()
-                .markAsRead(qiscusChatRoom!!.id, qiscusComment.id)
+            Const.qiscusCore()?.pusherApi
+                ?.markAsRead(qiscusChatRoom!!.id, qiscusComment.id)
         }
     }
 
     private fun notifyServerTyping(typing: Boolean) {
         if (isTyping != typing) {
-            QiscusPusherApi.getInstance().publishTyping(qiscusChatRoom!!.id, typing)
+            Const.qiscusCore()?.pusherApi?.publishTyping(qiscusChatRoom!!.id, typing)
             isTyping = typing
         }
     }
@@ -545,7 +542,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         if (requestCode == TAKE_PICTURE_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
                 val imageFile =
-                    QiscusFileUtil.from(Uri.parse(QiscusCacheManager.getInstance().lastImagePath))
+                    QiscusFileUtil.from(Uri.parse(Const.qiscusCore()?.cacheManager?.lastImagePath))
                 val qiscusPhoto = QiscusPhoto(imageFile)
 
                 val intent =
@@ -674,14 +671,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun onDestroy() {
         super.onDestroy()
-        QiscusCacheManager.getInstance().setLastChatActivity(false, 0)
+        Const.qiscusCore()?.cacheManager?.setLastChatActivity(false, 0)
         presenter.detachView()
         clearFindViewByIdCache()
     }
 
 
     interface CommentSelectedListener {
-        fun onCommentSelected(selectedComment: QiscusComment)
+        fun onCommentSelected(selectedComment: QMessage)
         fun onClearSelectedComment(status: Boolean)
     }
 

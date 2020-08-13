@@ -6,11 +6,11 @@ import com.qiscus.qiscusmultichannel.data.model.DataInitialChat
 import com.qiscus.qiscusmultichannel.data.model.UserProperties
 import com.qiscus.qiscusmultichannel.data.repository.ChatroomRepository
 import com.qiscus.qiscusmultichannel.data.repository.response.ResponseInitiateChat
+import com.qiscus.qiscusmultichannel.util.Const
 import com.qiscus.qiscusmultichannel.util.QiscusChatLocal
-import com.qiscus.sdk.chat.core.custom.QiscusCore
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
-import com.qiscus.sdk.chat.core.custom.data.remote.QiscusApi
-import com.qiscus.sdk.chat.core.custom.data.remote.QiscusPusherApi
+import com.qiscus.sdk.chat.core.data.model.QAccount
+import com.qiscus.sdk.chat.core.data.model.QMessage
+import com.qiscus.sdk.chat.core.data.model.QUser
 import org.json.JSONObject
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -24,21 +24,29 @@ class ChatroomRepositoryImpl : ChatroomRepository {
 
     fun sendComment(
         roomId: Long,
-        message: QiscusComment,
-        onSuccess: (QiscusComment) -> Unit,
+        message: QMessage,
+        onSuccess: (QMessage) -> Unit,
         onError: (Throwable) -> Unit
     ) {
-        QiscusApi.getInstance().sendMessage(message)
-            .doOnSubscribe { QiscusCore.getDataStore().addOrUpdate(message) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                if (it.roomId == roomId) {
+        val qAccount: QAccount = Const.qiscusCore()?.getQiscusAccount()!!
+        val qUser = QUser()
+        qUser.avatarUrl = qAccount.avatarUrl
+        qUser.id = qAccount.id
+        qUser.extras = qAccount.extras
+        qUser.name = qAccount.name
+        message.setSender(qUser)
+
+        Const.qiscusCore()?.api?.sendMessage(message)
+            ?.doOnSubscribe { Const.qiscusCore()?.getDataStore()?.addOrUpdate(message) }
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe({
+                if (it.chatRoomId == roomId) {
                     onSuccess(it)
                 }
             }, { throwable ->
                 throwable.printStackTrace()
-                if (message.roomId == roomId) {
+                if (message.chatRoomId == roomId) {
                     onError(throwable)
                 }
             })
@@ -48,13 +56,13 @@ class ChatroomRepositoryImpl : ChatroomRepository {
         roomId: Long,
         data: JSONObject
     ) {
-        QiscusPusherApi.getInstance().publishCustomEvent(roomId, data)
+        Const.qiscusCore()?.pusherApi?.publishCustomEvent(roomId, data)
     }
 
     fun subscribeCustomEvent(
         roomId: Long
     ) {
-        QiscusPusherApi.getInstance().subsribeCustomEvent(roomId)
+        Const.qiscusCore()?.pusherApi?.subsribeCustomEvent(roomId)
     }
 
     fun initiateChat(
@@ -67,19 +75,19 @@ class ChatroomRepositoryImpl : ChatroomRepository {
         onError: (Throwable) -> Unit
     ) {
 
-        QiscusApi.getInstance().jwtNonce
-            .doOnNext {
+        Const.qiscusCore()?.api?.jwtNonce
+            ?.doOnNext {
                 QiscusChatLocal.saveExtras(extras)
                 QiscusChatLocal.saveUserProps(userProp)
                 QiscusChatLocal.saveUserId(userId)
                 QiscusChatLocal.saveAvatar(avatar)
             }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe({
                 MultichannelWidget.instance.component.qiscusChatRepository.initiateChat(
                     DataInitialChat(
-                        QiscusCore.getAppId(),
+                        Const.qiscusCore()?.getAppId()!!,
                         userId,
                         name,
                         avatar,

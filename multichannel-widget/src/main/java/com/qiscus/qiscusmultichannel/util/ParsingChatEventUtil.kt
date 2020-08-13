@@ -2,7 +2,7 @@ package com.qiscus.qiscusmultichannel.util
 
 import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.R
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusAccount
+import com.qiscus.sdk.chat.core.data.model.QAccount
 import org.json.JSONObject
 
 /**
@@ -20,13 +20,13 @@ class ParsingChatEventUtil {
         val instance: ParsingChatEventUtil by lazy { Holder.local }
     }
 
-    fun parsingMessage(param: JSONObject, qiscusAccount: QiscusAccount): String {
+    fun parsingMessage(param: JSONObject, qiscusAccount: QAccount): String {
         val type = param.getString("type")
         var msg = ""
         val subjectUsername = param.getString("subject_username")
         val subjectEmail = param.getString("subject_email")
 
-        msg += if (subjectEmail == qiscusAccount.email) getString(R.string.qiscus_you_mc) else subjectUsername
+        msg += if (subjectEmail == qiscusAccount.id) getString(R.string.qiscus_you_mc) else subjectUsername
         return msg
     }
 

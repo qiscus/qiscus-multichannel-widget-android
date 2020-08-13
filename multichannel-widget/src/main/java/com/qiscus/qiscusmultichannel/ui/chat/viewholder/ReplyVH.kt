@@ -12,8 +12,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
-import com.qiscus.sdk.chat.core.custom.QiscusCore
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
+import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.sdk.chat.core.data.model.QMessage
 import kotlinx.android.synthetic.main.item_my_reply_mc.view.*
 import java.util.regex.Matcher
 
@@ -23,28 +23,28 @@ import java.util.regex.Matcher
  * GitHub     : https://github.com/tfkbudi
  */
 class ReplyVH(itemView: View) : BaseViewHolder(itemView) {
-    private val qiscusAccount = QiscusCore.getQiscusAccount()
+    private val qiscusAccount = Const.qiscusCore()?.getQiscusAccount()!!
     private val message = itemView.message
-    override fun bind(comment: QiscusComment) {
+    override fun bind(comment: QMessage) {
         super.bind(comment)
         val origin = comment.replyTo
 
         itemView.origin_sender?.text =
-            if (qiscusAccount.email == origin.senderEmail) itemView.context.getString(R.string.qiscus_you_mc) else origin.sender
+            if (qiscusAccount.id == origin.sender.id) itemView.context.getString(R.string.qiscus_you_mc) else origin.sender.name
 
-        itemView.origin_comment?.text = origin.message
-        itemView.message.text = comment.message
+        itemView.origin_comment?.text = origin.text
+        itemView.message.text = comment.text
         itemView.icon.visibility = View.VISIBLE
         setUpLinks()
         when (origin.type) {
-            QiscusComment.Type.TEXT -> {
+            QMessage.Type.TEXT -> {
                 itemView.origin_image.visibility = View.GONE
                 itemView.icon.visibility = View.GONE
             }
-            QiscusComment.Type.IMAGE -> {
+            QMessage.Type.IMAGE -> {
                 itemView.origin_image.visibility = View.VISIBLE
                 itemView.icon.setImageResource(R.drawable.ic_qiscus_gallery)
-                itemView.origin_comment.text = if (origin.caption == "") "Image" else origin.caption
+                itemView.origin_comment.text = if (origin.payload.getString("caption") == "") "Image" else origin.payload.getString("caption")
                 Nirmana.getInstance().get()
                     .setDefaultRequestOptions(
                         RequestOptions()
@@ -55,7 +55,7 @@ class ReplyVH(itemView: View) : BaseViewHolder(itemView) {
                     .load(origin.attachmentUri)
                     .into(itemView.origin_image)
             }
-            QiscusComment.Type.FILE -> {
+            QMessage.Type.FILE -> {
                 itemView.origin_image.visibility = View.GONE
                 itemView.icon.visibility = View.VISIBLE
                 itemView.origin_comment.text = origin.attachmentName
@@ -64,12 +64,12 @@ class ReplyVH(itemView: View) : BaseViewHolder(itemView) {
             else -> {
                 itemView.origin_image.visibility = View.GONE
                 itemView.icon.visibility = View.GONE
-                itemView.origin_comment.text = origin.message
+                itemView.origin_comment.text = origin.text
             }
         }
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint("DefaultLocale", "RestrictedApi")
     private fun setUpLinks() {
         val text = message.text.toString().toLowerCase()
         val matcher: Matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(text)

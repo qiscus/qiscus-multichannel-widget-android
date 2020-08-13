@@ -24,8 +24,6 @@ import android.widget.OverScroller;
 import android.widget.Scroller;
 
 import androidx.appcompat.widget.AppCompatImageView;
-
-import com.qiscus.sdk.chat.core.custom.util.QiscusLogger;
 /*
  * Copyright (c) 2016 Qiscus.
  *
@@ -881,8 +879,8 @@ public class QiscusTouchImageView extends AppCompatImageView {
     private void printMatrixInfo() {
         float[] n = new float[9];
         matrix.getValues(n);
-        QiscusLogger.print("TouchImageView", DEBUG + "Scale: " + n[Matrix.MSCALE_X] + " TransX: "
-                + n[Matrix.MTRANS_X] + " TransY: " + n[Matrix.MTRANS_Y]);
+        //QiscusLogger.print("TouchImageView", DEBUG + "Scale: " + n[Matrix.MSCALE_X] + " TransX: "
+        //        + n[Matrix.MTRANS_X] + " TransY: " + n[Matrix.MTRANS_Y]);
     }
 
     private enum State {

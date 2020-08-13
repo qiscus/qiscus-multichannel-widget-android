@@ -14,6 +14,9 @@ class SampleApp: MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
+        //just 1 in 1 lifecircle
+        ConstCore.setCore()
+
         val configMultichannel: MultichannelWidgetConfig =
             MultichannelWidgetConfig.setEnableLog(BuildConfig.DEBUG)
                 .setNotificationListener(null)
@@ -21,6 +24,7 @@ class SampleApp: MultiDexApplication() {
                 .setRoomSubtitle("Custom subtitle")
                 .setHardcodedAvatar("https://d1edrlpyc25xu0.cloudfront.net/cee-8xj32ozyfbnka0arz/image/upload/XBOSht7_hR/bebi.jpeg")
 
-        MultichannelWidget.setup(this, "cee-8xj32ozyfbnka0arz", configMultichannel)
+        //MultichannelWidget.setup(this, ConstCore.qiscusCore1(), "cee-8xj32ozyfbnka0arz", configMultichannel, "user1")
+        MultichannelWidget.setup(this, ConstCore.qiscusCore1(), "karm-gzu41e4e4dv9fu3f", configMultichannel, "user1")
     }
 }

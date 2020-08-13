@@ -13,8 +13,8 @@ import androidx.core.util.PatternsCompat
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.view.QiscusProgressView
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
-import com.qiscus.sdk.chat.core.custom.QiscusCore
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
+import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.sdk.chat.core.data.model.QMessage
 import org.json.JSONObject
 import java.util.regex.Matcher
 
@@ -23,18 +23,18 @@ import java.util.regex.Matcher
  * Author     : Taufik Budi S
  * Github     : https://github.com/tfkbudi
  */
-class FileVH(itemView: View) : BaseViewHolder(itemView), QiscusComment.ProgressListener,
-    QiscusComment.DownloadingListener {
+class FileVH(itemView: View) : BaseViewHolder(itemView), QMessage.ProgressListener,
+    QMessage.DownloadingListener {
 
     private val tvTitle: TextView? = itemView.findViewById(R.id.tvTitle)
     private val message: TextView? = itemView.findViewById(R.id.message)
     private val ivDownloadIcon: ImageView? = itemView.findViewById(R.id.ivDownloadIcon)
     private val progressView: QiscusProgressView? =
         itemView.findViewById<View>(R.id.qcpProgressView) as QiscusProgressView?
-    lateinit var qiscusComment: QiscusComment
+    lateinit var qiscusComment: QMessage
 
     @SuppressLint("SetTextI18n")
-    override fun bind(comment: QiscusComment) {
+    override fun bind(comment: QMessage) {
         super.bind(comment)
 
         this.qiscusComment = comment
@@ -43,7 +43,7 @@ class FileVH(itemView: View) : BaseViewHolder(itemView), QiscusComment.ProgressL
         setUpDownloadIcon(comment)
         setUpLinks()
         try {
-            val content = JSONObject(comment.extraPayload)
+            val content = comment.payload
             val title = content.getString("file_name")
             val url = content.getString("url")
             val tipe = url.split(".")
@@ -53,12 +53,12 @@ class FileVH(itemView: View) : BaseViewHolder(itemView), QiscusComment.ProgressL
 
         }
 
-        if (QiscusCore.getDataStore().getLocalPath(comment.id) != null) {
+        if (Const.qiscusCore()?.getDataStore()?.getLocalPath(comment.id) != null) {
             ivDownloadIcon?.visibility = View.GONE
         }
     }
 
-    override fun onProgress(qiscusComment: QiscusComment?, percentage: Int) {
+    override fun onProgress(qiscusComment: QMessage?, percentage: Int) {
         ivDownloadIcon?.visibility = View.GONE
         progressView?.setVisibility(View.GONE)
 
@@ -67,24 +67,25 @@ class FileVH(itemView: View) : BaseViewHolder(itemView), QiscusComment.ProgressL
         }
     }
 
-    override fun onDownloading(qiscusComment: QiscusComment?, downloading: Boolean) {
+    override fun onDownloading(qiscusComment: QMessage?, downloading: Boolean) {
         ivDownloadIcon?.visibility = View.GONE
         if (qiscusComment == this.qiscusComment && progressView != null) {
             progressView.setVisibility(if (downloading) View.VISIBLE else View.GONE)
         }
     }
 
-    private fun setUpDownloadIcon(qiscusComment: QiscusComment) {
-        qiscusComment.isMyComment
+    private fun setUpDownloadIcon(qiscusComment: QMessage) {
+        val me = Const.qiscusCore()?.getQiscusAccount()?.getId()
+        qiscusComment.isMyComment(me)
         if (ivDownloadIcon != null) {
-            if (qiscusComment.state <= QiscusComment.STATE_SENDING) {
-                if (qiscusComment.isMyComment) {
+            if (qiscusComment.status <= QMessage.STATE_SENDING) {
+                if (qiscusComment.isMyComment(me)) {
                     ivDownloadIcon.setImageResource(R.drawable.ic_qiscus_upload_file_mc)
                 } else {
                     ivDownloadIcon.setImageResource(R.drawable.ic_qiscus_opponent_upload_file_mc)
                 }
             } else {
-                if (qiscusComment.isMyComment) {
+                if (qiscusComment.isMyComment(me)) {
                     ivDownloadIcon.setImageResource(R.drawable.ic_qiscus_download_file)
                 } else {
                     ivDownloadIcon.setImageResource(R.drawable.ic_qiscus_opponent_download_file)

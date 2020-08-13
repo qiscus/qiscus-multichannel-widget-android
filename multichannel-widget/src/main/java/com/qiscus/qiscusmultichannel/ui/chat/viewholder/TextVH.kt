@@ -12,8 +12,8 @@ import androidx.core.util.PatternsCompat
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.util.DateUtil
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
-import com.qiscus.sdk.chat.core.custom.QiscusCore
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
+import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.sdk.chat.core.data.model.QMessage
 import java.util.regex.Matcher
 
 
@@ -27,15 +27,15 @@ class TextVH(itemView: View) : BaseViewHolder(itemView) {
     private val sender: TextView? = itemView.findViewById(R.id.sender)
     private val dateOfMessage: TextView? = itemView.findViewById(R.id.dateOfMessage)
 
-    override fun bind(comment: QiscusComment) {
+    override fun bind(comment: QMessage) {
         super.bind(comment)
-        message.text = comment.message
-        val chatRoom = QiscusCore.getDataStore().getChatRoom(comment.roomId)
+        message.text = comment.text
+        val chatRoom = Const.qiscusCore()?.getDataStore()?.getChatRoom(comment.chatRoomId)
 
         if (chatRoom != null) {
-            sender?.visibility = if (chatRoom.isGroup) View.GONE else View.VISIBLE
+            sender?.visibility = if (chatRoom.type == "group") View.GONE else View.VISIBLE
         }
-        dateOfMessage?.text = DateUtil.toFullDate(comment.time)
+        dateOfMessage?.text = DateUtil.toFullDate(comment.timestamp)
         setUpLinks()
     }
 
@@ -43,7 +43,7 @@ class TextVH(itemView: View) : BaseViewHolder(itemView) {
         dateOfMessage?.visibility = if (showDate) View.VISIBLE else View.GONE
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint("DefaultLocale", "RestrictedApi")
     private fun setUpLinks() {
         val text = message.text.toString()
         val matcher: Matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(text)

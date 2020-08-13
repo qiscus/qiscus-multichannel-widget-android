@@ -5,9 +5,7 @@ import android.media.ExifInterface
 import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Environment
-import com.qiscus.sdk.chat.core.custom.QiscusCore
-import com.qiscus.sdk.chat.core.custom.data.local.QiscusCacheManager
-import com.qiscus.sdk.chat.core.custom.util.QiscusFileUtil
+import com.qiscus.sdk.chat.core.util.QiscusFileUtil
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -43,8 +41,8 @@ object QiscusImageUtil {
         }
 
         //max Height and width values of the compressed image is taken as 1440x900
-        val maxHeight = QiscusCore.getChatConfig().getQiscusImageCompressionConfig().getMaxHeight()
-        val maxWidth = QiscusCore.getChatConfig().getQiscusImageCompressionConfig().getMaxWidth()
+        val maxHeight = Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()?.getMaxHeight()!!
+        val maxWidth = Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()?.getMaxWidth()!!
         var imgRatio = (actualWidth / actualHeight).toFloat()
         val maxRatio = maxWidth / maxHeight
 
@@ -143,7 +141,7 @@ object QiscusImageUtil {
             //write the compressed bitmap at the destination specified by filename.
             QiscusImageUtil.getScaledBitmap(Uri.fromFile(imageFile))!!.compress(
                 Bitmap.CompressFormat.JPEG,
-                QiscusCore.getChatConfig().getQiscusImageCompressionConfig().getQuality(), out
+                Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()?.getQuality()!!, out
             )
 
         } catch (e: FileNotFoundException) {
@@ -237,7 +235,7 @@ object QiscusImageUtil {
         val storageDir =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         val image = File.createTempFile(imageFileName, ".jpg", storageDir)
-        QiscusCacheManager.getInstance().cacheLastImagePath("file:" + image.getAbsolutePath())
+        Const.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.getAbsolutePath())
         return image
     }
 

@@ -1,6 +1,6 @@
 package com.qiscus.qiscusmultichannel.util
 
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
+import com.qiscus.sdk.chat.core.data.model.QMessage
 import org.json.JSONObject
 
 /**
@@ -11,10 +11,10 @@ import org.json.JSONObject
 class EventUtil {
 
     companion object {
-        fun isChatEvent(comment: QiscusComment): Boolean {
-            if (comment.type != QiscusComment.Type.CUSTOM) return false
+        fun isChatEvent(comment: QMessage): Boolean {
+            if (comment.type != QMessage.Type.CUSTOM) return false
 
-            val json = JSONObject(comment.extraPayload)
+            val json = comment.payload
             return json.getJSONObject("content").has("chat_event")
         }
     }

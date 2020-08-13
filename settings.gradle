@@ -1,3 +1,5 @@
 include ':app'
 include ':multichannel-widget'
+include ':chat-core'
+project(':chat-core').projectDir = new File('/Users/qiscus/Android/qiscus-sdk-android/chat-core/')
 rootProject.name='Multichannel-sample'

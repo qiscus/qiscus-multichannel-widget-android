@@ -9,23 +9,23 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.R
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusChatRoom
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusPhoto
+import com.qiscus.sdk.chat.core.data.model.QChatRoom
+import com.qiscus.sdk.chat.core.data.model.QiscusPhoto
 import kotlinx.android.synthetic.main.activity_send_image_confirmation_mc.*
 
 class SendImageConfirmationActivity : AppCompatActivity() {
 
-    lateinit var qiscusChatRoom: QiscusChatRoom
+    lateinit var qiscusChatRoom: QChatRoom
     lateinit var qiscusPhoto: QiscusPhoto
 
     companion object {
-        val EXTRA_ROOM = "extra_room"
-        val EXTRA_PHOTOS = "extra_photos"
-        val EXTRA_CAPTIONS = "extra_captions"
+        val EXTRA_ROOM = "extra_room2"
+        val EXTRA_PHOTOS = "extra_photos2"
+        val EXTRA_CAPTIONS = "extra_captions2"
 
         fun generateIntent(
             context: Context,
-            qiscusChatRoom: QiscusChatRoom,
+            qiscusChatRoom: QChatRoom,
             qiscusPhoto: QiscusPhoto
         ): Intent {
             val intent = Intent(context, SendImageConfirmationActivity::class.java)

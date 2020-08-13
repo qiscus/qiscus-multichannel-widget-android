@@ -11,13 +11,12 @@ import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusChatRoom
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
-import com.qiscus.sdk.chat.core.custom.data.remote.QiscusApi
-import com.qiscus.sdk.chat.core.custom.data.remote.QiscusPusherApi
-import com.qiscus.sdk.chat.core.custom.event.QiscusCommentReceivedEvent
-import com.qiscus.sdk.chat.core.custom.event.QiscusUserStatusEvent
-import com.qiscus.sdk.chat.core.custom.util.QiscusDateUtil
+import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.sdk.chat.core.data.model.QChatRoom
+import com.qiscus.sdk.chat.core.data.model.QMessage
+import com.qiscus.sdk.chat.core.event.QMessageReceivedEvent
+import com.qiscus.sdk.chat.core.event.QiscusUserStatusEvent
+import com.qiscus.sdk.chat.core.util.QiscusDateUtil
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_chat_room_mc.*
 import kotlinx.android.synthetic.main.toolbar_menu_selected_comment_mc.*
@@ -30,7 +29,7 @@ import rx.schedulers.Schedulers
 class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedListener,
     ChatRoomFragment.OnUserTypingListener {
 
-    lateinit var qiscusChatRoom: QiscusChatRoom
+    lateinit var qiscusChatRoom: QChatRoom
     private val users: MutableSet<String> = HashSet()
     private var memberList: String = ""
     private  var runnable =  Runnable{
@@ -42,7 +41,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
 
         fun generateIntent(
             context: Context,
-            qiscusChatRoom: QiscusChatRoom
+            qiscusChatRoom: QChatRoom
         ): Intent {
 
             val intent = Intent(context, ChatRoomActivity::class.java)
@@ -104,13 +103,14 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         return supportFragmentManager.findFragmentByTag(ChatRoomFragment::class.java.name) as ChatRoomFragment
     }
 
-    override fun onCommentSelected(selectedComment: QiscusComment) {
+    override fun onCommentSelected(selectedComment: QMessage) {
+        val me = Const.qiscusCore()?.getQiscusAccount()?.getId()
         if (toolbar_selected_comment.visibility == View.VISIBLE) {
             toolbar_selected_comment.visibility = View.GONE
             getChatFragment().clearSelectedComment()
         } else {
             btn_action_delete.visibility =
-                if (selectedComment.isMyComment) View.VISIBLE else View.GONE
+                if (selectedComment.isMyComment(me)) View.VISIBLE else View.GONE
             toolbar_selected_comment.visibility = View.VISIBLE
         }
     }
@@ -129,22 +129,22 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     }
 
     private fun bindRoomData() {
-        for (member in qiscusChatRoom.member) {
-            if (member.email != MultichannelWidget.instance.getQiscusAccount().email) {
-                users.add(member.email)
-                QiscusPusherApi.getInstance().subscribeUserOnlinePresence(member.email)
+        for (member in qiscusChatRoom.participants) {
+            if (member.id != MultichannelWidget.instance.getQiscusAccount().id) {
+                users.add(member.id)
+                Const.qiscusCore()?.pusherApi?.subscribeUserOnlinePresence(member.id)
             }
         }
     }
 
     private fun setBarInfo() {
         val listMember: ArrayList<String> = arrayListOf()
-        QiscusApi.getInstance().getChatRoomInfo(qiscusChatRoom.id)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { chatRoom ->
-                chatRoom.member.forEach {
-                    listMember.add(it.username)
+        Const.qiscusCore()?.api?.getChatRoomInfo(qiscusChatRoom.id)
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe { chatRoom ->
+                chatRoom.participants.forEach {
+                    listMember.add(it.name)
                 }
                 this.memberList = listMember.joinToString()
                 tvSubtitle.text = getSubtitle()
@@ -160,9 +160,9 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     }
 
     @Subscribe
-    fun onMessageReceived(event: QiscusCommentReceivedEvent) {
+    fun onMessageReceived(event: QMessageReceivedEvent) {
         when (event.qiscusComment.type) {
-            QiscusComment.Type.SYSTEM_EVENT -> setBarInfo()
+            QMessage.Type.SYSTEM_EVENT -> setBarInfo()
         }
 
     }
@@ -172,10 +172,10 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     }
 
     fun getAvatar(): String {
-        for (member in qiscusChatRoom.member) {
+        for (member in qiscusChatRoom.participants) {
             val type = member.extras.getString("type")
             if (type.isNotEmpty() && type == "agent"){
-                return member.avatar
+                return member.avatarUrl
             }
         }
 
@@ -185,7 +185,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     override fun onDestroy() {
         super.onDestroy()
         for (user in users) {
-            QiscusPusherApi.getInstance().unsubscribeUserOnlinePresence(user)
+            Const.qiscusCore()?.pusherApi?.unsubscribeUserOnlinePresence(user)
         }
         EventBus.getDefault().unregister(this)
         clearFindViewByIdCache()

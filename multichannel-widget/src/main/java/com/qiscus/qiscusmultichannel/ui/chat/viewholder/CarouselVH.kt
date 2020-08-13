@@ -3,7 +3,7 @@ package com.qiscus.qiscusmultichannel.ui.chat.viewholder
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.qiscus.qiscusmultichannel.ui.chat.CarouselAdapter
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
+import com.qiscus.sdk.chat.core.data.model.QMessage
 import kotlinx.android.synthetic.main.item_carousel_mc.view.*
 import org.json.JSONObject
 
@@ -15,9 +15,9 @@ import org.json.JSONObject
  */
 
 class CarouselVH(itemView: View) : BaseViewHolder(itemView) {
-    override fun bind(comment: QiscusComment) {
+    override fun bind(comment: QMessage) {
         super.bind(comment)
-        val payload = JSONObject(comment.extraPayload)
+        val payload = comment.payload
         payload.getJSONArray("cards")?.let {
             val adapter = CarouselAdapter(it, comment)
             val rvCarousel = itemView.rv_carousel

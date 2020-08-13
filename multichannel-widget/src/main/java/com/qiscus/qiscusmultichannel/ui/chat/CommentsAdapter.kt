@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.chat.viewholder.*
-import com.qiscus.sdk.chat.core.custom.data.model.QiscusComment
-import com.qiscus.sdk.chat.core.custom.util.QiscusAndroidUtil
-import com.qiscus.sdk.chat.core.custom.util.QiscusDateUtil
+import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.sdk.chat.core.data.model.QMessage
+import com.qiscus.sdk.chat.core.util.QiscusAndroidUtil
+import com.qiscus.sdk.chat.core.util.QiscusDateUtil
 
 /**
  * Created on : 19/08/19
@@ -16,49 +17,51 @@ import com.qiscus.sdk.chat.core.custom.util.QiscusDateUtil
  * GitHub     : https://github.com/tfkbudi
  */
 class CommentsAdapter(val context: Context) :
-    SortedRecyclerViewAdapter<QiscusComment, BaseViewHolder>() {
+    SortedRecyclerViewAdapter<QMessage, BaseViewHolder>() {
 
     private var lastDeliveredCommentId: Long = 0
     private var lastReadCommentId: Long = 0
-    private var selectedComment: QiscusComment? = null
+    private var selectedComment: QMessage? = null
 
-    override val itemClass: Class<QiscusComment>
-        get() = QiscusComment::class.java
+    override val itemClass: Class<QMessage>
+        get() = QMessage::class.java
 
-    override fun compare(item1: QiscusComment, item2: QiscusComment): Int {
+    override fun compare(item1: QMessage, item2: QMessage): Int {
         if (item2 == item1) { //Same comments
             return 0
         } else if (item2.id == -1L && item1.id == -1L) { //Not completed comments
-            return item2.time.compareTo(item1.time)
+            return item2.timestamp.compareTo(item1.timestamp)
         } else if (item2.id != -1L && item1.id != -1L) { //Completed comments
-            return QiscusAndroidUtil.compare(item2.id, item1.id)
+            return Const.qiscusCore()?.androidUtil?.compare(item2.id, item1.id)!!
         } else if (item2.id == -1L) {
             return 1
         } else if (item1.id == -1L) {
             return -1
         }
-        return item2.time.compareTo(item1.time)
+        return item2.timestamp.compareTo(item1.timestamp)
     }
 
     override fun getItemViewType(position: Int): Int {
+        val me = Const.qiscusCore()?.getQiscusAccount()?.getId()
         val comment = data.get(position)
         when (comment.type) {
-            QiscusComment.Type.TEXT -> return if (comment.isMyComment) TYPE_MY_TEXT else TYPE_OPPONENT_TEXT
+            QMessage.Type.TEXT -> return if (comment.isMyComment(me)) TYPE_MY_TEXT else TYPE_OPPONENT_TEXT
 
-            QiscusComment.Type.REPLY -> {
-                return if (comment.isMyComment) TYPE_MY_REPLY else TYPE_OPPONENT_REPLY
+            QMessage.Type.REPLY -> {
+                return if (comment.isMyComment(me)) TYPE_MY_REPLY else TYPE_OPPONENT_REPLY
             }
 
-            QiscusComment.Type.IMAGE -> {
-                return if (comment.isMyComment) TYPE_MY_IMAGE else TYPE_OPPONENT_IMAGE
+            QMessage.Type.IMAGE -> {
+                return if (comment.isMyComment(me)) TYPE_MY_IMAGE else TYPE_OPPONENT_IMAGE
             }
-            QiscusComment.Type.FILE -> {
-                return if (comment.isMyComment) TYPE_MY_FILE else TYPE_OPPONENT_FILE
+            QMessage.Type.FILE -> {
+                return if (comment.isMyComment(me)) TYPE_MY_FILE else TYPE_OPPONENT_FILE
             }
-            QiscusComment.Type.SYSTEM_EVENT -> return TYPE_EVENT
-            QiscusComment.Type.CARD -> return TYPE_CARD
-            QiscusComment.Type.CAROUSEL -> return TYPE_CAROUSEL
-            QiscusComment.Type.LINK -> return TYPE_OPPONENT_TEXT
+
+            QMessage.Type.SYSTEM_EVENT -> return TYPE_EVENT
+            QMessage.Type.CARD -> return TYPE_CARD
+            QMessage.Type.CAROUSEL -> return TYPE_CAROUSEL
+            QMessage.Type.LINK -> return TYPE_OPPONENT_TEXT
             else -> return TYPE_NOT_SUPPORT
         }
     }
@@ -117,8 +120,8 @@ class CommentsAdapter(val context: Context) :
         } else {
             holder.setNeedToShowDate(
                 !QiscusDateUtil.isDateEqualIgnoreTime(
-                    data.get(position).time,
-                    data.get(position + 1).time
+                    data.get(position).timestamp,
+                    data.get(position + 1).timestamp
                 )
             )
         }
@@ -126,7 +129,7 @@ class CommentsAdapter(val context: Context) :
         setOnClickListener(holder.itemView, position)
     }
 
-    override fun addOrUpdate(comments: List<QiscusComment>) {
+    override fun addOrUpdate(comments: List<QMessage>) {
         for (comment in comments) {
             val index = findPosition(comment)
             if (index == -1) {
@@ -138,7 +141,7 @@ class CommentsAdapter(val context: Context) :
         notifyDataSetChanged()
     }
 
-    override fun addOrUpdate(comment: QiscusComment) {
+    override fun addOrUpdate(comment: QMessage) {
         val index = findPosition(comment)
         if (index == -1) {
             data.add(comment)
@@ -148,12 +151,12 @@ class CommentsAdapter(val context: Context) :
         notifyDataSetChanged()
     }
 
-    override fun remove(comment: QiscusComment) {
+    override fun remove(comment: QMessage) {
         data.remove(comment)
         notifyDataSetChanged()
     }
 
-    fun setSelectedComment(comment: QiscusComment) = apply { this.selectedComment = comment }
+    fun setSelectedComment(comment: QMessage) = apply { this.selectedComment = comment }
 
     fun getSelectedComment() = selectedComment
 
@@ -183,27 +186,27 @@ class CommentsAdapter(val context: Context) :
     private fun updateCommentState() {
         val size = data.size()
         for (i in 0 until size) {
-            if (data.get(i).state > QiscusComment.STATE_SENDING) {
+            if (data.get(i).status > QMessage.STATE_SENDING) {
                 if (data.get(i).id <= lastReadCommentId) {
-                    if (data.get(i).state == QiscusComment.STATE_READ) {
+                    if (data.get(i).status == QMessage.STATE_READ) {
                         break
                     }
-                    data.get(i).state = QiscusComment.STATE_READ
+                    data.get(i).status = QMessage.STATE_READ
                 } else if (data.get(i).id <= lastDeliveredCommentId) {
-                    if (data.get(i).state >= QiscusComment.STATE_DELIVERED) {
+                    if (data.get(i).status >= QMessage.STATE_DELIVERED) {
                         break
                     }
-                    data.get(i).state = QiscusComment.STATE_DELIVERED
+                    data.get(i).status = QMessage.STATE_DELIVERED
                 }
             }
         }
     }
 
-    fun getLatestSentComment(): QiscusComment? {
+    fun getLatestSentComment(): QMessage? {
         val size = data.size()
         for (i in 0 until size) {
             val comment = data.get(i)
-            if (comment.state >= QiscusComment.STATE_ON_QISCUS) {
+            if (comment.status >= QMessage.STATE_SENT) {
                 return comment
             }
         }
