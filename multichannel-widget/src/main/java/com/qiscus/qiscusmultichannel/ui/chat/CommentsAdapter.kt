@@ -45,7 +45,13 @@ class CommentsAdapter(val context: Context) :
         val me = Const.qiscusCore()?.getQiscusAccount()?.getId()
         val comment = data.get(position)
         when (comment.type) {
-            QMessage.Type.TEXT -> return if (comment.isMyComment(me)) TYPE_MY_TEXT else TYPE_OPPONENT_TEXT
+            QMessage.Type.TEXT -> {
+                if (comment.isAttachment() == true) {
+                    return if (comment.isMyComment(me)) TYPE_MY_IMAGE else TYPE_OPPONENT_IMAGE
+                } else {
+                    return if (comment.isMyComment(me)) TYPE_MY_TEXT else TYPE_OPPONENT_TEXT
+                }
+            }
 
             QMessage.Type.REPLY -> {
                 return if (comment.isMyComment(me)) TYPE_MY_REPLY else TYPE_OPPONENT_REPLY
