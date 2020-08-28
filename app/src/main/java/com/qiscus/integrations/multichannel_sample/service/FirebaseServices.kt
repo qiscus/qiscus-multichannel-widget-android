@@ -1,6 +1,8 @@
 package com.qiscus.integrations.multichannel_sample.service
 
 import android.util.Log
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.qiscus.integrations.multichannel_sample.ConstCore
@@ -25,5 +27,22 @@ class FirebaseServices : FirebaseMessagingService() {
             Log.e("debug", "notif")
             return
         }
+    }
+
+    fun getCurrentDeviceToken() {
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.e(
+                        "Qiscus", "getCurrentDeviceToken Failed : " +
+                                task.exception
+                    )
+                    return@OnCompleteListener
+                }
+                if (task.result != null) {
+                    val currentToken = task.result!!.token
+                    MultichannelWidget.instance.registerDeviceToken(ConstCore.qiscusCore1(), currentToken)
+                }
+            })
     }
 }

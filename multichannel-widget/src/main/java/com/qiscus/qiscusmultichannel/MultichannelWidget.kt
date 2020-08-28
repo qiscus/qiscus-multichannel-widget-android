@@ -195,7 +195,7 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
      *
      */
 
-    private fun hasSetupUser(): Boolean =  Const.qiscusCore()?.hasSetupUser()!!
+    fun hasSetupUser(): Boolean =  Const.qiscusCore()?.hasSetupUser()!!
 
 
     fun openChatRoomById(
