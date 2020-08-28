@@ -25,6 +25,13 @@ object QiscusChatLocal {
         return getPref().edit()
     }
 
+    fun setHasMigration(hasMigration: Boolean) {
+        getEditor().putBoolean("hasMigration", hasMigration).apply()
+    }
+
+    fun getHasMigration() = getPref().getBoolean("hasMigration", false)
+
+
     fun setRoomId(roomId: Long) {
         getEditor().putLong("roomId", roomId).apply()
     }

@@ -46,7 +46,5 @@ dependencies {
 //    implementation 'com.qiscus.integrations:multichannel-widget:0.0.10'
     implementation 'androidx.multidex:multidex:2.0.1'
 
-    //no commit
-    implementation project(':chat-core')
 }
 apply plugin: 'com.google.gms.google-services'

@@ -23,6 +23,11 @@ class LoadingPresenter {
     }
 
     fun initiateChat(username: String, userId: String, avatar: String?, extras: String, userProp: List<UserProperties>) {
+        if (QiscusChatLocal.getHasMigration() == false) {
+            QiscusChatLocal.setHasMigration(true)
+            QiscusChatLocal.setRoomId(0)
+        }
+
         if (QiscusChatLocal.getRoomId() == 0L) {
             MultichannelWidget.instance.loginMultiChannel(username, userId, avatar, extras, userProp, {
                 openRoomById()
