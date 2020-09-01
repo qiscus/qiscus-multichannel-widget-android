@@ -232,7 +232,12 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                 try {
                     photoFile = QiscusImageUtil.createImageFile()
                 } catch (ex: IOException) {
-                    ctx.showToast(getString(R.string.qiscus_chat_error_failed_write_mc))
+                    if (ex.message != null && !ex.message.isNullOrEmpty()) {
+                        ctx.showToast(ex.message!!)
+                    } else {
+                        ctx.showToast(getString(R.string.qiscus_chat_error_failed_write_mc))
+                    }
+
                 }
 
                 if (photoFile != null) {
@@ -375,7 +380,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                 getString(R.string.qiscus_chat_activity_label_clipboard_mc),
                 textCopied
             )
-            clipboard.primaryClip = clip
+            clipboard.setPrimaryClip(clip)
 
             ctx.showToast(getString(R.string.qiscus_copied_message_mc))
         }
