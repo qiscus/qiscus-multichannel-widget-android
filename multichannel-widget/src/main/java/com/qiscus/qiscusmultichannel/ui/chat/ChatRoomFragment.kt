@@ -198,7 +198,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         clearSelectedComment()
         when (comment.type) {
             QMessage.Type.FILE -> {
-                val obj = comment.payload
+                val obj = JSONObject(comment.payload)
                 val url = obj.getString("url")
                 val fileName = obj.getString("file_name")
                 presenter.downloadFile(comment, url, fileName)
@@ -309,6 +309,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
 
     private fun bindReplyView(origin: QMessage) {
+        val obj = JSONObject(origin.payload)
         originSender.text = origin.sender.name
         when (origin.type) {
             QMessage.Type.IMAGE -> {
@@ -316,7 +317,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                 Nirmana.getInstance().get()
                     .load(origin.attachmentUri)
                     .into(originImage)
-                originContent.text = origin.payload.getString("caption")
+                originContent.text = obj.getString("caption")
             }
             QMessage.Type.FILE -> {
                 originContent.text = origin.attachmentName
@@ -365,12 +366,13 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     fun copyComment() {
         clearSelectedComment()
         commentsAdapter.getSelectedComment()?.let {
+            val obj = JSONObject(it.payload)
             val textCopied = when (it.type) {
                 QMessage.Type.FILE -> it.attachmentName
-                QMessage.Type.IMAGE -> it.payload.getString("caption")
+                QMessage.Type.IMAGE -> obj.getString("caption")
                 QMessage.Type.CARD -> {
-                    val title = it.payload.getString("title")
-                    val description = it.payload.getString("description")
+                    val title = obj.getString("title")
+                    val description = obj.getString("description")
                     title + "\n" + description
                 }
                 else -> it.text

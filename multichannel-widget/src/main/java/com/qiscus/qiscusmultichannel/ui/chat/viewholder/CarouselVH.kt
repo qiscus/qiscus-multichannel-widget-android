@@ -17,7 +17,7 @@ import org.json.JSONObject
 class CarouselVH(itemView: View) : BaseViewHolder(itemView) {
     override fun bind(comment: QMessage) {
         super.bind(comment)
-        val payload = comment.payload
+        val payload = JSONObject(comment.payload)
         payload.getJSONArray("cards")?.let {
             val adapter = CarouselAdapter(it, comment)
             val rvCarousel = itemView.rv_carousel

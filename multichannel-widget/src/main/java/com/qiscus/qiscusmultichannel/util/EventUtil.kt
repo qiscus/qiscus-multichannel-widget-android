@@ -14,7 +14,7 @@ class EventUtil {
         fun isChatEvent(comment: QMessage): Boolean {
             if (comment.type != QMessage.Type.CUSTOM) return false
 
-            val json = comment.payload
+            val json = JSONObject(comment.payload)
             return json.getJSONObject("content").has("chat_event")
         }
     }

@@ -43,7 +43,7 @@ class FileVH(itemView: View) : BaseViewHolder(itemView), QMessage.ProgressListen
         setUpDownloadIcon(comment)
         setUpLinks()
         try {
-            val content = comment.payload
+            val content = JSONObject(comment.payload)
             val title = content.getString("file_name")
             val url = content.getString("url")
             val tipe = url.split(".")

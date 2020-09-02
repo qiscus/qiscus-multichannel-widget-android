@@ -65,6 +65,10 @@ class ChatRoomPresenter(var room: QChatRoom) : QiscusChatRoomEventHandler.StateL
         qUser.name = qAccount.name
         message.setSender(qUser)
 
+        if (message.type == QMessage.Type.TEXT && message.text.trim().isEmpty()) {
+           return
+        }
+
         val subscription = Const.qiscusCore()?.api?.sendMessage(message)
             ?.doOnSubscribe { Const.qiscusCore()?.getDataStore()?.addOrUpdate(message) }
             ?.doOnNext { this.commentSuccess(it) }

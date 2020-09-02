@@ -228,6 +228,9 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
             onError(Throwable("Please set user first"))
         }
         Const.qiscusCore()?.api?.getChatRoomInfo(roomId)
+            ?.doOnNext {
+                Const.qiscusCore()?.dataStore?.addOrUpdate(it)
+            }
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe({

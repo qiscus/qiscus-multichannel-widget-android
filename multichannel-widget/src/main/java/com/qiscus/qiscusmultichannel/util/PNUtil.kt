@@ -96,12 +96,12 @@ class PNUtil {
             }
 
             if (EventUtil.isChatEvent(qiscusComment)) {
-                val json = qiscusComment.payload
+                val json = JSONObject(qiscusComment.payload)
                 val payload = json.getJSONObject("content").getJSONObject("chat_event")
                 return sender + ParsingChatEventUtil.instance.parsingMessage(payload, account)
             } else {
                 if (qiscusComment.type == QMessage.Type.CUSTOM) {
-                    val obj = qiscusComment.payload
+                    val obj = JSONObject(qiscusComment.payload)
                     val type = obj.getString("type")
                     if (type.contains("image")) {
                         return sender + context.getString(

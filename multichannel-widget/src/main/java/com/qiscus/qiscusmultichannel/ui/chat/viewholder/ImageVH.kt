@@ -73,7 +73,7 @@ class ImageVH(itemView: View, var listener: CommentsAdapter.RecyclerViewItemClic
 
         } else {
             try {
-                val content = comment.payload
+                val content = JSONObject(comment.payload)
                 var url = content.getString("url")
                 val caption = content.getString("caption")
                 val filename = content.getString("file_name")

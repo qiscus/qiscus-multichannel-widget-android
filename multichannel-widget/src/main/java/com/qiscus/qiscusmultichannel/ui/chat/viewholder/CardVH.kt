@@ -31,7 +31,7 @@ class CardVH(itemView: View) : BaseViewHolder(itemView) {
 
     override fun bind(comment: QMessage) {
         super.bind(comment)
-        val data = comment.payload
+        val data = JSONObject(comment.payload)
         itemView.tv_title.text = data.getString("title")
         itemView.tv_message.text = data.getString("description")
 

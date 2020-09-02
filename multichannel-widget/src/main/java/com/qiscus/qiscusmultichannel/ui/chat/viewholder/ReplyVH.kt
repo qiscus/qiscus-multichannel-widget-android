@@ -15,6 +15,7 @@ import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
 import com.qiscus.qiscusmultichannel.util.Const
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import kotlinx.android.synthetic.main.item_my_reply_mc.view.*
+import org.json.JSONObject
 import java.util.regex.Matcher
 
 /**
@@ -42,9 +43,10 @@ class ReplyVH(itemView: View) : BaseViewHolder(itemView) {
                 itemView.icon.visibility = View.GONE
             }
             QMessage.Type.IMAGE -> {
+                val obj = JSONObject(origin.payload)
                 itemView.origin_image.visibility = View.VISIBLE
                 itemView.icon.setImageResource(R.drawable.ic_qiscus_gallery)
-                itemView.origin_comment.text = if (origin.payload.getString("caption") == "") "Image" else origin.payload.getString("caption")
+                itemView.origin_comment.text = if (obj.getString("caption") == "") "Image" else obj.getString("caption")
                 Nirmana.getInstance().get()
                     .setDefaultRequestOptions(
                         RequestOptions()

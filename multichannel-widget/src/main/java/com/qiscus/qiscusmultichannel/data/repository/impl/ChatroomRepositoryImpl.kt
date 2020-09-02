@@ -36,6 +36,10 @@ class ChatroomRepositoryImpl : ChatroomRepository {
         qUser.name = qAccount.name
         message.setSender(qUser)
 
+        if (message.type == QMessage.Type.TEXT && message.text.trim().isEmpty()) {
+            onError(Throwable("message can't empty"))
+        }
+
         Const.qiscusCore()?.api?.sendMessage(message)
             ?.doOnSubscribe { Const.qiscusCore()?.getDataStore()?.addOrUpdate(message) }
             ?.subscribeOn(Schedulers.io())
