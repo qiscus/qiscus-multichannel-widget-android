@@ -209,6 +209,25 @@ val configMultichannel: MultichannelWidgetConfig =
                 })
 ```
 
+some configuration can set when call MultichannelWidgetConfig, for example
+
+```
+        val configMultichannel: MultichannelWidgetConfig =
+            MultichannelWidgetConfig.setEnableLog(BuildConfig.DEBUG)
+                 .setNotificationListener(object : MultichannelNotificationListener {
+                                    override fun handleMultichannelListener(
+                                        context: Context?,
+                                        qiscusComment: QMessage?
+                                    ) {
+                                        //do something here
+                                    }
+
+                                })
+                .setRoomTitle("Bot name") //title in navigationBar
+                .setRoomSubtitle("Custom subtitle") //subtitle in navigationBar
+                .setHideUIEvent(true) // hide UI Event in chat
+```
+
 ## Troubleshoot
 
 If you facing error like this

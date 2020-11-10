@@ -22,6 +22,7 @@ class SampleApp: MultiDexApplication() {
                 .setNotificationListener(null)
                 .setRoomTitle("Bot name")
                 .setRoomSubtitle("Custom subtitle")
+                .setHideUIEvent(true)
                 .setHardcodedAvatar("https://d1edrlpyc25xu0.cloudfront.net/cee-8xj32ozyfbnka0arz/image/upload/XBOSht7_hR/bebi.jpeg")
 
         MultichannelWidget.setup(this, ConstCore.qiscusCore1(), "cee-8xj32ozyfbnka0arz", configMultichannel, "user1")
