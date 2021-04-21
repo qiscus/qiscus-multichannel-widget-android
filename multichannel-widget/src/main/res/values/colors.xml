@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0071BB</color>
+    <color name="colorPrimaryDark">#0071BB</color>
+    <color name="colorAccent">#9E9E9E</color>
+
+    <color name="qiscus_text_reply_mc">#808080</color>
+
+    <color name="qiscus_primary_text_mc">#FFFFFF</color>
+    <color name="qiscus_secondary_text_mc">#F4F4F4</color>
+    <color name="qiscus_light_grey_mc">#D8D8D8</color>
+    <color name="qiscus_red_mc">#d32f2f</color>
+    <color name="qiscus_left_bubble_mc">#F4F4F4</color>
+    <color name="qiscus_right_bubble_mc">#0071BB</color>
+    <color name="qiscus_left_bubble_text_mc">#232323</color>
+    <color name="qiscus_right_bubble_text_mc">#FFFFFF</color>
+    <color name="qiscus_black_mc">#000000</color>
+    <color name="qiscus_white_mc">#FFFFFF</color>
+    <color name="qiscus_hint_mc">#C4C4C4</color>
+    <color name="qiscus_send_container_mc">#FAFAFA</color>
+
+    <color name="read_message_mc">#0071BB</color>
+    <color name="pending_message_mc">#757575</color>
+    <color name="dateBackground_mc">#B5B5B5</color>
+    <color name="qiscus_transparent_black_mc">#88000000</color>
+
+    <color name="qiscus_bottom_sheet_mc">#FAFAFA</color>
+    <color name="qiscus_grey_mc">#C4C4C4</color>
+    <color name="qiscus_text_attachment_mc">#5E5E5E</color>
+    <color name="qiscus_attachment_separator_mc">#F2F2F2</color>
+
+    <color name="text_typing_mc">#8F8F8F</color>
+    <color name="qiscus_date_bubble_mc">#C4C4C4</color>
+    <color name="qiscus_selected_mc">#240071BB</color>
+    <color name="mc_tint_cancel_send_message">#9E9E9E</color>
+
+    <color name="qiscus_color_my_link_mc">#FFFFFF</color>
+    <color name="qiscus_color_opponent_link_mc">#232323</color>
+    <color name="qiscus_darker_gray">#212121</color>
+    <color name="qiscus_lighter_gray">#777777</color>
+</resources>

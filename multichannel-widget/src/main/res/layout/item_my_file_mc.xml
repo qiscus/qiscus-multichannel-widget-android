@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dateOfMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_date"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/qiscus_white_mc"
+            android:text="Date"
+            android:textSize="14sp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="85dp"
+            android:layout_marginRight="10dp"
+            android:gravity="bottom|end"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:textColor="@color/qiscus_date_bubble_mc"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/state"
+                android:layout_width="18dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/qiscus_rounded_right_buble_bg"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@drawable/qiscus_rounded_right_buble_bg"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <ImageView
+                    android:id="@+id/ivAttachment"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_qiscus_file_white" />
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_toEndOf="@+id/ivAttachment"
+                    android:layout_toRightOf="@+id/ivAttachment"
+                    android:ellipsize="end"
+                    android:maxEms="20"
+                    android:maxLines="1"
+                    android:textAllCaps="true"
+                    android:textColor="@color/qiscus_white_mc"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toStartOf="@id/ivDownloadIcon"
+                    android:layout_toLeftOf="@id/ivDownloadIcon"
+                    android:layout_toEndOf="@id/ivAttachment"
+                    android:layout_toRightOf="@id/ivAttachment"
+                    android:autoLink="all"
+                    android:linksClickable="true"
+                    android:textColor="@color/qiscus_right_bubble_text_mc"
+                    android:textColorLink="@color/qiscus_color_my_link_mc"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/ivDownloadIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/ic_qiscus_upload_file_mc" />
+
+                <com.qiscus.qiscusmultichannel.ui.view.QiscusCircleProgress
+                    android:id="@+id/qcpProgressView"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    app:qcircle_text_size="12sp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/avatar_driver"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</LinearLayout>
