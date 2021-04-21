@@ -6,11 +6,9 @@ import com.qiscus.qiscusmultichannel.util.*
 import com.qiscus.sdk.chat.core.data.model.QMessage
 
 /**
- * Created on : 22/08/19
- * Author     : Taufik Budi S
- * GitHub     : https://github.com/tfkbudi
+ * Created by huseinmuhdhor on 15/4/2021
  */
-open class ImageVH(itemView: View, var listener: CommentsAdapter.RecyclerViewItemClickListener?) : BaseImageVideoViewHolder(itemView) {
+class VideoVH(itemView: View, var listener: CommentsAdapter.RecyclerViewItemClickListener?) : BaseImageVideoViewHolder(itemView) {
 
     override fun bind(comment: QMessage) {
         super.bind(comment)
@@ -24,4 +22,5 @@ open class ImageVH(itemView: View, var listener: CommentsAdapter.RecyclerViewIte
             true
         }
     }
+
 }

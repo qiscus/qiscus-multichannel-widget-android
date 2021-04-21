@@ -8,7 +8,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.qiscus.integrations.multichannel_sample"
+        applicationId "com.qiscus.multichannel.sample.widget"
         minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
@@ -43,7 +43,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation project(":multichannel-widget")
-//    implementation 'com.qiscus.integrations:multichannel-widget:0.0.10'
     implementation 'androidx.multidex:multidex:2.0.1'
 
 }

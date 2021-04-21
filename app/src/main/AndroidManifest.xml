@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.qiscus.integrations.multichannel_sample">
+    package="com.qiscus.multichannel.sample">
 
     <application
-        android:name=".SampleApp"
+        android:name="com.qiscus.multichannel.sample.widget.SampleApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.qiscus.multichannel.sample.widget.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +26,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/qiscus_provider_paths" />
         </provider>
-        <service android:name=".service.FirebaseServices">
+        <service android:name="com.qiscus.multichannel.sample.widget.service.FirebaseServices">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

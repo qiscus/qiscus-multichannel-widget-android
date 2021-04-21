@@ -22,27 +22,29 @@ class LoadingPresenter {
         this.view = null
     }
 
-    fun initiateChat(username: String, userId: String, avatar: String?, extras: String, userProp: List<UserProperties>) {
+    fun initiateChat(
+        username: String,
+        userId: String,
+        avatar: String?,
+        extras: String,
+        userProp: List<UserProperties>
+    ) {
         if (QiscusChatLocal.getHasMigration() == false) {
             QiscusChatLocal.setHasMigration(true)
             QiscusChatLocal.setRoomId(0)
         }
 
-        if (QiscusChatLocal.getRoomId() == 0L) {
-            MultichannelWidget.instance.loginMultiChannel(username, userId, avatar, extras, userProp, {
-                openRoomById()
-            }, {
-               view?.onError(it.localizedMessage)
-            })
-        } else {
+        MultichannelWidget.instance.loginMultiChannel(username, userId, avatar, extras, userProp, {
             openRoomById()
-        }
+        }, {
+            view?.onError(it.localizedMessage)
+        })
     }
 
     fun openRoomById() {
         MultichannelWidget.instance.openChatRoomById(QiscusChatLocal.getRoomId(), {
             view?.onSuccess(it)
-        },{
+        }, {
             view?.onError(it.localizedMessage)
         })
     }

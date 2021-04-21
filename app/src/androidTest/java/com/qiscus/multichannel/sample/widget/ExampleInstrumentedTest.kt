@@ -1,4 +1,4 @@
-package com.qiscus.integrations.multichannel_sample
+package com.qiscus.multichannel.sample.widget
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.qiscus.integrations.multichannel_sample", appContext.packageName)
+        assertEquals("com.qiscus.multichannel.sample.widget", appContext.packageName)
     }
 }

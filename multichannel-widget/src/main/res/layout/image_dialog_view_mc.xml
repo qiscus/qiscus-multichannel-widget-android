@@ -15,7 +15,19 @@
         android:id="@+id/ivDialogView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="false" />
+        android:adjustViewBounds="false"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/exoplayerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/info_panel"
+        android:layout_below="@id/toolbar_photo_view"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_qiscus_avatar"
+        android:visibility="gone" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_photo_view"

@@ -36,4 +36,6 @@
 
     <color name="qiscus_color_my_link_mc">#FFFFFF</color>
     <color name="qiscus_color_opponent_link_mc">#232323</color>
+    <color name="qiscus_darker_gray">#212121</color>
+    <color name="qiscus_lighter_gray">#777777</color>
 </resources>

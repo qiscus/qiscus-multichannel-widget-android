@@ -1,11 +1,11 @@
-package com.qiscus.integrations.multichannel_sample.service
+package com.qiscus.multichannel.sample.widget.service
 
 import android.util.Log
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.qiscus.integrations.multichannel_sample.ConstCore
+import com.qiscus.multichannel.sample.widget.ConstCore
 import com.qiscus.qiscusmultichannel.MultichannelWidget
 
 /**

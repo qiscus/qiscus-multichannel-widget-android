@@ -24,6 +24,7 @@ import com.qiscus.jupuk.JupukBuilder
 import com.qiscus.jupuk.JupukConst
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.MultichannelWidget
+import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.chat.image.SendImageConfirmationActivity
 import com.qiscus.qiscusmultichannel.ui.loading.LoadingActivity
@@ -61,7 +62,6 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     protected val RC_CAMERA_PERMISSION = 128
     private val RC_FILE_PERMISSION = 130
     protected val SEND_PICTURE_CONFIRMATION_REQUEST = 4
-    private val IMAGE_GALLERY_REQUEST = 7
     protected val GET_TEMPLATE = 5
     private lateinit var ctx: Context
     private lateinit var commentsAdapter: CommentsAdapter
@@ -263,9 +263,12 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     private fun pickImage() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
-        startActivityForResult(intent, IMAGE_GALLERY_REQUEST)
+        JupukBuilder().setMaxCount(1)
+            .enableVideoPicker(false)
+            .setColorPrimary(ContextCompat.getColor(ctx, R.color.colorPrimary))
+            .setColorPrimaryDark(ContextCompat.getColor(ctx, R.color.colorPrimaryDark))
+            .setColorAccent(ContextCompat.getColor(ctx, R.color.colorAccent))
+            .pickPhoto(this)
     }
 
     private fun openGallery() {
@@ -510,7 +513,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     override fun showNewChatButton(it: Boolean) {
-        if (it) {
+        if (it && MultichannelWidgetConfig.isSessional()) {
             newChatPanel.visibility = View.VISIBLE
             messageInputPanel.visibility = View.GONE
         } else {
@@ -580,10 +583,10 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                 val template = it.getStringExtra("template")
                 sendComment(template)
             }
-        } else if (requestCode == IMAGE_GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == JupukConst.REQUEST_CODE_PHOTO && resultCode == Activity.RESULT_OK) {
             try {
-                val imageFile = QiscusFileUtil.from(data?.data!!)
-                val qiscusPhoto = QiscusPhoto(imageFile)
+                val paths = data!!.getStringArrayListExtra(JupukConst.KEY_SELECTED_MEDIA)
+                val qiscusPhoto = QiscusPhoto(File(paths!![0]))
                 startActivityForResult(
                     SendImageConfirmationActivity.generateIntent(
                         ctx,

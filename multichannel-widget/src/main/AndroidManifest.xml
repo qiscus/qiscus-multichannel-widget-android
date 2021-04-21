@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".ui.loading.LoadingActivity"></activity>
+        <activity android:name=".ui.loading.LoadingActivity" />
         <activity android:name=".ui.chat.image.SendImageConfirmationActivity" />
         <activity android:name=".ui.chat.ChatRoomActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">

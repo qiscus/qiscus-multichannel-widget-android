@@ -101,7 +101,7 @@ class ChatroomRepositoryImpl : ChatroomRepository {
                         userProp
                     ), {
                         it.data.isSessional?.let {
-                            MultichannelWidgetConfig.setSessional(true)
+                            MultichannelWidgetConfig.setSessional(it)
                         }
                         responseInitiateChat(it)
                     }, {

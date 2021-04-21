@@ -1,6 +1,8 @@
 package com.qiscus.qiscusmultichannel.ui.chat
 
 import android.webkit.MimeTypeMap
+import com.qiscus.qiscusmultichannel.MultichannelWidget
+import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.util.Const
 import com.qiscus.sdk.chat.core.data.model.*
@@ -66,7 +68,7 @@ class ChatRoomPresenter(var room: QChatRoom) : QiscusChatRoomEventHandler.StateL
         message.setSender(qUser)
 
         if (message.type == QMessage.Type.TEXT && message.text.trim().isEmpty()) {
-           return
+            return
         }
 
         val subscription = Const.qiscusCore()?.api?.sendMessage(message)
@@ -197,7 +199,8 @@ class ChatRoomPresenter(var room: QChatRoom) : QiscusChatRoomEventHandler.StateL
 
     fun loadOlderCommentThan(qiscusComment: QMessage) {
         view?.showLoading()
-        Const.qiscusCore()?.getDataStore()?.getObservableOlderCommentsThan(qiscusComment, room.id, 40)
+        Const.qiscusCore()?.getDataStore()
+            ?.getObservableOlderCommentsThan(qiscusComment, room.id, 40)
             ?.flatMap { Observable.from(it) }
             ?.filter { qiscusComment1 -> qiscusComment.id == -1L || qiscusComment1.id < qiscusComment.id }
             ?.toSortedList(commentComparator)
@@ -405,7 +408,8 @@ class ChatRoomPresenter(var room: QChatRoom) : QiscusChatRoomEventHandler.StateL
                     } else if (qiscusComment.type == QMessage.Type.FILE || qiscusComment.type == QMessage.Type.VIDEO) {
                         view?.onFileDownloaded(
                             file1,
-                            MimeTypeMap.getSingleton().getMimeTypeFromExtension(qiscusComment.extension)
+                            MimeTypeMap.getSingleton()
+                                .getMimeTypeFromExtension(qiscusComment.extension)
                         )
                     }
                 }, { throwable ->
@@ -450,7 +454,8 @@ class ChatRoomPresenter(var room: QChatRoom) : QiscusChatRoomEventHandler.StateL
     fun onRoomReceivedEvent(event: QiscusChatRoomEvent) {
         when (event.event) {
             QiscusChatRoomEvent.Event.READ -> {
-                val qiscusComment = Const.qiscusCore()?.getDataStore()?.getComment(event.commentUniqueId)
+                val qiscusComment =
+                    Const.qiscusCore()?.getDataStore()?.getComment(event.commentUniqueId)
                 if (qiscusComment != null) {
                     qiscusComment.status = QMessage.STATE_READ
                     Const.qiscusCore()?.getDataStore()?.addOrUpdate(qiscusComment)
@@ -488,14 +493,7 @@ class ChatRoomPresenter(var room: QChatRoom) : QiscusChatRoomEventHandler.StateL
                 view?.showNewChatButton(true)
             }
 
-            Const.qiscusCore()?.api?.getChatRoomInfo(room.id)
-                ?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe { chatRoom ->
-                    chatRoom.extras.getBoolean("is_resolved").let {
-                        view?.showNewChatButton(it)
-                    }
-                }
+            checkRoomStatus()
         }
 
         if (qiscusComment.sender.id.equals(qiscusAccount.id, ignoreCase = true)) {
@@ -507,6 +505,27 @@ class ChatRoomPresenter(var room: QChatRoom) : QiscusChatRoomEventHandler.StateL
 
     }
 
+    private fun checkRoomStatus() {
+        Const.qiscusCore()?.api?.getChatRoomInfo(room.id)
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe { chatRoom ->
+                chatRoom.extras.getBoolean("is_resolved").let { resolved ->
+                    MultichannelWidget.instance.component.qiscusChatRepository.checkSessional(
+                        Const.qiscusCore()!!.appId,
+                        {
+                            it.data.isSessional?.let {
+                                MultichannelWidgetConfig.setSessional(it)
+                                view?.showNewChatButton(resolved)
+                            }
+                        },
+                        {
+                            // do nothing
+                        })
+                }
+            }
+    }
+
     private fun handleIsResolvedMsg(qiscusComment: QMessage) {
         if (qiscusComment.type == QMessage.Type.LINK) {
             val url = qiscusComment.extras.getString("survey_link")
@@ -516,7 +535,9 @@ class ChatRoomPresenter(var room: QChatRoom) : QiscusChatRoomEventHandler.StateL
 
     fun deleteComment(comment: QMessage) {
         view?.showLoading()
-        QiscusAndroidUtil.runOnBackgroundThread { Const.qiscusCore()?.getDataStore()?.delete(comment) }
+        QiscusAndroidUtil.runOnBackgroundThread {
+            Const.qiscusCore()?.getDataStore()?.delete(comment)
+        }
         view?.dismissLoading()
         view?.onCommentDeleted(comment)
 

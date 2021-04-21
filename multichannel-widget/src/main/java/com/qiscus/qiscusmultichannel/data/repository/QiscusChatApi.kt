@@ -1,6 +1,5 @@
 package com.qiscus.qiscusmultichannel.data.repository
 
-import android.util.Log
 import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.data.model.DataInitialChat
 import com.qiscus.qiscusmultichannel.data.repository.response.ResponseInitiateChat
@@ -9,9 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
 object QiscusChatApi {
     fun create(): Api {
@@ -38,6 +35,9 @@ object QiscusChatApi {
 
         @POST("api/v1/qiscus/initiate_chat")
         fun initiateChat(@Body dataInitialChat: DataInitialChat): Call<ResponseInitiateChat>
+
+        @GET("{appCode}/get_session")
+        fun sessionalCheck(@Path("appCode") appCode: String?): Call<ResponseInitiateChat>
     }
 }
 

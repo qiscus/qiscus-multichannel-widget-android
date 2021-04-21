@@ -60,6 +60,11 @@ class CommentsAdapter(val context: Context) :
             QMessage.Type.IMAGE -> {
                 return if (comment.isMyComment(me)) TYPE_MY_IMAGE else TYPE_OPPONENT_IMAGE
             }
+
+            QMessage.Type.VIDEO -> {
+                return if (comment.isMyComment(me)) TYPE_MY_VIDEO else TYPE_OPPONENT_VIDEO
+            }
+
             QMessage.Type.FILE -> {
                 return if (comment.isMyComment(me)) TYPE_MY_FILE else TYPE_OPPONENT_FILE
             }
@@ -82,6 +87,10 @@ class CommentsAdapter(val context: Context) :
                 .inflate(R.layout.item_my_image_comment_mc, parent, false)
             TYPE_OPPONENT_IMAGE -> return LayoutInflater.from(context)
                 .inflate(R.layout.item_opponent_image_comment_mc, parent, false)
+            TYPE_MY_VIDEO -> return LayoutInflater.from(context)
+                .inflate(R.layout.item_my_video_comment_mc, parent, false)
+            TYPE_OPPONENT_VIDEO -> return LayoutInflater.from(context)
+                .inflate(R.layout.item_opponent_video_comment_mc, parent, false)
             TYPE_MY_REPLY -> return LayoutInflater.from(context)
                 .inflate(R.layout.item_my_reply_mc, parent, false)
             TYPE_OPPONENT_REPLY -> return LayoutInflater.from(context)
@@ -104,6 +113,7 @@ class CommentsAdapter(val context: Context) :
         return when (viewType) {
             TYPE_MY_TEXT, TYPE_OPPONENT_TEXT -> TextVH(getView(parent, viewType))
             TYPE_MY_IMAGE, TYPE_OPPONENT_IMAGE -> ImageVH(getView(parent, viewType), recyclerViewItemClickListener)
+            TYPE_MY_VIDEO, TYPE_OPPONENT_VIDEO -> VideoVH(getView(parent, viewType), recyclerViewItemClickListener)
             TYPE_MY_REPLY, TYPE_OPPONENT_REPLY -> ReplyVH(getView(parent, viewType))
             TYPE_EVENT -> EventVH(getView(parent, viewType))
             TYPE_MY_FILE, TYPE_OPPONENT_FILE -> FileVH(getView(parent, viewType))
@@ -230,11 +240,13 @@ class CommentsAdapter(val context: Context) :
     private val TYPE_OPPONENT_TEXT = 2
     private val TYPE_MY_IMAGE = 3
     private val TYPE_OPPONENT_IMAGE = 4
-    private val TYPE_MY_FILE = 5
-    private val TYPE_OPPONENT_FILE = 6
-    private val TYPE_MY_REPLY = 7
-    private val TYPE_OPPONENT_REPLY = 8
-    private val TYPE_EVENT = 9
-    private val TYPE_CARD = 10
-    private val TYPE_CAROUSEL = 11
+    private val TYPE_MY_VIDEO = 5
+    private val TYPE_OPPONENT_VIDEO = 6
+    private val TYPE_MY_FILE = 7
+    private val TYPE_OPPONENT_FILE = 8
+    private val TYPE_MY_REPLY = 9
+    private val TYPE_OPPONENT_REPLY = 10
+    private val TYPE_EVENT = 11
+    private val TYPE_CARD = 12
+    private val TYPE_CAROUSEL = 13
 }

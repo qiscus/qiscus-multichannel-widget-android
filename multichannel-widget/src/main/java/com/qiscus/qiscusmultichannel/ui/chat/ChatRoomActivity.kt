@@ -32,10 +32,13 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     lateinit var qiscusChatRoom: QChatRoom
     private val users: MutableSet<String> = HashSet()
     private var memberList: String = ""
-    private  var runnable =  Runnable{
-        tvSubtitle?.text = MultichannelWidget.config.getRoomSubtitle() ?: memberList
+    private var runnable = Runnable {
+        runOnUiThread {
+            tvSubtitle?.text = MultichannelWidget.config.getRoomSubtitle() ?: memberList
+        }
     }
     private var handler = Handler(Looper.getMainLooper())
+
     companion object {
         val CHATROOM_KEY = "chatroom_key"
 
@@ -174,7 +177,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     fun getAvatar(): String {
         for (member in qiscusChatRoom.participants) {
             val type = member.extras.getString("type")
-            if (type.isNotEmpty() && type == "agent"){
+            if (type.isNotEmpty() && type == "agent") {
                 return member.avatarUrl
             }
         }

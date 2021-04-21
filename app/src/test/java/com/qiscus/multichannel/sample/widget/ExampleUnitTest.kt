@@ -1,4 +1,4 @@
-package com.qiscus.integrations.multichannel_sample
+package com.qiscus.multichannel.sample.widget
 
 import org.junit.Test
 
