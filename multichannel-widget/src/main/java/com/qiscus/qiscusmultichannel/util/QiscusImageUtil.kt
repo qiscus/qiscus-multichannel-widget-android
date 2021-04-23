@@ -4,7 +4,10 @@ import android.graphics.*
 import android.media.ExifInterface
 import android.media.ThumbnailUtils
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import com.qiscus.sdk.chat.core.QiscusCore
+import com.qiscus.sdk.chat.core.data.local.QiscusCacheManager
 import com.qiscus.sdk.chat.core.util.QiscusFileUtil
 import java.io.File
 import java.io.FileNotFoundException
@@ -230,13 +233,29 @@ object QiscusImageUtil {
 
     @Throws(IOException::class)
     fun createImageFile(): File {
-        val timeStamp = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
-        val imageFileName = "JPEG-$timeStamp-"
-        val storageDir =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val image = File.createTempFile(imageFileName, ".jpg", storageDir)
-        Const.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.getAbsolutePath())
-        return image
+        val androidVersion = Build.VERSION.SDK_INT
+        return if (androidVersion >= 29) {
+            val timeStamp =
+                SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+            val imageFileName = "JPEG-$timeStamp-"
+            val storageDir: File? =
+                Const.qiscusCore()?.getApps()?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            val image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",  /* suffix */
+                storageDir /* directory */
+            )
+            Const.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.absolutePath)
+            return image
+        } else {
+            val timeStamp = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
+            val imageFileName = "JPEG-$timeStamp-"
+            val storageDir =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            val image = File.createTempFile(imageFileName, ".jpg", storageDir)
+            Const.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.getAbsolutePath())
+            return image
+        }
     }
 
     fun getCircularBitmap(bm: Bitmap): Bitmap {

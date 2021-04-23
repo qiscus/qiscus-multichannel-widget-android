@@ -13,7 +13,6 @@ First, you need to add URL reference in your .gradle project.
  allprojects {
     repositories {
         ...
-        maven { url "https://dl.bintray.com/qiscustech/maven" }
         maven {
             url "https://artifactory.qiscus.com/artifactory/qiscus-library-open-source"
         }
@@ -26,7 +25,7 @@ Then in your app build.gradle you need add this.
 ```
 dependencies {
     ...
-    implementation ('com.qiscus.integrations:multichannel-widget:0.0.15-v3')
+    implementation ('com.qiscus.integrations:multichannel-widget:0.0.16-v3')
 }
 ```
 
