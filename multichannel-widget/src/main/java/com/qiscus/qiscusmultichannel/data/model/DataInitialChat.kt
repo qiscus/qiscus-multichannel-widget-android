@@ -9,12 +9,12 @@ import com.google.gson.annotations.SerializedName
  * GitHub     : https://github.com/arioki
  */
 data class DataInitialChat(
-    @SerializedName("app_id") val appId: String,
-    @SerializedName("user_id") val userId: String,
-    @SerializedName("name") val name: String,
+    @SerializedName("app_id") val appId: String?,
+    @SerializedName("user_id") val userId: String?,
+    @SerializedName("name") val name: String?,
     @SerializedName("avatar") val avatar: String? = "",
-    @SerializedName("nonce") val nonce: String,
+    @SerializedName("nonce") val nonce: String?,
     @SerializedName("origin") val origin: String? = "",
     @SerializedName("extras") val extras: String? = null,
-    @SerializedName("user_properties") val userProp: List<UserProperties>
+    @SerializedName("user_properties") val userProp: List<UserProperties>?
 )

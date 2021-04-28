@@ -230,7 +230,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             if (intent.resolveActivity(ctx.packageManager) != null) {
                 var photoFile: File? = null
                 try {
-                    photoFile = QiscusImageUtil.createImageFile()
+                    photoFile = QiscusImageUtil.createImageFile(context!!)
                 } catch (ex: IOException) {
                     if (ex.message != null && !ex.message.isNullOrEmpty()) {
                         ctx.showToast(ex.message!!)
@@ -581,7 +581,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         } else if (requestCode == GET_TEMPLATE && resultCode == Activity.RESULT_OK) {
             data?.let {
                 val template = it.getStringExtra("template")
-                sendComment(template)
+                sendComment(template!!)
             }
         } else if (requestCode == JupukConst.REQUEST_CODE_PHOTO && resultCode == Activity.RESULT_OK) {
             try {
@@ -590,7 +590,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                 startActivityForResult(
                     SendImageConfirmationActivity.generateIntent(
                         ctx,
-                        qiscusChatRoom!!, qiscusPhoto
+                        qiscusChatRoom!!, qiscusPhoto!!
                     ),
                     SEND_PICTURE_CONFIRMATION_REQUEST
                 )

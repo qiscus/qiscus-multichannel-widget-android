@@ -1,5 +1,6 @@
 package com.qiscus.qiscusmultichannel.util
 
+import android.content.Context
 import android.graphics.*
 import android.media.ExifInterface
 import android.media.ThumbnailUtils
@@ -229,11 +230,11 @@ object QiscusImageUtil {
     }
 
     @Throws(IOException::class)
-    fun createImageFile(): File {
+    fun createImageFile(context: Context): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
         val imageFileName = "JPEG-$timeStamp-"
-        val storageDir =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        
+        val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val image = File.createTempFile(imageFileName, ".jpg", storageDir)
         Const.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.getAbsolutePath())
         return image

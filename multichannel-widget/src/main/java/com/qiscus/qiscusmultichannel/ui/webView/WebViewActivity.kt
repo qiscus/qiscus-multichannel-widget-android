@@ -56,7 +56,7 @@ class WebViewActivity : AppCompatActivity() {
 
         webViewClient = WebViewClient()
         val url = intent.getStringExtra("url")
-        webview.loadUrl(url)
+        webview.loadUrl(url!!)
 
         with(webview.settings) {
             setAppCacheEnabled(true)

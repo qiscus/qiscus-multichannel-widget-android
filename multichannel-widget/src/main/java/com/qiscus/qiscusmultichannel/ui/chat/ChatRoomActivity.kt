@@ -63,7 +63,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
           toolbar.setNavigationOnClickListener { finish() }
          */
 
-        qiscusChatRoom = intent.getParcelableExtra(CHATROOM_KEY)
+        qiscusChatRoom = intent.getParcelableExtra(CHATROOM_KEY)!!
 
         if (!this::qiscusChatRoom.isInitialized) {
             finish()

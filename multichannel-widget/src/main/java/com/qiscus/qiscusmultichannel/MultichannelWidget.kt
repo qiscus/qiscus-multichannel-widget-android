@@ -101,11 +101,11 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
     }
 
     fun loginMultiChannel(
-        name: String,
-        userId: String,
+        name: String?,
+        userId: String?,
         avatar: String?,
-        extras: String,
-        userProperties: List<UserProperties>,
+        extras: String?,
+        userProperties: List<UserProperties>?,
         onSuccess: (QAccount) -> Unit,
         onError: (Throwable) -> Unit
     ) {

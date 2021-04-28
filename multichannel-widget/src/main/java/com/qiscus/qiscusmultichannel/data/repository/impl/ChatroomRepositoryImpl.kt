@@ -70,11 +70,11 @@ class ChatroomRepositoryImpl : ChatroomRepository {
     }
 
     fun initiateChat(
-        name: String,
-        userId: String,
+        name: String?,
+        userId: String?,
         avatar: String?,
-        extras: String,
-        userProp: List<UserProperties>,
+        extras: String?,
+        userProp: List<UserProperties>?,
         responseInitiateChat: (ResponseInitiateChat) -> Unit,
         onError: (Throwable) -> Unit
     ) {

@@ -39,14 +39,14 @@ class SendImageConfirmationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send_image_confirmation_mc)
 
-        qiscusChatRoom = intent.getParcelableExtra(EXTRA_ROOM)
+        qiscusChatRoom = intent.getParcelableExtra(EXTRA_ROOM)!!
 
         if (!this::qiscusChatRoom.isInitialized) {
             finish()
             return
         }
 
-        qiscusPhoto = intent.getParcelableExtra(EXTRA_PHOTOS)
+        qiscusPhoto = intent.getParcelableExtra(EXTRA_PHOTOS)!!
         if (this::qiscusPhoto.isInitialized) {
             initPhotos()
         } else {

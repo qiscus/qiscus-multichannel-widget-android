@@ -612,7 +612,9 @@ class ChatRoomPresenter(var room: QChatRoom) : QiscusChatRoomEventHandler.StateL
         fun onUserTyping(email: String?, isTyping: Boolean)
 
         fun onFileDownloaded(file: File, mimeType: String?)
+
         fun showNewChatButton(it: Boolean)
+
         fun refreshComments()
 
         fun openWebview(url: String)

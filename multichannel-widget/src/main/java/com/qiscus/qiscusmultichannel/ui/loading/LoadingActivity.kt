@@ -20,11 +20,11 @@ import org.json.JSONObject
 class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
 
     private lateinit var presenter: LoadingPresenter
-    lateinit var username: String
-    lateinit var userId: String
-    lateinit var extras: String
-    lateinit var avatar: String
-    lateinit var userProp: ArrayList<UserProperties>
+    private var username: String? = null
+    private var userId: String? = null
+    private var extras: String? = null
+    private var avatar: String? = null
+    private var userProp: ArrayList<UserProperties>? = null
 
     companion object {
         private val PARAM_USERNAME = "username"
@@ -62,7 +62,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
         super.onResume()
         presenter.attachView(this)
 
-        presenter.initiateChat(username, userId, avatar, extras, userProp.toList())
+        presenter.initiateChat(username, userId, avatar, extras, userProp?.toList())
     }
 
     override fun onStop() {

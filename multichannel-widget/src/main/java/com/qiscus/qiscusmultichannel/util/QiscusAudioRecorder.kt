@@ -1,5 +1,6 @@
 package com.qiscus.qiscusmultichannel.util
 
+import android.content.Context
 import android.media.MediaRecorder
 import android.os.Environment
 import java.io.File
@@ -21,21 +22,21 @@ class QiscusAudioRecorder {
 
     @Throws(IOException::class)
 
-    fun startRecording() {
+    fun startRecording(context: Context) {
         val timeStamp =
             SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
                 .format(Date())
         val audioFileName = "AUDIO_" + timeStamp + "_"
         val storageDir =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-        storageDir.mkdirs()
-        var file = storageDir.absolutePath
+            context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)
+        storageDir?.mkdirs()
+        var file = storageDir?.absolutePath
         file += File.separator + audioFileName + ".m4a"
         startRecording(file)
     }
 
     @Throws(IOException::class)
-    private fun startRecording(fileName: String) {
+    private fun startRecording(fileName: String?) {
         if (!recording) {
             this.fileName = fileName
             recording = true

@@ -23,11 +23,11 @@ class LoadingPresenter {
     }
 
     fun initiateChat(
-        username: String,
-        userId: String,
+        username: String?,
+        userId: String?,
         avatar: String?,
-        extras: String,
-        userProp: List<UserProperties>
+        extras: String?,
+        userProp: List<UserProperties>?
     ) {
         if (QiscusChatLocal.getHasMigration() == false) {
             QiscusChatLocal.setHasMigration(true)
