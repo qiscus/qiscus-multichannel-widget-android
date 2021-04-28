@@ -4,11 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.R
+import com.qiscus.qiscusmultichannel.util.WidgetFileUtil
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import com.qiscus.sdk.chat.core.data.model.QiscusPhoto
 import kotlinx.android.synthetic.main.activity_send_image_confirmation_mc.*
@@ -58,13 +60,16 @@ class SendImageConfirmationActivity : AppCompatActivity() {
     }
 
     private fun initPhotos() {
+        val file = qiscusPhoto.photoFile
         Nirmana.getInstance().get()
             .setDefaultRequestOptions(
                 RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
             )
-            .load(qiscusPhoto.photoFile)
+            .load(file)
             .into(ivImage)
+
+        iv_play.visibility = if (WidgetFileUtil.isVideo(file)!!) View.VISIBLE else View.GONE
     }
 
     private fun confirm() {

@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity() {
             FirebaseServices().getCurrentDeviceToken()
         }
 
+        etUserEmail.setText("testing2332@gmail.com")
+        etDisplayName.setText("Testing 2332")
 
         val userProperties = mapOf("city" to "jogja", "job" to "developer")
 

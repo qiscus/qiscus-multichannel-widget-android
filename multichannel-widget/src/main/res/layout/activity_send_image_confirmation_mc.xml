@@ -23,19 +23,34 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/ivImage"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#000" />
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/ivImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000" />
+
+        <ImageView
+            android:id="@+id/iv_play"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/rounded_play_bg"
+            android:padding="10dp"
+            android:src="@drawable/ic_play"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/fieldMessageContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@color/qiscus_white_mc"
+        android:orientation="horizontal"
         android:padding="4dp">
 
         <EditText

@@ -264,7 +264,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     private fun pickImage() {
         JupukBuilder().setMaxCount(1)
-            .enableVideoPicker(false)
+            .enableVideoPicker(true)
             .setColorPrimary(ContextCompat.getColor(ctx, R.color.colorPrimary))
             .setColorPrimaryDark(ContextCompat.getColor(ctx, R.color.colorPrimaryDark))
             .setColorAccent(ContextCompat.getColor(ctx, R.color.colorAccent))
