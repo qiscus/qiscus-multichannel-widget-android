@@ -16,7 +16,8 @@ object MultichannelWidgetConfig {
     private var roomTitle: String? = null
     private var roomSubtitle: String? = null
     private var hardcodedAvatar: String? = null
-    private var hideUIEvent: Boolean = false
+    private var hideUIEvent: Boolean = false // hide system event
+    private var videoPreviewSend: Boolean = true // show video preview on send confirmation activity
 
     fun setEnableLog(enableLog: Boolean) = apply { this.enableLog = enableLog }
     fun isEnableLog() = enableLog
@@ -32,6 +33,8 @@ object MultichannelWidgetConfig {
     fun getRoomSubtitle(): String? = roomSubtitle
     fun setHideUIEvent(isHidden: Boolean) = apply { this.hideUIEvent = isHidden }
     fun getHideUIEvent(): Boolean = hideUIEvent
+    fun setVideoPreviewOnSend(isShow: Boolean) = apply {this.videoPreviewSend = isShow}
+    fun getVideoPreviewOnSend(): Boolean = videoPreviewSend
 
     @Deprecated("move using configuration from dashboard")
     fun setHardcodedAvatar(hardcodedAvatar: String) = apply { this.hardcodedAvatar = hardcodedAvatar }
