@@ -140,6 +140,10 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         }, {
             notifyServerTyping(false)
         })
+
+        if (Build.VERSION.SDK_INT <= 28) {
+            requestFilePermission()
+        }
     }
 
     override fun onAttach(context: Context) {
