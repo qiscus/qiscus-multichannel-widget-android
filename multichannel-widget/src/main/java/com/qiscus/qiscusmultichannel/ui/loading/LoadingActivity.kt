@@ -50,10 +50,10 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
         presenter = LoadingPresenter()
 
         intent?.let {
-            username = it.getStringExtra(PARAM_USERNAME)
-            userId = it.getStringExtra(PARAM_USERID)
-            extras = it.getStringExtra(PARAM_EXTRAS)
-            avatar = it.getStringExtra(PARAM_AVATAR)
+            username = it.getStringExtra(PARAM_USERNAME).toString()
+            userId = it.getStringExtra(PARAM_USERID).toString()
+            extras = it.getStringExtra(PARAM_EXTRAS).toString()
+            avatar = it.getStringExtra(PARAM_AVATAR).toString()
             userProp = it.getSerializableExtra(PARAM_USER_PROPERTIES) as ArrayList<UserProperties>
         }
     }

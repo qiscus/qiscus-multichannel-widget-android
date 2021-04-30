@@ -54,17 +54,14 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_room_mc)
-        /* setSupportActionBar(toolbar_selected_comment)
-          supportActionBar?.title = qiscusChatRoom.name
-          toolbar.setNavigationIcon(R.drawable.ic_back)
-          toolbar.setNavigationOnClickListener { finish() }
-         */
 
-        qiscusChatRoom = intent.getParcelableExtra(CHATROOM_KEY)
+        val room = intent.getParcelableExtra<QChatRoom>(CHATROOM_KEY)
 
-        if (!this::qiscusChatRoom.isInitialized) {
+        if (room == null) {
             finish()
             return
+        } else {
+            this.qiscusChatRoom = room
         }
 
         btn_back.setOnClickListener { finish() }
