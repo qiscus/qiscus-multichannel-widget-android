@@ -14,7 +14,9 @@ class NotificationClickReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val qiscusComment = intent.getParcelableExtra<QMessage>("data")
-        QiscusChatLocal.setRoomId(qiscusComment!!.chatRoomId)
-        MultichannelWidget.instance.openChatRoomMultichannel(clearTaskActivity = true)
+        qiscusComment?.let {
+            QiscusChatLocal.setRoomId(it.chatRoomId)
+            MultichannelWidget.instance.openChatRoomMultichannel(clearTaskActivity = true)
+        }
     }
 }

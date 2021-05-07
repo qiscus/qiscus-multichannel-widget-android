@@ -63,11 +63,13 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         setContentView(R.layout.activity_chat_room_mc)
         initColor()
 
-        qiscusChatRoom = intent.getParcelableExtra(CHATROOM_KEY)!!
+        val room = intent.getParcelableExtra<QChatRoom>(CHATROOM_KEY)
 
-        if (!this::qiscusChatRoom.isInitialized) {
+        if (room == null) {
             finish()
             return
+        } else {
+            this.qiscusChatRoom = room
         }
 
         btnBack.setOnClickListener { finish() }

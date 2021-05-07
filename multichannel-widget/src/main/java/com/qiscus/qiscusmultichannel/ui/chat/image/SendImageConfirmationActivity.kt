@@ -50,15 +50,18 @@ class SendImageConfirmationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send_image_confirmation_mc)
 
-        qiscusChatRoom = intent.getParcelableExtra(EXTRA_ROOM)!!
+        val room = intent.getParcelableExtra<QChatRoom>(EXTRA_ROOM)
 
-        if (!this::qiscusChatRoom.isInitialized) {
+        if (room == null) {
             finish()
             return
+        } else {
+            this.qiscusChatRoom = room
         }
 
-        qiscusPhoto = intent.getParcelableExtra(EXTRA_PHOTOS)!!
-        if (this::qiscusPhoto.isInitialized) {
+        val photo = intent.getParcelableExtra<QiscusPhoto>(EXTRA_PHOTOS)
+        if (photo != null) {
+            this.qiscusPhoto = photo
             initPhotos()
         } else {
             finish()

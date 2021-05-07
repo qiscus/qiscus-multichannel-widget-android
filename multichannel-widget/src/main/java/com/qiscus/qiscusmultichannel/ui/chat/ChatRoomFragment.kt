@@ -51,6 +51,9 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     ChatRoomPresenter.ChatRoomView, QiscusPermissionsUtil.PermissionCallbacks {
 
     private val CAMERA_PERMISSION = arrayOf(
+        "android.permission.CAMERA"
+    )
+    private val CAMERA_PERMISSION_28 = arrayOf(
         "android.permission.CAMERA",
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.READ_EXTERNAL_STORAGE"
@@ -139,7 +142,10 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         }, {
             notifyServerTyping(false)
         })
-        requestFilePermission()
+
+        if (Build.VERSION.SDK_INT <= 28) {
+            requestFilePermission()
+        }
     }
 
     private fun initColor() {
@@ -253,12 +259,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     private fun openCamera() {
-        if (QiscusPermissionsUtil.hasPermissions(ctx, CAMERA_PERMISSION)) {
+        val permission =
+            if (Build.VERSION.SDK_INT <= 28) CAMERA_PERMISSION_28 else CAMERA_PERMISSION
+        if (QiscusPermissionsUtil.hasPermissions(ctx, permission)) {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (intent.resolveActivity(ctx.packageManager) != null) {
                 var photoFile: File? = null
                 try {
-                    photoFile = QiscusImageUtil.createImageFile(context!!)
+                    photoFile = QiscusImageUtil.createImageFile()
                 } catch (ex: IOException) {
                     if (ex.message != null && !ex.message.isNullOrEmpty()) {
                         ctx.showToast(ex.message!!)
@@ -297,16 +305,23 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     private fun openGallery() {
-        if (QiscusPermissionsUtil.hasPermissions(ctx, FILE_PERMISSION)) {
-            pickImage()
+        if (Build.VERSION.SDK_INT <= 28) {
+            if (QiscusPermissionsUtil.hasPermissions(ctx, FILE_PERMISSION)) {
+                pickImage()
+            } else {
+                requestFilePermission()
+            }
         } else {
-            requestFilePermission()
+            pickImage()
         }
     }
 
     private fun openFile() {
-        if (QiscusPermissionsUtil.hasPermissions(ctx, FILE_PERMISSION)) {
-
+        if ((Build.VERSION.SDK_INT >= 29) || (Build.VERSION.SDK_INT <= 28 && QiscusPermissionsUtil.hasPermissions(
+                ctx,
+                FILE_PERMISSION
+            ))
+        ) {
             JupukBuilder().setMaxCount(1)
                 .pickDoc(this)
         } else {
@@ -315,11 +330,20 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     private fun requestCameraPermission() {
-        if (!QiscusPermissionsUtil.hasPermissions(ctx, CAMERA_PERMISSION)) {
-            QiscusPermissionsUtil.requestPermissions(
-                this, getString(R.string.qiscus_permission_request_title_mc),
-                RC_CAMERA_PERMISSION, CAMERA_PERMISSION
-            )
+        if (Build.VERSION.SDK_INT <= 28) {
+            if (!QiscusPermissionsUtil.hasPermissions(ctx, CAMERA_PERMISSION_28)) {
+                QiscusPermissionsUtil.requestPermissions(
+                    this, getString(R.string.qiscus_permission_request_title_mc),
+                    RC_CAMERA_PERMISSION, CAMERA_PERMISSION_28
+                )
+            }
+        } else {
+            if (!QiscusPermissionsUtil.hasPermissions(ctx, CAMERA_PERMISSION)) {
+                QiscusPermissionsUtil.requestPermissions(
+                    this, getString(R.string.qiscus_permission_request_title_mc),
+                    RC_CAMERA_PERMISSION, CAMERA_PERMISSION
+                )
+            }
         }
     }
 
@@ -369,9 +393,11 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         commentsAdapter.clearSelected()
     }
 
-    fun sendComment(message: String) {
-        clearSelectedComment()
-        presenter.sendComment(message)
+    fun sendComment(message: String?) {
+        message?.let {
+            clearSelectedComment()
+            presenter.sendComment(message)
+        }
     }
 
     fun deleteComment() {

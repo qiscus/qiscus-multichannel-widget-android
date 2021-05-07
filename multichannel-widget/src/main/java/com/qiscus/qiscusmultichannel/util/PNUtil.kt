@@ -9,6 +9,7 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.util.BuildVersionUtil
@@ -36,6 +37,10 @@ class PNUtil {
             }
 
             if (Const.qiscusCore()?.getQiscusAccount()?.id == qiscusComment.sender.id) {
+                return
+            }
+
+            if (MultichannelWidget.config.getHideUIEvent() && qiscusComment.type == QMessage.Type.SYSTEM_EVENT) {
                 return
             }
 

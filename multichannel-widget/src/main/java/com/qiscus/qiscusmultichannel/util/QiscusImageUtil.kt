@@ -1,10 +1,10 @@
 package com.qiscus.qiscusmultichannel.util
 
-import android.content.Context
 import android.graphics.*
 import android.media.ExifInterface
 import android.media.ThumbnailUtils
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import com.qiscus.sdk.chat.core.util.QiscusFileUtil
 import java.io.File
@@ -42,8 +42,10 @@ object QiscusImageUtil {
         }
 
         //max Height and width values of the compressed image is taken as 1440x900
-        val maxHeight = Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()?.getMaxHeight()!!
-        val maxWidth = Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()?.getMaxWidth()!!
+        val maxHeight =
+            Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()?.getMaxHeight()!!
+        val maxWidth =
+            Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()?.getMaxWidth()!!
         var imgRatio = (actualWidth / actualHeight).toFloat()
         val maxRatio = maxWidth / maxHeight
 
@@ -142,7 +144,8 @@ object QiscusImageUtil {
             //write the compressed bitmap at the destination specified by filename.
             QiscusImageUtil.getScaledBitmap(Uri.fromFile(imageFile))!!.compress(
                 Bitmap.CompressFormat.JPEG,
-                Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()?.getQuality()!!, out
+                Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()
+                    ?.getQuality()!!, out
             )
 
         } catch (e: FileNotFoundException) {
@@ -230,14 +233,30 @@ object QiscusImageUtil {
     }
 
     @Throws(IOException::class)
-    fun createImageFile(context: Context): File {
-        val timeStamp = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
-        val imageFileName = "JPEG-$timeStamp-"
-        
-        val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        val image = File.createTempFile(imageFileName, ".jpg", storageDir)
-        Const.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.getAbsolutePath())
-        return image
+    fun createImageFile(): File {
+        val androidVersion = Build.VERSION.SDK_INT
+        return if (androidVersion >= 29) {
+            val timeStamp =
+                SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+            val imageFileName = "JPEG-$timeStamp-"
+            val storageDir: File? =
+                Const.qiscusCore()?.getApps()?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            val image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",  /* suffix */
+                storageDir /* directory */
+            )
+            Const.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.absolutePath)
+            return image
+        } else {
+            val timeStamp = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
+            val imageFileName = "JPEG-$timeStamp-"
+            val storageDir =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            val image = File.createTempFile(imageFileName, ".jpg", storageDir)
+            Const.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.getAbsolutePath())
+            return image
+        }
     }
 
     fun getCircularBitmap(bm: Bitmap): Bitmap {
