@@ -20,13 +20,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/colorPrimary"
             android:paddingStart="0dp"
             android:paddingLeft="0dp"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:titleTextColor="@color/colorAccent">
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <TextView
                 android:id="@+id/tvSubtitle"
@@ -47,7 +45,7 @@
                 tools:text="Customer, Key Accout Qiscus, Abah, Rifki Reinaldo, Yoga Setiawan" />
 
             <ImageButton
-                android:id="@+id/btn_back"
+                android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -82,7 +80,7 @@
                 android:layout_marginStart="18dp"
                 android:layout_marginLeft="18dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_back"
+                app:layout_constraintStart_toEndOf="@+id/btnBack"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

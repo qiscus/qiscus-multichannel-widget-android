@@ -2,11 +2,15 @@ package com.qiscus.qiscusmultichannel.ui.chat
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
@@ -57,11 +61,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_room_mc)
-        /* setSupportActionBar(toolbar_selected_comment)
-          supportActionBar?.title = qiscusChatRoom.name
-          toolbar.setNavigationIcon(R.drawable.ic_back)
-          toolbar.setNavigationOnClickListener { finish() }
-         */
+        initColor()
 
         qiscusChatRoom = intent.getParcelableExtra(CHATROOM_KEY)!!
 
@@ -70,7 +70,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             return
         }
 
-        btn_back.setOnClickListener { finish() }
+        btnBack.setOnClickListener { finish() }
 
         supportFragmentManager.beginTransaction()
             .replace(
@@ -95,6 +95,24 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         Nirmana.getInstance().get()
             .load(getAvatar())
             .into(ivAvatar)
+    }
+
+    private fun initColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.qiscus_statusbar_mc)
+        }
+        toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.qiscus_appbar_mc))
+
+        tvTitle.setTextColor(ContextCompat.getColor(this, R.color.qiscus_title_mc))
+        tvSubtitle.setTextColor(ContextCompat.getColor(this, R.color.qiscus_subtitle_mc))
+        btnBack.setColorFilter(
+            ContextCompat.getColor(
+                this,
+                R.color.qiscus_back_icon_mc
+            ),
+            PorterDuff.Mode.SRC_IN
+        )
     }
 
     override fun onResume() {

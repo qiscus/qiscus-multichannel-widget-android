@@ -3,6 +3,7 @@ package com.qiscus.qiscusmultichannel.ui.chat
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.*
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -98,6 +99,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        initColor()
         initRecyclerMessage()
 
         arguments?.let {
@@ -138,6 +140,32 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             notifyServerTyping(false)
         })
         requestFilePermission()
+    }
+
+    private fun initColor() {
+        context?.let {
+            btnAttachmentCamera.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.qiscus_pick_image_mc
+                ),
+                PorterDuff.Mode.SRC_IN
+            )
+            btnAttachmentDoc.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.qiscus_pick_doc_mc
+                ),
+                PorterDuff.Mode.SRC_IN
+            )
+            btnSend.setColorFilter(
+                ContextCompat.getColor(
+                    it,
+                    R.color.qiscus_send_button_mc
+                ),
+                PorterDuff.Mode.SRC_IN
+            )
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -265,9 +293,6 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     private fun pickImage() {
         JupukBuilder().setMaxCount(1)
             .enableVideoPicker(true)
-            .setColorPrimary(ContextCompat.getColor(ctx, R.color.colorPrimary))
-            .setColorPrimaryDark(ContextCompat.getColor(ctx, R.color.colorPrimaryDark))
-            .setColorAccent(ContextCompat.getColor(ctx, R.color.colorAccent))
             .pickPhoto(this)
     }
 
@@ -283,9 +308,6 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         if (QiscusPermissionsUtil.hasPermissions(ctx, FILE_PERMISSION)) {
 
             JupukBuilder().setMaxCount(1)
-                .setColorPrimary(ContextCompat.getColor(ctx, R.color.colorPrimary))
-                .setColorPrimaryDark(ContextCompat.getColor(ctx, R.color.colorPrimaryDark))
-                .setColorAccent(ContextCompat.getColor(ctx, R.color.colorAccent))
                 .pickDoc(this)
         } else {
             requestFilePermission()

@@ -86,4 +86,8 @@
     <color name="darknavy">#0564a2</color>
     <color name="creamRed">#ffe8c9</color>
     <color name="creamRedDark">#e7d0b0</color>
+
+    <color name="qiscus_appbar_mc">#009688</color>
+    <color name="qiscus_statusbar_mc">#00796B</color>
+    <color name="qiscus_accent_mc">#FF5722</color>
 </resources>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#0071BB</color>
-    <color name="colorPrimaryDark">#0071BB</color>
-    <color name="colorAccent">#9E9E9E</color>
+    <color name="qiscus_appbar_mc">#009688</color>
+    <color name="qiscus_statusbar_mc">#00796B</color>
+    <color name="qiscus_accent_mc">#FF5722</color>
 
     <color name="qiscus_text_reply_mc">#808080</color>
 
@@ -11,7 +11,7 @@
     <color name="qiscus_light_grey_mc">#D8D8D8</color>
     <color name="qiscus_red_mc">#d32f2f</color>
     <color name="qiscus_left_bubble_mc">#F4F4F4</color>
-    <color name="qiscus_right_bubble_mc">#0071BB</color>
+    <color name="qiscus_right_bubble_mc">#009688</color>
     <color name="qiscus_left_bubble_text_mc">#232323</color>
     <color name="qiscus_right_bubble_text_mc">#FFFFFF</color>
     <color name="qiscus_black_mc">#000000</color>
@@ -38,4 +38,19 @@
     <color name="qiscus_color_opponent_link_mc">#232323</color>
     <color name="qiscus_darker_gray">#212121</color>
     <color name="qiscus_lighter_gray">#777777</color>
+
+    <color name="qiscus_webview_toolbar_mc">#009688</color>
+    <color name="qiscus_notification_mc">#009688</color>
+
+    <color name="qiscus_send_button_mc">#009688</color>
+    <color name="qiscus_pick_image_mc">#009688</color>
+    <color name="qiscus_pick_doc_mc">#009688</color>
+    <color name="qiscus_title_mc">#FFFFFF</color>
+    <color name="qiscus_subtitle_mc">#FFFFFF</color>
+    <color name="qiscus_back_icon_mc">#FFFFFF</color>
+
+    <!-- Jupuk Libs -->
+    <color name="jupuk_primary">#009688</color>
+    <color name="jupuk_primary_dark">#00796B</color>
+    <color name="jupuk_accent">#FF5722</color>
 </resources>

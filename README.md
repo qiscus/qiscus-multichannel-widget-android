@@ -4,7 +4,7 @@ Qiscus Multichannel Widget Android is official [sdk](https://github.com/qiscus/q
 
 ## Installation
 
-Add this URL reference in your project .gradle
+Add this URL reference in your project build.gradle
 ```
 allprojects {
    repositories {
@@ -16,7 +16,7 @@ allprojects {
 }
 ```
 
-Then add this to your app .gradle
+Then add this to your app build.gradle
 
 ```
 dependencies {
@@ -83,7 +83,7 @@ If you facing error like this
 ```
 More than one file was found with OS independent path 'META-INF/rxjava.properties'
 ```
-Add this to your app .gradle
+Add this to your app build.gradle
 
 ```
 android {

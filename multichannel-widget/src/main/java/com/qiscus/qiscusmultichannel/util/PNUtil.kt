@@ -68,7 +68,7 @@ class PNUtil {
                 .setTicker(getContent(context, qiscusComment))
                 //@TODO Change background image
                 .setSmallIcon(R.drawable.ic_qiscus_notification_icon)
-                .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .setColor(ContextCompat.getColor(context, R.color.qiscus_notification_mc))
                 .setGroup("CHAT_NOTIF_" + qiscusComment.chatRoomId)
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
