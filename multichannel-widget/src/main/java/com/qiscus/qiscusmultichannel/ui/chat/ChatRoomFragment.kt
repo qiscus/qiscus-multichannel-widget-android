@@ -67,6 +67,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     private val RC_FILE_PERMISSION = 130
     protected val SEND_PICTURE_CONFIRMATION_REQUEST = 4
     protected val GET_TEMPLATE = 5
+    private val IMAGE_GALLERY_REQUEST = 7
     private lateinit var ctx: Context
     private lateinit var commentsAdapter: CommentsAdapter
     private var qiscusChatRoom: QChatRoom? = null
@@ -299,6 +300,12 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     private fun pickImage() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_GALLERY_REQUEST)
+    }
+
+    private fun pickImageSDK28() {
         JupukBuilder().setMaxCount(1)
             .enableVideoPicker(true)
             .pickPhoto(this)
@@ -307,7 +314,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     private fun openGallery() {
         if (Build.VERSION.SDK_INT <= 28) {
             if (QiscusPermissionsUtil.hasPermissions(ctx, FILE_PERMISSION)) {
-                pickImage()
+                pickImageSDK28()
             } else {
                 requestFilePermission()
             }
@@ -630,6 +637,20 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             data?.let {
                 val template = it.getStringExtra("template")
                 sendComment(template!!)
+            }
+        } else if (requestCode == IMAGE_GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
+            try {
+                val imageFile = QiscusFileUtil.from(data?.data!!)
+                val qiscusPhoto = QiscusPhoto(imageFile)
+                startActivityForResult(
+                    SendImageConfirmationActivity.generateIntent(
+                        ctx,
+                        qiscusChatRoom!!, qiscusPhoto
+                    ),
+                    SEND_PICTURE_CONFIRMATION_REQUEST
+                )
+            } catch (e: Exception) {
+                showError("Failed to open image file!")
             }
         } else if (requestCode == JupukConst.REQUEST_CODE_PHOTO && resultCode == Activity.RESULT_OK) {
             try {
