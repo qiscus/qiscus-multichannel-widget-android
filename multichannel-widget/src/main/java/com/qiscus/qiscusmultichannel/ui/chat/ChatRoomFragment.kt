@@ -299,27 +299,29 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         }
     }
 
-    private fun pickImage() {
+    private fun pickImageUsingIntentSystem() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         startActivityForResult(intent, IMAGE_GALLERY_REQUEST)
     }
 
-    private fun pickImageSDK28() {
+    private fun pickImageUsingJupuk() {
         JupukBuilder().setMaxCount(1)
             .enableVideoPicker(true)
             .pickPhoto(this)
     }
 
     private fun openGallery() {
-        if (Build.VERSION.SDK_INT <= 28) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             if (QiscusPermissionsUtil.hasPermissions(ctx, FILE_PERMISSION)) {
-                pickImageSDK28()
+                pickImageUsingJupuk()
             } else {
                 requestFilePermission()
             }
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+            pickImageUsingJupuk()
         } else {
-            pickImage()
+            pickImageUsingIntentSystem()
         }
     }
 
