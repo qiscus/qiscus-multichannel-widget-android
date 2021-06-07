@@ -28,14 +28,26 @@ class MainActivity : AppCompatActivity() {
             val username = etDisplayName.text.toString()
 
             if (isValidEmail(email)) {
-                MultichannelWidget.instance.initiateChat(
-                    this,
-                    username,
-                    email,
-                    "https://vignette.wikia.nocookie.net/fatal-fiction-fanon/images/9/9f/Doraemon.png/revision/latest?cb=20170922055255",
-                    null,
-                    userProperties
-                )
+                MultichannelWidget.InitiateChat()
+                    .withName(username)
+                    .withUserId(email)
+                    .withAvatar("https://vignette.wikia.nocookie.net/fatal-fiction-fanon/images/9/9f/Doraemon.png/revision/latest?cb=20170922055255")
+                    .withUserProperties(userProperties)
+                    .showLoadingWhenInitiate(true)
+                    .initiateAndOpenChatRoom(this)
+//                    .initiateWithCallback(this, object : MultichannelWidget.InitiateCallback {
+//                        override fun onProgress() {
+//                            Log.e("InitiateCallback", "onProgress: ")
+//                        }
+//
+//                        override fun onSuccess(qChatRoom: QChatRoom) {
+//                            Log.e("InitiateCallback", "onSuccess: ")
+//                        }
+//
+//                        override fun onError(throwable: Throwable) {
+//                            Log.e("InitiateCallback", "onError: ${throwable.message}")
+//                        }
+//                    })
 
                 // only 1 after initiateChat
                 if (MultichannelWidget.instance.hasSetupUser()) {

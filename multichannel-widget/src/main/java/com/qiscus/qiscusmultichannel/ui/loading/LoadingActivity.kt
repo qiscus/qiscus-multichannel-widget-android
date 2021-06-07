@@ -33,7 +33,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
         private val PARAM_EXTRAS = "extras"
         private val PARAM_USER_PROPERTIES = "user_properties"
 
-        fun generateIntent(context: Context, username: String, userId: String, avatar: String?, extras: JSONObject?, userProp: List<UserProperties>) {
+        fun generateIntent(context: Context, username: String?, userId: String?, avatar: String?, extras: JSONObject?, userProp: List<UserProperties>) {
             val intent = Intent(context, LoadingActivity::class.java)
             intent.putExtra(PARAM_USERNAME, username)
             intent.putExtra(PARAM_USERID, userId)

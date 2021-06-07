@@ -3,6 +3,7 @@
     <color name="qiscus_appbar_mc">#009688</color>
     <color name="qiscus_statusbar_mc">#00796B</color>
     <color name="qiscus_accent_mc">#FF5722</color>
+    <color name="qiscus_loading_background_mc">#009688</color>
 
     <color name="qiscus_text_reply_mc">#808080</color>
 
