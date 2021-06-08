@@ -43,7 +43,7 @@ class SampleApp : Application() {
     }
 }
 ```
-**APPID** : Multichannel APPID, you can get your it from [here](https://multichannel.qiscus.com)
+**APPID** : Multichannel APPID, you can get your AppId from [here](https://multichannel.qiscus.com)
 
 **LOCALPREFKEY** : local data identifier
 
