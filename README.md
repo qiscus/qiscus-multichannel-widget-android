@@ -75,6 +75,46 @@ MultichannelWidget.instance.initiateChat(context, userId, email, avatar, extras,
 
 **userProperties** (Map<String, String>, optional) : user properties for multichannel
 
+## Customization
+
+There are some additional configuration that you can change
+
+No | Config | Desciption 
+--- | --- | --- 
+1 | setEnableLog | Set true if you want to show multichannel widget log 
+2 | setNotificationListener | Set your custom notification handler
+3 | setEnableNotification | Enable app notification 
+4 | setRoomTitle | Set Room Title 
+5 | setRoomSubtitle | Set Room Subtitle 
+6 | setHideUIEvent | Show / Hide System Event 
+7 | setVideoPreviewOnSend | Show / Hide video preview after user select video in attachment 
+8 | ~~setHardcodedAvatar~~ | Set your user default avatar (Deprecated) 
+
+And for color configuration you just need to change it from your app [color res](https://developer.android.com/guide/topics/resources/more-resources#Color)
+
+No | Color Name | Desciption 
+--- | --- | --- 
+1 | qiscus_statusbar_mc | Chat room status bar color
+2 | qiscus_appbar_mc | Chat room appbar bar color
+3 | qiscus_accent_mc | Widget accent color
+4 | qiscus_text_reply_mc | Reply line color
+5 | qiscus_send_button_mc | Send button color
+6 | qiscus_pick_image_mc | Pick image icon color 
+7 | qiscus_pick_doc_mc | Pick document icon color
+8 | qiscus_title_mc | Chat room title color
+9 | qiscus_subtitle_mc | Chat room subtitle color
+10 | qiscus_back_icon_mc | Chat room back icon color
+11 | qiscus_left_bubble_mc | Left (Friend) bubble chat color
+12 | qiscus_right_bubble_mc | Right (Me) bubble chat color
+13 | qiscus_left_bubble_text_mc | Left (Friend) bubble chat text color
+14 | qiscus_right_bubble_text_mc | Right (Me) bubble chat text color
+15 | qiscus_send_container_mc | Message box container color
+16 | read_message_mc | Message status color if readed
+17 | pending_message_mc | Message status color when pending
+18 | jupuk_primary | Image & Doc picker appbar color
+19 | jupuk_primary_dark | Image & Doc picker statusbar color
+20 | jupuk_accent | Image & Doc picker accent color
+
 ## Proguard
 if your app using [Proguard](https://www.guardsquare.com/proguard), make sure you add Proguard Rules of Qiscus from [Qiscus Proguard Rules](https://github.com/qiscus/qiscus-sdk-android/blob/master/app/proguard-rules.pro) to your Proguard Rules
 
