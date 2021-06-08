@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
 
         val userProperties = mapOf("city" to "jogja", "job" to "developer")
 
+        etUserEmail.setText("testing2332@gmail.com")
+        etDisplayName.setText("Testing 2332")
         login.setOnClickListener {
             val email = etUserEmail.text.toString()
             val username = etDisplayName.text.toString()

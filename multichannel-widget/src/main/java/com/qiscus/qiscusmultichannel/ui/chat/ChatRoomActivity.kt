@@ -35,6 +35,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
 
     lateinit var qiscusChatRoom: QChatRoom
     private val users: MutableSet<String> = HashSet()
+    private var subtitle: String = ""
     private var memberList: String = ""
     private var runnable = Runnable {
         runOnUiThread {
@@ -127,7 +128,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     }
 
     override fun onCommentSelected(selectedComment: QMessage) {
-        val me = Const.qiscusCore()?.getQiscusAccount()?.getId()
+        val me = Const.qiscusCore()?.qiscusAccount?.id
         if (toolbar_selected_comment.visibility == View.VISIBLE) {
             toolbar_selected_comment.visibility = View.GONE
             getChatFragment().clearSelectedComment()
@@ -143,11 +144,14 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     }
 
     override fun onUserTyping(email: String?, isTyping: Boolean) {
-        tvSubtitle?.text = if (isTyping) "typing..." else getSubtitle()
+        subtitle = if (isTyping) "typing..." else getSubtitle()
+        runOnUiThread {
+            tvSubtitle?.text = subtitle
+        }
 
         if (isTyping) {
             handler.removeCallbacks(runnable)
-            handler.postDelayed(runnable, 5000)
+            handler.postDelayed(runnable, 3000)
         }
     }
 
