@@ -317,7 +317,6 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
         private var name: String? = null,
         private var userId: String? = null,
         private var avatar: String? = null,
-        private var extras: JSONObject? = null,
         private var userProperties: Map<String, String>? = null,
         private var showLoading: Boolean? = false
     ) {
@@ -325,7 +324,6 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
         fun withName(name: String) = apply { this.name = name }
         fun withUserId(userId: String) = apply { this.userId = userId }
         fun withAvatar(avatar: String) = apply { this.avatar = avatar }
-        fun withExtras(extras: JSONObject) = apply { this.extras = extras }
         fun withUserProperties(userProperties: Map<String, String>) =
             apply { this.userProperties = userProperties }
 
@@ -341,13 +339,13 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
             }
             if (isRequiredDataValid()) {
                 if (this.showLoading == true) {
-                    LoadingActivity.generateIntent(context, name, userId, avatar, extras, userProp)
+                    LoadingActivity.generateIntent(context, name, userId, avatar, null, userProp)
                 } else {
                     instance.loginMultiChannel(
                         name,
                         userId,
                         avatar,
-                        extras?.toString() ?: "{}",
+                        "{}",
                         userProp,
                         {
                             loadChatRoom(context, null)
@@ -372,14 +370,14 @@ class MultichannelWidget constructor(val component: MultichannelWidgetComponent)
 
             if (isRequiredDataValid()) {
                 if (this.showLoading != false) {
-                    LoadingActivity.generateIntent(context, name, userId, avatar, extras, userProp)
+                    LoadingActivity.generateIntent(context, name, userId, avatar, null, userProp)
                 } else {
                     initiateCallback.onProgress()
                     instance.loginMultiChannel(
                         name,
                         userId,
                         avatar,
-                        extras?.toString() ?: "{}",
+                        "{}",
                         userProp,
                         {
                             loadChatRoom(context, initiateCallback)
