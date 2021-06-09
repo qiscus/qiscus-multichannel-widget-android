@@ -28,7 +28,7 @@ class SampleApp : MultiDexApplication() {
         MultichannelWidget.setup(
             this,
             ConstCore.qiscusCore1(),
-            "goum-bzlmlpixlodgb6wn",
+            "erliv-1vgncdxub60y7y8",
             configMultichannel,
             "user1"
         )
