@@ -2,6 +2,13 @@
 
 Qiscus Multichannel Widget Android is official [sdk](https://github.com/qiscus/qiscus-sdk-android/tree/multiple-appid) widget to implement [Qiscus Multichannel Customer](https://www.qiscus.com/customer-service-chat) to your app.
 
+## Screenshot
+<p float="left">
+   <img src="https://user-images.githubusercontent.com/56247115/121902988-092eb380-cd52-11eb-8cd0-fd5f68ba2a41.png" alt="Login" width="240"/>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   <img src="https://user-images.githubusercontent.com/56247115/121903017-12b81b80-cd52-11eb-87bc-b39c5501f745.png" alt="Conversation" width="240"/>
+</p>
+
 ## Installation
 
 Add this URL reference in your project build.gradle
