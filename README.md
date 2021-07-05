@@ -28,7 +28,7 @@ Then add this to your app build.gradle
 ```
 dependencies {
     ...
-    implementation 'com.qiscus.integrations:multichannel-widget:0.0.20-v3'
+    implementation 'com.qiscus.integrations:multichannel-widget:0.1.1-v3'
 }
 ```
 
@@ -69,18 +69,23 @@ MultichannelWidget.setup(context, qiscusCore, APPID, config, LOCALPREFKEY)
 ## Initiate Chat
 Start chatting can be done in single method
 ```java
-MultichannelWidget.instance.initiateChat(context, userId, email, avatar, extras, userProperties)
+MultichannelWidget.InitiateChat()
+    .withName(userName) // required
+    .withUserId(userId) // required
+    .initiateAndOpenChatRoom(this) // required
 
 ```
-**name** (String) : Username
+**withName(String)** : required value for user name
 
-**userId** (String) : A user identifier that will be used to identify a user and used whenever another user need to chat with this user. It can be anything, whether is user's email, your user database index, etc. As long as it is unique and a string.
+**withUserId(String)** : A user identifier that will be used to identify a user and used whenever another user need to chat with this user. It can be anything, whether is user's email, your user database index, etc. As long as it is unique and a string.
 
-**avatar** (String, optional) : user avatar, if empty it will use the default avatar
+**withAvatar** (String) : user avatar, if empty it will use the default avatar
 
-**extras** (JSONObject, optional) : extra data
+**withUserProperties**(Map<String, String>, optional) : user properties for multichannel
 
-**userProperties** (Map<String, String>, optional) : user properties for multichannel
+**showLoadingWhenInitiate**(Boolean) : set true if you want to show Multichannel Widget default loading page
+
+**initiateAndOpenChatRoom** (Context) : method to initiate chat and open Multichannel Widget Chat Room Activity
 
 ## Customization
 
