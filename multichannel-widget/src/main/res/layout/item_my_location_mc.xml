@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/margin_small"
+    android:paddingBottom="@dimen/margin_small"
+    tools:viewBindingIgnore="true">
+
+    <ViewStub
+        android:id="@+id/container_date_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/item_chat_date_indicator"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        app:shapeAppearanceOverlay="@style/roundedCornersImageView"
+        android:id="@+id/iv_map_image"
+        android:layout_width="0dp"
+        android:layout_height="190dp"
+        android:layout_marginStart="@dimen/margin_bubble_space"
+        android:layout_marginLeft="@dimen/margin_bubble_space"
+        android:layout_marginEnd="@dimen/margin_bubble"
+        android:layout_marginRight="@dimen/margin_bubble"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_date_indicator" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/containerLoction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_bubble_space"
+        android:layout_marginLeft="@dimen/margin_bubble_space"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="@dimen/margin_bubble"
+        android:layout_marginRight="@dimen/margin_bubble"
+        android:minHeight="80dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="@+id/iv_map_image">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_location_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_location_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:textSize="14sp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <ImageView
+        android:id="@+id/img_sender_avatar"
+        android:layout_width="@dimen/avatar_sender_size"
+        android:layout_height="@dimen/avatar_sender_size"
+        android:layout_marginEnd="18dp"
+        android:layout_marginRight="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_date_indicator" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:textSize="@dimen/text_time_bubble"
+        app:layout_constraintEnd_toStartOf="@+id/iv_map_image"
+        app:layout_constraintTop_toBottomOf="@+id/container_date_indicator"
+        tools:ignore="SmallSp" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/state_indicator"
+        android:layout_width="@dimen/state_size"
+        android:layout_height="@dimen/state_size"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        app:layout_constraintEnd_toStartOf="@+id/iv_map_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_time" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

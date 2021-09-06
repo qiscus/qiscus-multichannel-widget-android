@@ -3,7 +3,7 @@ package com.qiscus.qiscusmultichannel.util
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.qiscus.qiscusmultichannel.MultichannelWidget
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
 import com.qiscus.sdk.chat.core.data.model.QMessage
 
 /**
@@ -16,7 +16,7 @@ class NotificationClickReceiver : BroadcastReceiver() {
         val qiscusComment = intent.getParcelableExtra<QMessage>("data")
         qiscusComment?.let {
             QiscusChatLocal.setRoomId(it.chatRoomId)
-            MultichannelWidget.instance.openChatRoomMultichannel(clearTaskActivity = true)
+            QiscusMultichannelWidget.instance.openChatRoom(context, true)
         }
     }
 }

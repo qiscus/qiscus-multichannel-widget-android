@@ -1,17 +1,20 @@
 package com.qiscus.qiscusmultichannel.ui.chat.viewholder
 
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
+import android.view.ViewStub
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SortedList
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.util.DateUtil
+import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
 
 /**
@@ -19,78 +22,138 @@ import com.qiscus.sdk.chat.core.data.model.QMessage
  * Author     : Taufik Budi S
  * GitHub     : https://github.com/tfkbudi
  */
-open class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val avatar: ImageView? = itemView.findViewById(R.id.avatar_driver)
-    private val sender: TextView? = itemView.findViewById(R.id.sender)
-    private val date: TextView? = itemView.findViewById(R.id.date)
-    private val dateOfMessage: TextView? = itemView.findViewById(R.id.dateOfMessage)
-    @Nullable
-    private val state: ImageView? = itemView.findViewById(R.id.state)
+open class BaseViewHolder(
+    itemView: View,
+    val config: QiscusMultichannelWidgetConfig,
+    val color: QiscusMultichannelWidgetColor
+) : RecyclerView.ViewHolder(itemView) {
 
-    private val pendingStateColor: Int =
-        ContextCompat.getColor(itemView.context, R.color.pending_message_mc)
-    private val readStateColor: Int =
-        ContextCompat.getColor(itemView.context, R.color.read_message_mc)
-    private val failedStateColor: Int =
-        ContextCompat.getColor(itemView.context, R.color.qiscus_red_mc)
-    private val selectedCommentBackground: Drawable =
-        ColorDrawable(ContextCompat.getColor(itemView.context, R.color.qiscus_selected_mc))
+    private val sender: TextView? = itemView.findViewById(R.id.tv_name_sender)
+    private val avatar: ImageView? = itemView.findViewById(R.id.img_sender_avatar)
+    private val time: TextView? = itemView.findViewById(R.id.tv_time)
+    private var chatFrom: View? = itemView.findViewById(R.id.chat_from)
+    private val containerDateIndicator: ViewStub? =
+        itemView.findViewById(R.id.container_date_indicator)
+    private var firstIndicator: TextView? = null
+    private var dateOfMessage: TextView? = null
+    private val state: ImageView? = itemView.findViewById(R.id.state_indicator)
     var pstn = 0
 
-    open fun bind(comment: QMessage) {
-        avatar?.let {
-            Nirmana.getInstance().get()
-                .setDefaultRequestOptions(
-                    RequestOptions()
-                        .placeholder(R.drawable.ic_qiscus_avatar)
-                        .error(R.drawable.ic_qiscus_avatar)
-                        .dontAnimate()
-                )
-                .load(comment.sender.avatarUrl)
-                .into(it)
+    init {
+        containerDateIndicator?.setOnInflateListener { _: ViewStub?, view: View ->
+            firstIndicator = view.findViewById(R.id.tv_first_chat_indicator)
+            dateOfMessage = view.findViewById(R.id.tv_date)
+
+            dateOfMessage?.setTextColor(color.getTimeLabelTextColor())
+            dateOfMessage?.background = ResourceManager.getTintDrawable(
+                ContextCompat.getDrawable(
+                    itemView.context,
+                    R.drawable.rounded_date
+                ), color.getTimeBackgroundColor()
+            )
         }
-        sender?.text = comment.sender.name
-        date?.text = DateUtil.getTimeStringFromDate(comment.timestamp)
+        avatar?.visibility =
+            if (config.isAvatarActived()) View.VISIBLE else View.GONE
+        time?.setTextColor(color.getTimeLabelTextColor())
+        sender?.setTextColor(color.getRightBubbleColor())
+    }
+
+    open fun bind(comment: QMessage) {
+        time?.text = DateUtil.getTimeStringFromDate(comment.timestamp)
         dateOfMessage?.text = DateUtil.toFullDate(comment.timestamp)
 
         renderState(comment)
 
-        itemView.background = if (comment.isSelected) selectedCommentBackground else null
+        itemView.background =
+            if (comment.isSelected) ResourceManager.IC_SELECTED_BACKGROUND else null
 
     }
 
-    open fun setNeedToShowDate(showDate: Boolean) {
+    fun setNeedToShowDate(showDate: Boolean): Boolean {
+        if (showDate) containerDateIndicator?.visibility = View.VISIBLE
         dateOfMessage?.visibility = if (showDate) View.VISIBLE else View.GONE
+        return showDate
     }
 
-    open fun setNeedToShowName(showName: Boolean) {
-        sender?.visibility = if (showName) View.VISIBLE else View.GONE
+    fun showFirstMessageIndicator(
+        showDate: Boolean,
+        data: SortedList<QMessage>,
+        position: Int
+    ) {
+        val nextPosition = position + 1
+        if (showDate || data.get(nextPosition).type == QMessage.Type.CARD
+            || data.get(nextPosition).type == QMessage.Type.CAROUSEL
+            || data.get(nextPosition).type == QMessage.Type.SYSTEM_EVENT
+        ) {
+            setNeedNameAndAvatar(true, data.get(position))
+        } else if (data.get(position).sender.id.equals(data.get(nextPosition).sender.id)) {
+            setNeedNameAndAvatar(false, null)
+        } else {
+            setNeedNameAndAvatar(true, data.get(position))
+        }
     }
 
-    private fun renderState(comment: QMessage) {
+    private fun setNeedNameAndAvatar(isShow: Boolean, comment: QMessage?) {
+        if (config.isAvatarActived() && isShow) {
+            avatar?.let {
+                Nirmana.getInstance().get()
+                    .load(comment!!.sender.avatarUrl)
+                    .apply(
+                        RequestOptions()
+                            .circleCrop()
+                            .placeholder(R.drawable.ic_avatar)
+                            .error(R.drawable.ic_avatar)
+                            .dontAnimate()
+                    )
+                    .into(it)
+            }
+            sender?.text = comment!!.sender.name
+
+            avatar?.visibility = View.VISIBLE
+            sender?.visibility = View.VISIBLE
+            chatFrom?.apply {
+                background = getChatFrom()
+                visibility = View.VISIBLE
+            }
+
+        } else {
+            avatar?.visibility = View.GONE
+            sender?.visibility = View.GONE
+            chatFrom?.visibility = View.GONE
+        }
+    }
+
+    open fun getChatFrom(): Drawable? = null
+
+    private fun renderState(comment: QMessage) = with(ResourceManager) {
         if (state != null) {
             when (comment.status) {
                 QMessage.STATE_PENDING, QMessage.STATE_SENDING -> {
-                    state.setColorFilter(pendingStateColor)
+                    state.setColorFilter(PENDING_STATE_COLOR!!)
                     state.setImageResource(R.drawable.ic_qiscus_info_time)
                 }
                 QMessage.STATE_SENT -> {
-                    state.setColorFilter(pendingStateColor)
+                    state.setColorFilter(PENDING_STATE_COLOR!!)
                     state.setImageResource(R.drawable.ic_qiscus_sending)
                 }
                 QMessage.STATE_DELIVERED -> {
-                    state.setColorFilter(pendingStateColor)
+                    state.setColorFilter(PENDING_STATE_COLOR!!)
                     state.setImageResource(R.drawable.ic_qiscus_read)
                 }
                 QMessage.STATE_READ -> {
-                    state.setColorFilter(readStateColor)
+                    state.setColorFilter(READ_STATE_COLOR!!)
                     state.setImageResource(R.drawable.ic_qiscus_read)
                 }
                 QMessage.STATE_FAILED -> {
-                    state.setColorFilter(failedStateColor)
+                    state.setColorFilter(FAILED_STATE_COLOR!!)
                     state.setImageResource(R.drawable.ic_qiscus_sending_failed)
                 }
             }
         }
     }
+
+    fun showFirstTextIndicator(isShow: Boolean) {
+        firstIndicator?.visibility = if (isShow) View.VISIBLE else View.GONE
+    }
+
 }

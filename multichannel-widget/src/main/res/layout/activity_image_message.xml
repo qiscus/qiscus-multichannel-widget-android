@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="false"
+    android:animationCache="false"
+    android:layoutAnimation="@null"
+    tools:context=".ui.chat.image.ImageMessageActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/QiscusMessageToolbarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/messageBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="false"
+        android:animationCache="false"
+        android:background="@color/qiscus_white_mc"
+        android:layoutAnimation="@null"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/rvImagePrev">
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/fieldMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="18dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp"
+            android:layout_weight="1"
+            android:dropDownAnchor="@+id/tv_start_chat"
+            android:gravity="center_vertical"
+            android:hint="@string/add_caption"
+            android:imeOptions="actionSend"
+            android:inputType="textLongMessage|textAutoCorrect|textNoSuggestions|textCapSentences|textMultiLine"
+            android:maxHeight="116dp"
+            android:maxLines="6"
+            android:minHeight="38dp"
+            android:paddingLeft="@dimen/margin_normal"
+            android:paddingTop="10dp"
+            android:paddingRight="@dimen/margin_normal"
+            android:paddingBottom="10dp"
+            android:textColor="#232323"
+            android:textColorHint="#B9B9B9"
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btnSend"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="4dp"
+            android:contentDescription="@null"
+            android:paddingStart="18dp"
+            android:paddingLeft="18dp"
+            android:paddingEnd="18dp"
+            android:paddingRight="18dp"
+            android:src="@drawable/ic_send_mc" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvImagePrev"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:animateLayoutChanges="false"
+        android:animationCache="false"
+        android:clipToPadding="false"
+        android:layoutAnimation="@null"
+        android:orientation="horizontal"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/imageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:animateLayoutChanges="false"
+        android:animationCache="false"
+        android:background="#333333"
+        android:layoutAnimation="@null"
+        app:layout_constraintBottom_toTopOf="@+id/messageBox"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E3E3E3"
+        app:layout_constraintBottom_toTopOf="@+id/messageBox" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

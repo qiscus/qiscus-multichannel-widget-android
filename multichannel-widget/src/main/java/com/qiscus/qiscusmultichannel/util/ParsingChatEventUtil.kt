@@ -1,6 +1,5 @@
 package com.qiscus.qiscusmultichannel.util
 
-import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.sdk.chat.core.data.model.QAccount
 import org.json.JSONObject
@@ -31,11 +30,11 @@ class ParsingChatEventUtil {
     }
 
     private fun getString(str: Int): String {
-        return MultichannelWidget.application.getString(str)
+        return Const.qiscusCore()?.apps!!.getString(str)
     }
 
     private fun getString(str: Int, param: String): String {
-        return MultichannelWidget.application.getString(str, param)
+        return Const.qiscusCore()?.apps!!.getString(str, param)
     }
 
 }

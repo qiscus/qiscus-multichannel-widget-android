@@ -1,112 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:paddingTop="@dimen/margin_small"
+    android:paddingBottom="@dimen/margin_small"
+    tools:viewBindingIgnore="true">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/dateOfMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_date"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="Date"
-            android:textColor="@color/qiscus_white_mc"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
+    <ViewStub
+        android:id="@+id/container_date_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp">
+        android:layout="@layout/item_chat_date_indicator"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:gravity="bottom|end"
-            android:orientation="vertical">
+    <com.google.android.material.imageview.ShapeableImageView
+        app:shapeAppearanceOverlay="@style/roundedCornersImageView"
+        android:id="@+id/iv_chat_comment"
+        android:layout_width="0dp"
+        android:layout_height="190dp"
+        android:layout_marginStart="@dimen/margin_bubble_space"
+        android:layout_marginLeft="@dimen/margin_bubble_space"
+        android:layout_marginEnd="@dimen/margin_bubble"
+        android:layout_marginRight="@dimen/margin_bubble"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_date_indicator" />
 
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:ellipsize="end"
-                android:gravity="end"
-                android:maxLines="1"
-                android:textSize="14sp"
-                android:textColor="@color/qiscus_date_bubble_mc" />
+    <View
+        android:id="@+id/spacer_message"
+        android:layout_width="1dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_chat"
+        app:layout_constraintStart_toStartOf="@+id/iv_chat_comment"
+        app:layout_constraintTop_toTopOf="@+id/iv_chat_comment" />
 
-            <ImageView
-                android:id="@+id/state"
-                android:layout_width="18dp"
-                android:layout_height="16dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp" />
-        </LinearLayout>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_chat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:minHeight="40dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/iv_chat_comment"
+        app:layout_constraintStart_toStartOf="@+id/iv_chat_comment" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_weight="2"
-            android:background="@drawable/qiscus_rounded_right_buble_bg"
-            android:orientation="vertical">
+    <ImageView
+        android:id="@+id/ivPlay"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/rounded_play_bg"
+        app:layout_constraintBottom_toTopOf="@+id/tv_chat"
+        app:layout_constraintEnd_toEndOf="@+id/iv_chat_comment"
+        app:layout_constraintStart_toStartOf="@+id/iv_chat_comment"
+        app:layout_constraintTop_toTopOf="@+id/iv_chat_comment" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="160dp">
+    <!--<androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_video_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="14dp"
+        android:gravity="center"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_small"
+        android:paddingRight="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_small"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_chat"
+        app:layout_constraintEnd_toEndOf="@+id/iv_chat_comment"
+        tools:ignore="SmallSp" />-->
 
-                <ImageView
-                    android:id="@+id/thumbnail"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop" />
+    <ImageView
+        android:id="@+id/img_sender_avatar"
+        android:layout_width="@dimen/avatar_sender_size"
+        android:layout_height="@dimen/avatar_sender_size"
+        android:layout_marginEnd="18dp"
+        android:layout_marginRight="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_date_indicator" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_play_bg"
-                    android:src="@drawable/ic_play"
-                    android:layout_centerInParent="true"
-                    android:padding="10dp"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:textSize="@dimen/text_time_bubble"
+        app:layout_constraintEnd_toStartOf="@+id/iv_chat_comment"
+        app:layout_constraintTop_toBottomOf="@+id/container_date_indicator"
+        tools:ignore="SmallSp" />
 
-            </RelativeLayout>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/state_indicator"
+        android:layout_width="@dimen/state_size"
+        android:layout_height="@dimen/state_size"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        app:layout_constraintEnd_toStartOf="@+id/iv_chat_comment"
+        app:layout_constraintTop_toBottomOf="@+id/tv_time" />
 
-            <TextView
-                android:id="@+id/message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="all"
-                android:layout_marginTop="-8dp"
-                android:linksClickable="true"
-                android:textColor="@color/qiscus_right_bubble_text_mc"
-                android:textColorLink="@color/qiscus_color_my_link_mc"
-                android:textSize="14sp"
-                android:padding="8dp"
-                android:background="@drawable/bg_my_caption_image"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/avatar_driver"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

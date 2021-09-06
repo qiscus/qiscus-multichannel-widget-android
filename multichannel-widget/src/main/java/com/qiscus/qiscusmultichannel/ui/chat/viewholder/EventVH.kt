@@ -1,29 +1,42 @@
 package com.qiscus.qiscusmultichannel.ui.chat.viewholder
 
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.TextView
-import com.qiscus.qiscusmultichannel.MultichannelWidget
+import androidx.core.content.ContextCompat
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
-import com.qiscus.qiscusmultichannel.util.QiscusChatLocal
+import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
 
-class EventVH(itemView: View) : BaseViewHolder(itemView) {
+class EventVH(
+    itemView: View,
+    config: QiscusMultichannelWidgetConfig,
+    color: QiscusMultichannelWidgetColor
+) : BaseViewHolder(itemView, config, color) {
 
     private val tvEvent: TextView? = itemView.findViewById(R.id.tvEvent)
-    private var linEvent : LinearLayout? = itemView.findViewById(R.id.linEvent)
+
+    init {
+        tvEvent?.let {
+            it.background = ResourceManager.getTintDrawable(
+                ContextCompat.getDrawable(
+                    itemView.context,
+                    R.drawable.rounded_date
+                ), color.getTimeBackgroundColor()
+            )
+            it.setTextColor(color.getSystemEventTextColor())
+        }
+    }
+
     override fun bind(comment: QMessage) {
         super.bind(comment)
         tvEvent?.text = comment.text
 
-
-        if (MultichannelWidget.config.getHideUIEvent()) {
-            hidenUI()
-        }
-
+        if (config.getHideUIEvent()) hidenUI()
     }
 
-    fun hidenUI(){
+    fun hidenUI() {
         itemView.layoutParams.width = 0
         itemView.layoutParams.height = 0
     }

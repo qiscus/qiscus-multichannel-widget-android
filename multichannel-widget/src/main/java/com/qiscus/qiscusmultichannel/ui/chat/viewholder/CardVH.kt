@@ -7,18 +7,28 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.content.ContextCompat
 import androidx.core.util.PatternsCompat
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
-import com.qiscus.qiscusmultichannel.MultichannelWidget
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
+import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
-import kotlinx.android.synthetic.main.item_card_mc.view.*
+import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.util.regex.Matcher
+
 
 /**
  * Created on : 11/02/20
@@ -27,52 +37,56 @@ import java.util.regex.Matcher
  * GitHub     : https://github.com/arioki
  */
 
-class CardVH(itemView: View) : BaseViewHolder(itemView) {
+class CardVH(
+    itemView: View,
+    config: QiscusMultichannelWidgetConfig,
+    color: QiscusMultichannelWidgetColor
+) : BaseViewHolder(itemView, config, color), ChatButtonView.ChatButtonClickListener {
+
+    private var chatRoomId: Long = 0
+    private var description: TextView = itemView.findViewById(R.id.description)
+    private var title: TextView = itemView.findViewById(R.id.title)
+    private var thumbnail: ImageView = itemView.findViewById(R.id.thumbnail)
+    private var containerBackground: ViewGroup = itemView.findViewById(R.id.containerBackground)
+    private var buttonsContainer: ViewGroup = itemView.findViewById(R.id.buttonsContainer)
+
+    init {
+        description.setTextColor(color.getLeftBubbleTextColor())
+        title.setTextColor(color.getLeftBubbleTextColor())
+    }
 
     override fun bind(comment: QMessage) {
         super.bind(comment)
+        this.chatRoomId = comment.chatRoomId
         val data = JSONObject(comment.payload)
-        itemView.tv_title.text = data.getString("title")
-        itemView.tv_message.text = data.getString("description")
+        title.text = data.getString("title")
+        description.text = data.getString("description")
 
         Nirmana.getInstance().get()
-            .setDefaultRequestOptions(
-                RequestOptions()
-                    .placeholder(R.drawable.ic_qiscus_add_image)
-                    .error(R.drawable.ic_qiscus_add_image)
-                    .dontAnimate()
-                    .transforms(CenterCrop(), RoundedCorners(16))
-            )
             .load(data.getString("image"))
-            .into(itemView.image)
-        setUpLinks()
-        try {
-            val dataButton = JSONObject(data.getJSONArray("buttons")[0].toString())
-            val payload = JSONObject(dataButton.get("payload").toString())
-            val url = payload.getString("url")
-            val type = dataButton.getString("type")
-            val postbackText = dataButton.getString("postback_text")
-            itemView.btn_msg.setOnClickListener {
-                when (type) {
-                    "link" -> WebViewHelper.launchUrl(itemView.context, Uri.parse(url))
-                    "postback" -> {
-                        val postBackMessage = QMessage.generatePostBackMessage(
-                            comment.chatRoomId,
-                            postbackText,
-                            payload
-                        )
-                        sendComment(postBackMessage)
-                    }
-                }
+            .apply(
+                RequestOptions()
+                    .placeholder(R.drawable.qiscus_image_placeholder)
+                    .error(R.drawable.qiscus_image_placeholder)
+                    .dontAnimate()
+                    .centerCrop()
+                    .transform(CenterCrop(), RoundedCorners(ResourceManager.DIMEN_ROUNDED_IMAGE))
+            )
+            .into(thumbnail)
 
-            }
-            itemView.btn_msg.text = dataButton.getString("label")
-        } catch (e: Exception) {
-        }
+        setUpLinks()
+        setUpButtons(data.getJSONArray("buttons"))
+
+        containerBackground.background = ResourceManager.getTintDrawable(
+            ContextCompat.getDrawable(
+                itemView.context,
+                R.drawable.qiscus_rounded_chat_bg_mc
+            ), color.getLeftBubbleColor()
+        )
     }
 
     private fun sendComment(comment: QMessage) {
-        MultichannelWidget.instance.component.chatroomRepository.sendComment(
+        QiscusMultichannelWidget.instance.component.chatroomRepository.sendComment(
             comment.chatRoomId,
             comment,
             {
@@ -85,7 +99,7 @@ class CardVH(itemView: View) : BaseViewHolder(itemView) {
 
     @SuppressLint("DefaultLocale", "RestrictedApi")
     private fun setUpLinks() {
-        val text = itemView.tv_message.text.toString().toLowerCase()
+        val text = description.text.toString().toLowerCase()
         val matcher: Matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(text)
         while (matcher.find()) {
             val start: Int = matcher.start()
@@ -106,17 +120,39 @@ class CardVH(itemView: View) : BaseViewHolder(itemView) {
     }
 
     private fun clickify(start: Int, end: Int, listener: ClickSpan.OnClickListener) {
-        val text: CharSequence = itemView.tv_message.text.toString()
+        val text: CharSequence = description.text.toString()
         val span = ClickSpan(listener)
         if (start == -1) {
             return
         }
         if (text is Spannable) {
-            (text as Spannable).setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            text.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         } else {
             val s: SpannableString = SpannableString.valueOf(text)
             s.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            itemView.tv_message.text = s
+            description.text = s
+        }
+    }
+
+    @Throws(JSONException::class)
+    private fun setUpButtons(buttons: JSONArray) {
+        buttonsContainer.removeAllViews()
+        if (buttons.length() < 1) return
+
+        var type: String
+        for (i in 0 until buttons.length()) {
+            type = buttons.getJSONObject(i).optString("type", "")
+            if (type == "postback" || type == "link") {
+                buttonsContainer.addView(
+                    ChatButtonView(itemView.context, color, buttons.getJSONObject(i))
+                        .setChatButtonClickListener(this)
+                        .build(),
+                    LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                    )
+                )
+            }
         }
     }
 
@@ -132,4 +168,25 @@ class CardVH(itemView: View) : BaseViewHolder(itemView) {
         }
 
     }
+
+    override fun onChatButtonClick(jsonButton: JSONObject?) {
+        jsonButton?.let {
+            when (it.getString("type")) {
+                "link" -> WebViewHelper.launchUrl(
+                    itemView.context,
+                    Uri.parse(JSONObject(jsonButton.get("payload").toString()).getString("url"))
+                )
+                "postback" -> {
+                    val postBackMessage = QMessage.generatePostBackMessage(
+                        this.chatRoomId,
+                        it.getString("postback_text"),
+                        JSONObject(jsonButton.get("payload").toString())
+                    )
+                    sendComment(postBackMessage)
+                }
+            }
+
+        }
+    }
+
 }

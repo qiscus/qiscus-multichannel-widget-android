@@ -1,9 +1,9 @@
 package com.qiscus.qiscusmultichannel.data.repository.impl
 
-import com.qiscus.qiscusmultichannel.MultichannelWidget
-import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.data.model.DataInitialChat
-import com.qiscus.qiscusmultichannel.data.model.UserProperties
+import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
 import com.qiscus.qiscusmultichannel.data.repository.ChatroomRepository
 import com.qiscus.qiscusmultichannel.data.repository.response.ResponseInitiateChat
 import com.qiscus.qiscusmultichannel.util.Const
@@ -28,20 +28,20 @@ class ChatroomRepositoryImpl : ChatroomRepository {
         onSuccess: (QMessage) -> Unit,
         onError: (Throwable) -> Unit
     ) {
-        val qAccount: QAccount = Const.qiscusCore()?.getQiscusAccount()!!
+        val qAccount: QAccount = Const.qiscusCore()?.qiscusAccount!!
         val qUser = QUser()
         qUser.avatarUrl = qAccount.avatarUrl
         qUser.id = qAccount.id
         qUser.extras = qAccount.extras
         qUser.name = qAccount.name
-        message.setSender(qUser)
+        message.sender = qUser
 
         if (message.type == QMessage.Type.TEXT && message.text.trim().isEmpty()) {
             onError(Throwable("message can't empty"))
         }
 
         Const.qiscusCore()?.api?.sendMessage(message)
-            ?.doOnSubscribe { Const.qiscusCore()?.getDataStore()?.addOrUpdate(message) }
+            ?.doOnSubscribe { Const.qiscusCore()?.dataStore?.addOrUpdate(message) }
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe({
@@ -69,12 +69,13 @@ class ChatroomRepositoryImpl : ChatroomRepository {
         Const.qiscusCore()?.pusherApi?.subsribeCustomEvent(roomId)
     }
 
-    fun initiateChat(
+    fun loginMultichannel(
         name: String?,
         userId: String?,
         avatar: String?,
         extras: String?,
         userProp: List<UserProperties>?,
+        config: QiscusMultichannelWidgetConfig?,
         responseInitiateChat: (ResponseInitiateChat) -> Unit,
         onError: (Throwable) -> Unit
     ) {
@@ -89,9 +90,9 @@ class ChatroomRepositoryImpl : ChatroomRepository {
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe({
-                MultichannelWidget.instance.component.qiscusChatRepository.initiateChat(
+                QiscusMultichannelWidget.instance.component.qiscusChatRepository.initiateChat(
                     DataInitialChat(
-                        Const.qiscusCore()?.getAppId()!!,
+                        Const.qiscusCore()?.appId!!,
                         userId,
                         name,
                         avatar,
@@ -99,13 +100,13 @@ class ChatroomRepositoryImpl : ChatroomRepository {
                         null,
                         extras,
                         userProp
-                    ), {
-                        it.data.isSessional?.let {
-                            MultichannelWidgetConfig.setSessional(it)
+                    ), { response ->
+                        response.data.isSessional?.let { sessional ->
+                            config?.setSessional(sessional)
                         }
-                        responseInitiateChat(it)
-                    }, {
-                        onError(it)
+                        responseInitiateChat(response)
+                    }, { throwable ->
+                        onError(throwable)
                     })
             }, {
                 onError(it)

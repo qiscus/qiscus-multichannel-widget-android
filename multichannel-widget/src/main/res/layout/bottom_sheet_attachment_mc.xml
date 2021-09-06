@@ -1,112 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linAttachment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
-
-    <View
-        android:layout_width="40dp"
-        android:layout_height="4dp"
-        android:layout_gravity="center"
-        android:background="@drawable/bottom_sheet_draggable_mark" />
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/linTakePhoto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="52dp"
         android:orientation="horizontal"
-        android:padding="10dp"
-        tools:visibility="gone">
+        android:paddingStart="24dp"
+        android:paddingLeft="24dp"
+        android:paddingTop="28dp"
+        android:paddingEnd="24dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="14dp">
 
         <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:clickable="false"
-            android:src="@drawable/ic_qiscus_camera" />
+            android:id="@+id/imgCamera"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_camera" />
 
         <TextView
-            android:id="@+id/textView7"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:gravity="center|start"
-            android:text="@string/qiscus_camera_mc"
-            android:textColor="@color/qiscus_text_attachment_mc" />
-    </LinearLayout>
+            android:id="@+id/textCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:text="@string/qiscus_camera_mc" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/qiscus_attachment_separator_mc"
-        tools:visibility="gone" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linImageGallery"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="52dp"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:paddingStart="24dp"
+        android:paddingLeft="24dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="24dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="28dp">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:clickable="false"
-            android:src="@drawable/ic_qiscus_gallery" />
+            android:id="@+id/imgGallery"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_gallery" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
+            android:id="@+id/textGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginLeft="@dimen/margin_normal"
             android:gravity="center|start"
-            android:text="@string/qiscus_image_mc"
-            android:textColor="@color/qiscus_text_attachment_mc" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/qiscus_attachment_separator_mc" />
-
-    <LinearLayout
-        android:id="@+id/linDocument"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:padding="10dp">
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:clickable="false"
-            android:src="@drawable/ic_qiscus_doc" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:gravity="center|start"
-            android:text="@string/qiscus_document_mc"
-            android:textColor="@color/qiscus_text_attachment_mc" />
+            android:text="@string/qiscus_image_mc" />
 
     </LinearLayout>
 

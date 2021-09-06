@@ -3,8 +3,7 @@ package com.qiscus.qiscusmultichannel.util
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.qiscus.qiscusmultichannel.MultichannelWidget
-import com.qiscus.qiscusmultichannel.data.model.UserProperties
+import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
 import org.json.JSONObject
 
 /**
@@ -14,7 +13,7 @@ import org.json.JSONObject
  */
 object QiscusChatLocal {
 
-    private var sharedPreferences: SharedPreferences = MultichannelWidget.application
+    private var sharedPreferences: SharedPreferences = Const.qiscusCore()?.apps!!
         .getSharedPreferences("qiscus_multichannel_chat", Context.MODE_PRIVATE)
 
     fun getPref(): SharedPreferences {

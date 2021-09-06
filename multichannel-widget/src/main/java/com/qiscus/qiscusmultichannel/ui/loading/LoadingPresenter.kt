@@ -1,7 +1,7 @@
 package com.qiscus.qiscusmultichannel.ui.loading
 
-import com.qiscus.qiscusmultichannel.MultichannelWidget
-import com.qiscus.qiscusmultichannel.data.model.UserProperties
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
+import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
 import com.qiscus.qiscusmultichannel.util.QiscusChatLocal
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 
@@ -29,20 +29,27 @@ class LoadingPresenter {
         extras: String?,
         userProp: List<UserProperties>?
     ) {
-        if (QiscusChatLocal.getHasMigration() == false) {
+        if (!QiscusChatLocal.getHasMigration()) {
             QiscusChatLocal.setHasMigration(true)
             QiscusChatLocal.setRoomId(0)
         }
 
-        MultichannelWidget.instance.loginMultiChannel(username, userId, avatar, extras, userProp, {
-            openRoomById()
-        }, {
-            view?.onError(it.localizedMessage)
-        })
+        QiscusMultichannelWidget.instance.loginMultiChannel(
+            username,
+            userId,
+            avatar,
+            extras,
+            userProp,
+            {
+                openRoomById()
+            },
+            {
+                view?.onError(it.localizedMessage)
+            })
     }
 
     fun openRoomById() {
-        MultichannelWidget.instance.openChatRoomById(QiscusChatLocal.getRoomId(), {
+        QiscusMultichannelWidget.instance.openChatRoomById(QiscusChatLocal.getRoomId(), {
             view?.onSuccess(it)
         }, {
             view?.onError(it.localizedMessage)

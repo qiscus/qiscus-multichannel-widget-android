@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.SortedList
 abstract class SortedRecyclerViewAdapter<Item, VH : RecyclerView.ViewHolder> :
     RecyclerView.Adapter<VH>() {
 
-    protected var recyclerViewItemClickListener: CommentsAdapter.RecyclerViewItemClickListener? = null
+    protected var ietmViewListener: CommentsAdapter.ItemViewListener? = null
 
     val data: SortedList<Item> = SortedList(itemClass, object : SortedList.Callback<Item>() {
         override fun compare(o1: Item, o2: Item): Int {
@@ -137,18 +137,18 @@ abstract class SortedRecyclerViewAdapter<Item, VH : RecyclerView.ViewHolder> :
     }
 
     //Set method of OnItemClickListener object
-    fun setOnItemClickListener(recyclerViewItemClickListener: CommentsAdapter.RecyclerViewItemClickListener) {
-        this.recyclerViewItemClickListener = recyclerViewItemClickListener
+    fun setOnItemClickListener(recyclerViewItemClickListener: CommentsAdapter.ItemViewListener) {
+        this.ietmViewListener = recyclerViewItemClickListener
     }
 
     fun setOnClickListener(view: View, position: Int) {
         view.setOnClickListener { v ->
             //When item view is clicked, trigger the itemclicklistener
-            recyclerViewItemClickListener?.onItemClick(v, position)
+            ietmViewListener?.onItemClick(v, position)
         }
         view.setOnLongClickListener { v ->
             //When item view is clicked long, trigger the itemclicklistener
-            recyclerViewItemClickListener?.onItemLongClick(v, position)
+            ietmViewListener?.onItemLongClick(v, position)
             true
         }
     }

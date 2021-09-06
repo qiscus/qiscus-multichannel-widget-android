@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/liner"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/margin_normal"
+        android:paddingLeft="@dimen/margin_normal"
+        android:paddingTop="@dimen/margin_chat_message"
+        android:paddingBottom="@dimen/margin_chat_message"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:maxLength="20"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:textSize="14sp" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.content.ContextCompat
-import com.qiscus.qiscusmultichannel.R
 
 /**
  * Created on : 14/02/20
@@ -18,10 +16,7 @@ object WebViewHelper {
     fun launchUrl(context: Context, uri: Uri) {
         val packageName = CustomTabsHelper.getPackageNameToUse(context)
         val builder = CustomTabsIntent.Builder()
-            .setToolbarColor(ContextCompat.getColor(context, R.color.qiscus_webview_toolbar_mc))
             .setShowTitle(true)
-            .addDefaultShareMenuItem()
-            .enableUrlBarHiding()
             .build()
         if (packageName == null) {
             val intent = Intent(context, WebViewActivity::class.java)

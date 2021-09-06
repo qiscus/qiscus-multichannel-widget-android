@@ -4,119 +4,100 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:paddingTop="@dimen/margin_small"
+    android:paddingBottom="@dimen/margin_small"
+    tools:viewBindingIgnore="true">
 
-    <View
-        android:id="@+id/view3"
-        android:layout_width="200dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/qiscus_rounded_left_chat_bg_mc"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ViewStub
+        android:id="@+id/container_date_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/item_chat_date_indicator"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_name_sender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_bubble"
+        android:layout_marginLeft="@dimen/margin_bubble"
+        android:gravity="start"
+        android:paddingBottom="@dimen/margin_smaller"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateOfMessage" />
+        app:layout_constraintTop_toBottomOf="@+id/container_date_indicator"
+        tools:ignore="RtlSymmetry" />
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/containerBackground"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_bubble"
+        android:layout_marginLeft="@dimen/margin_bubble"
+        android:orientation="vertical"
+        android:padding="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_sender">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            app:shapeAppearanceOverlay="@style/roundedCornersImageView"
+            android:id="@+id/thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_chat_message"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_chat_message"
+            android:ellipsize="end"
+            android:maxLines="4"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/buttonsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <ImageView
-        android:id="@+id/image"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="16dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="@+id/view3"
+        android:id="@+id/img_sender_avatar"
+        android:layout_width="@dimen/avatar_sender_size"
+        android:layout_height="@dimen/avatar_sender_size"
+        android:layout_marginStart="18dp"
+        android:layout_marginLeft="18dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateOfMessage"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_sender" />
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:textStyle="bold"
-        android:textColor="@color/qiscus_darker_gray"
-        app:layout_constraintEnd_toEndOf="@+id/view3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image"
-        tools:text="TextView" />
-
-    <TextView
-        android:id="@+id/tv_message"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:lineSpacingExtra="8sp"
-        android:autoLink="all"
-        android:linksClickable="true"
-        android:textColor="@color/qiscus_left_bubble_text_mc"
-        android:textColorLink="@color/qiscus_color_opponent_link_mc"
-        app:layout_constraintEnd_toEndOf="@+id/view3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        tools:text="Rp. 200Sandal jepit nikmat rasa ayam"
-        android:focusable="true" />
-
-    <Button
-        android:id="@+id/btn_msg"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/transparent"
-        android:textAllCaps="false"
-        android:textColor="@color/qiscus_lighter_gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/view3"
-        app:layout_constraintStart_toStartOf="@+id/view3"
-        app:layout_constraintTop_toBottomOf="@+id/view5"
-        tools:text="Button" />
-
-    <View
-        android:id="@+id/view5"
-        android:layout_width="0dp"
-        android:layout_height="1.6dp"
-        android:layout_marginTop="16dp"
-        android:alpha="0.5"
-        android:background="@color/qiscus_light_grey_mc"
-        app:layout_constraintEnd_toEndOf="@+id/view3"
-        app:layout_constraintStart_toStartOf="@+id/view3"
-        app:layout_constraintTop_toBottomOf="@+id/tv_message" />
-
-    <TextView
-        android:id="@+id/date"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/qiscus_date_bubble_mc"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/image"
-        app:layout_constraintTop_toTopOf="@+id/view3"
-        tools:text="00:00" />
-
-    <TextView
-        android:id="@+id/dateOfMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_date"
-        android:gravity="center"
-        android:padding="10dp"
-        tools:text="Date"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginTop="2dp"
+        android:textSize="@dimen/text_time_bubble"
+        app:layout_constraintStart_toEndOf="@+id/containerBackground"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_sender"
+        tools:ignore="SmallSp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

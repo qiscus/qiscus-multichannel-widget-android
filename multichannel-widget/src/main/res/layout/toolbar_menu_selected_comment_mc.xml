@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorPrimary">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/containerOption"
         android:layout_width="match_parent"
         android:layout_height="60dp">
 
@@ -62,4 +62,5 @@
             app:srcCompat="@drawable/ic_cancel_mc"
             tools:ignore="VectorDrawableCompat" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </com.google.android.material.appbar.AppBarLayout>

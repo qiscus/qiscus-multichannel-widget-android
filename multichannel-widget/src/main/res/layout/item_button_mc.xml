@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/margin_small"
+    android:paddingBottom="@dimen/margin_small"
+    tools:viewBindingIgnore="true">
+
+    <ViewStub
+        android:id="@+id/container_date_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/item_chat_date_indicator" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_name_sender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/container_date_indicator"
+        android:layout_marginStart="@dimen/margin_bubble"
+        android:layout_marginLeft="@dimen/margin_bubble"
+        android:gravity="start"
+        android:paddingBottom="@dimen/margin_smaller"
+        android:textSize="12sp"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageView
+        android:id="@+id/img_sender_avatar"
+        android:layout_width="@dimen/avatar_sender_size"
+        android:layout_height="@dimen/avatar_sender_size"
+        android:layout_below="@+id/tv_name_sender"
+        android:layout_marginStart="18dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginEnd="@dimen/margin_smaller"
+        android:layout_marginRight="@dimen/margin_smaller" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_name_sender"
+        android:layout_marginStart="@dimen/margin_bubble"
+        android:layout_marginLeft="@dimen/margin_bubble"
+        android:layout_marginEnd="@dimen/margin_bubble_space"
+        android:layout_marginRight="@dimen/margin_bubble_space"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/contents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_chat_message"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:autoLink="web"
+            android:gravity="center_horizontal"
+            android:linksClickable="true"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_chat_message"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_chat_from"
+            android:gravity="center"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/buttonsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="1dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</RelativeLayout>

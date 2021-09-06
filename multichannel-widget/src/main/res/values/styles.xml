@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -21,7 +21,8 @@
     </style>
 
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/bottom_sheet_style</item>
+        <!--        <item name="android:background">@drawable/bottom_sheet_style</item>-->
+        <item name="android:background">@null</item>
     </style>
 
     <style name="ExoMediaButton.Previous">
@@ -31,4 +32,39 @@
     <style name="ExoMediaButton.Next">
         <item name="android:visibility">gone</item>
     </style>
+
+    <style name="QiscusTitleTextApperance">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/qiscus_white_mc</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="QiscusSubTitleTextApperance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/qiscus_white_mc</item>
+    </style>
+
+    <style name="QiscusToolbarStyle" parent="android:Widget.Toolbar" tools:targetApi="LOLLIPOP">
+        <item name="android:background">?colorPrimary</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="elevation">0dp</item>
+        <item name="navigationIcon">@drawable/ic_back_white</item>
+        <item name="titleTextAppearance">@style/QiscusTitleTextApperance</item>
+        <item name="subtitleTextAppearance">@style/QiscusSubTitleTextApperance</item>
+        <item name="titleMargin">0dp</item>
+        <item name="maxButtonHeight">?attr/actionBarSize</item>
+    </style>
+
+    <style name="QiscusMessageToolbarStyle" parent="QiscusToolbarStyle">
+        <item name="titleMarginStart">12dp</item>
+        <item name="titleMarginEnd">2dp</item>
+    </style>
+
+    <style name="roundedCornersImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/margin_medium</item>
+    </style>
+
 </resources>

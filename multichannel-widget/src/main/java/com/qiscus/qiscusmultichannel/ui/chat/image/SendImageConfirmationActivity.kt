@@ -16,7 +16,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.qiscus.nirmana.Nirmana
-import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.util.WidgetFileUtil
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
@@ -75,15 +75,15 @@ class SendImageConfirmationActivity : AppCompatActivity() {
         val file = qiscusPhoto.photoFile
         val isVideo = WidgetFileUtil.isVideo(file)!!
 
-        if (isVideo && MultichannelWidgetConfig.getVideoPreviewOnSend()) {
+        if (isVideo && QiscusMultichannelWidget.instance.config.getVideoPreviewOnSend()) {
             initVideo(file)
         } else {
             Nirmana.getInstance().get()
-                .setDefaultRequestOptions(
+                .load(file)
+                .apply(
                     RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 )
-                .load(file)
                 .into(ivImage)
             progressBar.visibility = View.GONE
         }

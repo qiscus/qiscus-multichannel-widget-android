@@ -4,175 +4,137 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/qiscus_white_mc"
-    android:orientation="vertical"
-    android:padding="10dp"
-    android:visibility="visible">
+    android:paddingTop="@dimen/margin_small"
+    android:paddingBottom="@dimen/margin_small"
+    tools:viewBindingIgnore="true">
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="66dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="121dp"
-        android:layout_marginRight="121dp"
-        android:background="@drawable/qiscus_rounded_left_chat_bg_mc"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/avatar_driver"
-        app:layout_constraintTop_toBottomOf="@+id/sender" />
-
-    <ImageView
-        android:id="@+id/avatar_driver"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/message"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvTitle" />
-
-    <ImageView
-        android:id="@+id/ivAttachment"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:src="@drawable/ic_qiscus_file_mc"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/view" />
-
-    <ImageView
-        android:id="@+id/ivDownloadIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:src="@drawable/ic_qiscus_opponent_download_file"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintEnd_toEndOf="@+id/view" />
-
-    <TextView
-        android:id="@+id/dateOfMessage"
-        android:layout_width="wrap_content"
+    <ViewStub
+        android:id="@+id/container_date_indicator"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_date"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="Date"
-        android:textColor="@color/qiscus_white_mc"
-        android:textSize="14sp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout="@layout/item_chat_date_indicator"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/sender"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/qiscus_secondary_text_mc"
-        android:textSize="14sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateOfMessage" />
-
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_toEndOf="@+id/ivAttachment"
-        android:layout_toRightOf="@+id/ivAttachment"
-        android:ellipsize="end"
-        android:maxEms="20"
-        android:maxLines="1"
-        android:textAllCaps="true"
-        android:textColor="@color/qiscus_left_bubble_text_mc"
-        android:textSize="14sp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintStart_toEndOf="@+id/ivAttachment"
-        app:layout_constraintTop_toTopOf="@+id/view" />
-
-    <com.qiscus.qiscusmultichannel.ui.view.QiscusCircleProgress
-        android:id="@+id/qcpProgressView"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/tvTitle"
-        app:qcircle_text_size="12sp" />
-
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_toRightOf="@id/ivAttachment"
-        android:autoLink="all"
-        android:ellipsize="end"
-        android:linksClickable="true"
-        android:maxEms="20"
-        android:maxLines="1"
-        android:textAllCaps="true"
-        android:textColor="@color/qiscus_left_bubble_text_mc"
-        android:textColorLink="@color/qiscus_color_opponent_link_mc"
-        android:textSize="14sp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintEnd_toStartOf="@+id/ivDownloadIcon"
-        app:layout_constraintStart_toEndOf="@+id/ivAttachment" />
-
-    <TextView
-        android:id="@+id/date"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_name_sender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="@dimen/margin_bubble"
+        android:layout_marginLeft="@dimen/margin_bubble"
+        android:gravity="start"
+        android:paddingBottom="@dimen/margin_smaller"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_date_indicator"
+        tools:ignore="RtlSymmetry" />
+
+    <View
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:layout_marginStart="@dimen/margin_bubble"
+        android:layout_marginLeft="@dimen/margin_bubble"
+        android:layout_marginEnd="@dimen/margin_bubble_space"
+        android:layout_marginRight="@dimen/margin_bubble_space"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_sender" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_icon_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="@id/background"
+        app:layout_constraintStart_toStartOf="@id/background"
+        app:layout_constraintTop_toTopOf="@id/background"
+        app:tintMode="src_atop" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_title_file"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:ellipsize="end"
+        android:maxWidth="150dp"
+        android:maxLines="1"
+        android:textSize="@dimen/text_message_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/background"
+        app:layout_constraintStart_toEndOf="@+id/iv_icon_file"
+        app:layout_constraintTop_toTopOf="@id/background" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_extension_file"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title_file"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_smaller"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/qiscus_date_bubble_mc"
-        android:textSize="14sp"
-        android:visibility="visible"
-        app:layout_constraintStart_toEndOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/view"
-        tools:text="10:10" />
+        android:textSize="10sp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_download_or_upload"
+        app:layout_constraintStart_toEndOf="@+id/iv_icon_file"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_file"
+        tools:ignore="SmallSp" />
+
+    <com.qiscus.qiscusmultichannel.ui.view.QiscusCircleProgress
+        android:id="@+id/pb_file"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:indeterminate="true"
+        android:max="100"
+        android:maxLines="1"
+        android:progress="0"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/tv_title_file"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_file" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_download_or_upload"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="2dp"
+        android:contentDescription="@null"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/tv_title_file"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_file"
+        android:src="@drawable/ic_qiscus_opponent_download_file"
+        app:tint="@color/colorPrimary"
+        app:tintMode="src_atop" />
+
+    <ImageView
+        android:id="@+id/img_sender_avatar"
+        android:layout_width="@dimen/avatar_sender_size"
+        android:layout_height="@dimen/avatar_sender_size"
+        android:layout_marginStart="18dp"
+        android:layout_marginLeft="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_sender" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginTop="2dp"
+        android:textSize="@dimen/text_time_bubble"
+        app:layout_constraintStart_toEndOf="@+id/background"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_sender"
+        tools:ignore="SmallSp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

@@ -1,13 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_carousel"
-        android:layout_width="match_parent"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/container_carousel"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" />
-</LinearLayout>
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginRight="18dp"
+        android:layout_marginBottom="@dimen/margin_small"
+        app:cardCornerRadius="@dimen/margin_medium"
+        app:cardElevation="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_carousel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="34dp"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:padding="6.5dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <com.rd.PageIndicatorView
+            android:id="@+id/page_indicator_view"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/margin_medium"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="18dp"
+            app:piv_animationType="color"
+            app:piv_dynamicCount="true"
+            app:piv_interactiveAnimation="true"
+            app:piv_orientation="horizontal"
+            app:piv_padding="4dp"
+            app:piv_radius="4dp"
+            app:piv_scaleFactor="0" />
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

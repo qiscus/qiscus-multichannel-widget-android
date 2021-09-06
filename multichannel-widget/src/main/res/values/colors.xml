@@ -35,7 +35,7 @@
 
     <color name="text_typing_mc">#8F8F8F</color>
     <color name="qiscus_date_bubble_mc">#C4C4C4</color>
-    <color name="qiscus_selected_mc">#240071BB</color>
+    <color name="qiscus_selected_mc">#464646</color>
     <color name="mc_tint_cancel_send_message">#9E9E9E</color>
 
     <color name="qiscus_color_my_link_mc">#FFFFFF</color>
@@ -57,4 +57,5 @@
     <color name="jupuk_primary">#009688</color>
     <color name="jupuk_primary_dark">#00796B</color>
     <color name="jupuk_accent">#FF5722</color>
+    <color name="qiscus_divider">#D1D5DB</color>
 </resources>

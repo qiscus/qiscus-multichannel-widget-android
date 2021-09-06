@@ -9,11 +9,16 @@ import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.util.PatternsCompat
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
+import com.qiscus.qiscusmultichannel.ui.chat.CommentsAdapter
 import com.qiscus.qiscusmultichannel.ui.view.QiscusProgressView
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
 import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import org.json.JSONObject
 import java.util.regex.Matcher
@@ -23,15 +28,61 @@ import java.util.regex.Matcher
  * Author     : Taufik Budi S
  * Github     : https://github.com/tfkbudi
  */
-class FileVH(itemView: View) : BaseViewHolder(itemView), QMessage.ProgressListener,
+class FileVH(
+    itemView: View,
+    config: QiscusMultichannelWidgetConfig,
+    color: QiscusMultichannelWidgetColor,
+    viewType: Int
+) : BaseViewHolder(itemView, config, color), QMessage.ProgressListener,
     QMessage.DownloadingListener {
 
-    private val tvTitle: TextView? = itemView.findViewById(R.id.tvTitle)
-    private val message: TextView? = itemView.findViewById(R.id.message)
-    private val ivDownloadIcon: ImageView? = itemView.findViewById(R.id.ivDownloadIcon)
+    private val containerMessage: View? = itemView.findViewById(R.id.background)
+    private val ivAttachment: ImageView? = itemView.findViewById(R.id.iv_icon_file)
+    private val tvTitle: TextView? = itemView.findViewById(R.id.tv_title_file)
+    private val extention: TextView? = itemView.findViewById(R.id.tv_extension_file)
+    private val ivDownloadIcon: ImageView? = itemView.findViewById(R.id.btn_download_or_upload)
     private val progressView: QiscusProgressView? =
-        itemView.findViewById<View>(R.id.qcpProgressView) as QiscusProgressView?
+        itemView.findViewById<View>(R.id.pb_file) as QiscusProgressView?
     lateinit var qiscusComment: QMessage
+
+    init {
+        val backgroundColor: Int
+        val iconColor: Int
+
+        if (viewType == CommentsAdapter.TYPE_OPPONENT_FILE) {
+            ivDownloadIcon?.background = ResourceManager.getTintDrawable(
+                ContextCompat.getDrawable(
+                    itemView.context,
+                    R.drawable.ic_qiscus_opponent_download_file
+                ), color.getNavigationColor()
+            )
+
+            backgroundColor = color.getLeftBubbleColor()
+            iconColor = color.getNavigationColor()
+            tvTitle?.setTextColor(color.getLeftBubbleTextColor())
+            extention?.setTextColor(color.getLeftBubbleTextColor())
+        } else {
+            backgroundColor = color.getRightBubbleColor()
+            iconColor = color.getRightBubbleTextColor()
+            tvTitle?.setTextColor(color.getRightBubbleTextColor())
+            extention?.setTextColor(color.getRightBubbleTextColor())
+        }
+
+        containerMessage?.background = ResourceManager.getTintDrawable(
+            ContextCompat.getDrawable(
+                itemView.context,
+                R.drawable.qiscus_rounded_chat_bg_mc
+            ), backgroundColor
+        )
+        ivAttachment?.setImageDrawable(
+            ResourceManager.getTintDrawable(
+                ContextCompat.getDrawable(
+                    itemView.context,
+                    R.drawable.ic_qiscus_doc
+                ), iconColor
+            )
+        )
+    }
 
     @SuppressLint("SetTextI18n")
     override fun bind(comment: QMessage) {
@@ -48,12 +99,12 @@ class FileVH(itemView: View) : BaseViewHolder(itemView), QMessage.ProgressListen
             val url = content.getString("url")
             val tipe = url.split(".")
             tvTitle?.text = title.toString()
-            message?.text = "${tipe[tipe.size - 1].toUpperCase()} File"
+            extention?.text = "${tipe[tipe.size - 1].toUpperCase()} File"
         } catch (ex: Exception) {
 
         }
 
-        if (Const.qiscusCore()?.getDataStore()?.getLocalPath(comment.id) != null) {
+        if (Const.qiscusCore()?.dataStore?.getLocalPath(comment.id) != null) {
             ivDownloadIcon?.visibility = View.GONE
         }
     }
@@ -75,7 +126,7 @@ class FileVH(itemView: View) : BaseViewHolder(itemView), QMessage.ProgressListen
     }
 
     private fun setUpDownloadIcon(qiscusComment: QMessage) {
-        val me = Const.qiscusCore()?.getQiscusAccount()?.getId()
+        val me = Const.qiscusCore()?.qiscusAccount?.id
         qiscusComment.isMyComment(me)
         if (ivDownloadIcon != null) {
             if (qiscusComment.status <= QMessage.STATE_SENDING) {
@@ -94,9 +145,9 @@ class FileVH(itemView: View) : BaseViewHolder(itemView), QMessage.ProgressListen
         }
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint("DefaultLocale", "RestrictedApi")
     private fun setUpLinks() {
-        val text = message?.text.toString().toLowerCase()
+        val text = extention?.text.toString().toLowerCase()
         val matcher: Matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(text)
         while (matcher.find()) {
             val start: Int = matcher.start()
@@ -117,17 +168,17 @@ class FileVH(itemView: View) : BaseViewHolder(itemView), QMessage.ProgressListen
     }
 
     private fun clickify(start: Int, end: Int, listener: ClickSpan.OnClickListener) {
-        val text: CharSequence = message?.text.toString()
+        val text: CharSequence = extention?.text.toString()
         val span = ClickSpan(listener)
         if (start == -1) {
             return
         }
         if (text is Spannable) {
-            (text as Spannable).setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            text.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         } else {
             val s: SpannableString = SpannableString.valueOf(text)
             s.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            message?.text = s
+            extention?.text = s
         }
     }
 

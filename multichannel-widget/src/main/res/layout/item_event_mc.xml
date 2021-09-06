@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linEvent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:paddingTop="@dimen/margin_small"
+    android:paddingBottom="@dimen/margin_small"
+    tools:viewBindingIgnore="true">
 
-    <TextView
+    <ViewStub
+        android:id="@+id/container_date_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/item_chat_date_indicator" />
+
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/rounded_date"
-        android:paddingStart="8dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="4dp"
-        android:textColor="@color/qiscus_white_mc"
-        tools:text="Admin marked this conversation as resolved" />
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:autoLink="all"
+        android:gravity="center"
+        android:linksClickable="true"
+        android:paddingLeft="@dimen/margin_normal"
+        android:paddingTop="10dp"
+        android:paddingRight="@dimen/margin_normal"
+        android:paddingBottom="10dp"
+        android:textSize="12sp" />
 
 </LinearLayout>

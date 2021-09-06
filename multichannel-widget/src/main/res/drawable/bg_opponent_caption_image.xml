@@ -2,6 +2,13 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/qiscus_left_bubble_mc" />
     <corners
-        android:bottomLeftRadius="16dp"
-        android:bottomRightRadius="16dp" />
+        android:bottomLeftRadius="8dp"
+        android:bottomRightRadius="8dp" />
+
+    <padding
+        android:bottom="10dp"
+        android:left="@dimen/margin_normal"
+        android:right="@dimen/margin_normal"
+        android:top="10dp" />
+
 </shape>

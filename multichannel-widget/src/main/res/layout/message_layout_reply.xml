@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layoutAnimation="@null"
+    android:minHeight="@dimen/toolbar_size"
+    android:visibility="gone">
+
+    <View
+        android:id="@+id/bar"
+        android:layout_width="@dimen/margin_smaller"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/originSender"
+        android:layout_alignBottom="@id/originContent"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:background="@color/colorAccent"
+        android:layout_marginTop="-8dp"
+        android:layout_marginBottom="-14dp" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/originImage"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/bar"
+        android:layout_toRightOf="@id/bar"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/originSender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/originImage"
+        android:layout_toRightOf="@id/originImage"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="12sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/originContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/originSender"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_smaller"
+        android:layout_marginBottom="8dp"
+        android:layout_toStartOf="@+id/btnCancelReply"
+        android:layout_toLeftOf="@+id/btnCancelReply"
+        android:layout_toEndOf="@id/originImage"
+        android:layout_toRightOf="@id/originImage"
+        android:textColor="@color/qiscus_color_opponent_link_mc"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="12sp" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btnCancelReply"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_smaller"
+        android:layout_marginRight="@dimen/margin_smaller"
+        android:contentDescription="@null"
+        android:padding="11dp"
+        android:src="@drawable/ic_cancel_mc" />
+
+</RelativeLayout>

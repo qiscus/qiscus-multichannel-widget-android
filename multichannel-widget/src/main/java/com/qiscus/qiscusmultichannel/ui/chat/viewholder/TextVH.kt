@@ -1,6 +1,7 @@
 package com.qiscus.qiscusmultichannel.ui.chat.viewholder
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.Spannable
 import android.text.SpannableString
@@ -8,11 +9,14 @@ import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.util.PatternsCompat
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
-import com.qiscus.qiscusmultichannel.util.DateUtil
+import com.qiscus.qiscusmultichannel.ui.chat.CommentsAdapter
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
-import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import java.util.regex.Matcher
 
@@ -22,25 +26,43 @@ import java.util.regex.Matcher
  * Author     : Taufik Budi S
  * GitHub     : https://github.com/tfkbudi
  */
-class TextVH(itemView: View) : BaseViewHolder(itemView) {
-    private val message: TextView = itemView.findViewById(R.id.message)
-    private val sender: TextView? = itemView.findViewById(R.id.sender)
-    private val dateOfMessage: TextView? = itemView.findViewById(R.id.dateOfMessage)
+class TextVH(
+    itemView: View,
+    config: QiscusMultichannelWidgetConfig,
+    color: QiscusMultichannelWidgetColor,
+    private val viewType: Int
+) : BaseViewHolder(itemView, config, color) {
+
+    private val message: TextView = itemView.findViewById(R.id.tv_chat)
+
+    init {
+        val backgroundColor: Int
+        val colorText: Int
+
+        if (viewType == CommentsAdapter.TYPE_MY_TEXT) {
+            backgroundColor = color.getRightBubbleColor()
+            colorText = color.getRightBubbleTextColor()
+        } else {
+            backgroundColor = color.getLeftBubbleColor()
+            colorText = color.getLeftBubbleTextColor()
+        }
+
+        message.background = ResourceManager.getTintDrawable(
+            ContextCompat.getDrawable(
+                itemView.context,
+                R.drawable.qiscus_rounded_chat_bg_mc
+            ), backgroundColor
+        )
+        message.setTextColor(colorText)
+    }
+
+    override fun getChatFrom(): Drawable? =
+        if (viewType == CommentsAdapter.TYPE_MY_TEXT) ResourceManager.IC_CHAT_FROM_ME else ResourceManager.IC_CHAT_FROM
 
     override fun bind(comment: QMessage) {
         super.bind(comment)
         message.text = comment.text
-        val chatRoom = Const.qiscusCore()?.getDataStore()?.getChatRoom(comment.chatRoomId)
-
-        if (chatRoom != null) {
-            sender?.visibility = if (chatRoom.type == "group") View.GONE else View.VISIBLE
-        }
-        dateOfMessage?.text = DateUtil.toFullDate(comment.timestamp)
         setUpLinks()
-    }
-
-    override fun setNeedToShowDate(showDate: Boolean) {
-        dateOfMessage?.visibility = if (showDate) View.VISIBLE else View.GONE
     }
 
     @SuppressLint("DefaultLocale", "RestrictedApi")
@@ -72,7 +94,7 @@ class TextVH(itemView: View) : BaseViewHolder(itemView) {
             return
         }
         if (text is Spannable) {
-            (text as Spannable).setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            text.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         } else {
             val s: SpannableString = SpannableString.valueOf(text)
             s.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

@@ -7,15 +7,18 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
-import com.qiscus.qiscusmultichannel.MultichannelWidget
-import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.event.QMessageReceivedEvent
@@ -29,17 +32,19 @@ import org.greenrobot.eventbus.Subscribe
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-
 class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedListener,
     ChatRoomFragment.OnUserTypingListener {
 
+    lateinit var displayMetrics: DisplayMetrics
     lateinit var qiscusChatRoom: QChatRoom
     private val users: MutableSet<String> = HashSet()
     private var subtitle: String = ""
     private var memberList: String = ""
+    private val qiscusMultichannelWidget = QiscusMultichannelWidget.instance
+
     private var runnable = Runnable {
         runOnUiThread {
-            tvSubtitle?.text = MultichannelWidget.config.getRoomSubtitle() ?: memberList
+            tvSubtitle?.text = qiscusMultichannelWidget.config.getRoomSubtitle() ?: memberList
         }
     }
     private var handler = Handler(Looper.getMainLooper())
@@ -62,6 +67,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_room_mc)
+        ResourceManager.setUp(this, qiscusMultichannelWidget.color)
         initColor()
 
         val room = intent.getParcelableExtra<QChatRoom>(CHATROOM_KEY)
@@ -74,6 +80,14 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         }
 
         btnBack.setOnClickListener { finish() }
+
+        displayMetrics = DisplayMetrics()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            display?.getRealMetrics(displayMetrics)
+        } else {
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+        }
+        ResourceManager.DIMEN_ROUNDED_IMAGE = ResourceManager.getDimen(displayMetrics, 8).toInt()
 
         supportFragmentManager.beginTransaction()
             .replace(
@@ -92,23 +106,32 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         btn_action_reply_cancel.setOnClickListener { getChatFragment().clearSelectedComment() }
         setBarInfo()
 
-        tvTitle.text = MultichannelWidget.config.getRoomTitle() ?: qiscusChatRoom.name
+        tv_title_file.text = qiscusMultichannelWidget.config.getRoomTitle() ?: qiscusChatRoom.name
+        tvSubtitle.visibility = if (qiscusMultichannelWidget.config.getRoomSubtitleType() ==
+            QiscusMultichannelWidgetConfig.RoomSubtitle.DISABLE
+        ) View.GONE else View.VISIBLE
 
-        val avatar = MultichannelWidget.config.getHardcodedAvatar() ?: qiscusChatRoom.avatarUrl
         Nirmana.getInstance().get()
             .load(getAvatar())
+            .apply(
+                RequestOptions()
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_avatar)
+                    .error(R.drawable.ic_avatar)
+                    .dontAnimate()
+            )
             .into(ivAvatar)
     }
 
     private fun initColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = ContextCompat.getColor(this, R.color.qiscus_statusbar_mc)
+            window.statusBarColor = qiscusMultichannelWidget.color.getStatusBarColor()
         }
-        toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.qiscus_appbar_mc))
+        toolbar.setBackgroundColor(qiscusMultichannelWidget.color.getNavigationColor())
 
-        tvTitle.setTextColor(ContextCompat.getColor(this, R.color.qiscus_title_mc))
-        tvSubtitle.setTextColor(ContextCompat.getColor(this, R.color.qiscus_subtitle_mc))
+        tv_title_file.setTextColor(qiscusMultichannelWidget.color.getNavigationTitleColor())
+        tvSubtitle.setTextColor(qiscusMultichannelWidget.color.getNavigationTitleColor())
         btnBack.setColorFilter(
             ContextCompat.getColor(
                 this,
@@ -116,6 +139,13 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             ),
             PorterDuff.Mode.SRC_IN
         )
+
+        btnBack.setColorFilter(qiscusMultichannelWidget.color.getNavigationTitleColor())
+        containerOption.setBackgroundColor(qiscusMultichannelWidget.color.getNavigationColor())
+        btn_action_copy.setColorFilter(qiscusMultichannelWidget.color.getNavigationTitleColor())
+        btn_action_delete.setColorFilter(qiscusMultichannelWidget.color.getNavigationTitleColor())
+        btn_action_reply.setColorFilter(qiscusMultichannelWidget.color.getNavigationTitleColor())
+        btn_action_reply_cancel.setColorFilter(qiscusMultichannelWidget.color.getNavigationTitleColor())
     }
 
     override fun onResume() {
@@ -144,6 +174,10 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     }
 
     override fun onUserTyping(email: String?, isTyping: Boolean) {
+        if (qiscusMultichannelWidget.config.getRoomSubtitleType() ==
+            QiscusMultichannelWidgetConfig.RoomSubtitle.DISABLE
+        ) return
+
         subtitle = if (isTyping) "typing..." else getSubtitle()
         runOnUiThread {
             tvSubtitle?.text = subtitle
@@ -157,7 +191,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
 
     private fun bindRoomData() {
         for (member in qiscusChatRoom.participants) {
-            if (member.id != MultichannelWidget.instance.getQiscusAccount().id) {
+            if (member.id != QiscusMultichannelWidget.instance.getQiscusAccount().id) {
                 users.add(member.id)
                 Const.qiscusCore()?.pusherApi?.subscribeUserOnlinePresence(member.id)
             }
@@ -191,11 +225,10 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         when (event.qiscusComment.type) {
             QMessage.Type.SYSTEM_EVENT -> setBarInfo()
         }
-
     }
 
     fun getSubtitle(): String {
-        return MultichannelWidget.config.getRoomSubtitle() ?: memberList
+        return qiscusMultichannelWidget.config.getRoomSubtitle() ?: memberList
     }
 
     fun getAvatar(): String {
@@ -206,7 +239,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             }
         }
 
-        return MultichannelWidgetConfig.getHardcodedAvatar() ?: qiscusChatRoom.avatarUrl
+        return qiscusMultichannelWidget.config.getHardcodedAvatar() ?: qiscusChatRoom.avatarUrl
     }
 
     override fun onDestroy() {

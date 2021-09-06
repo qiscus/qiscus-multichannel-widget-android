@@ -3,11 +3,32 @@ package com.qiscus.qiscusmultichannel.util
 import com.qiscus.sdk.chat.core.QiscusCore
 
 object Const {
+
+    val TAKE_PICTURE_REQUEST = 3
+    val IMAGE_GALLERY_REQUEST = 7
+
+    val CAMERA_PERMISSION = arrayOf(
+        "android.permission.CAMERA"
+    )
+    val CAMERA_PERMISSION_28 = arrayOf(
+        "android.permission.CAMERA",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+    )
+    val FILE_PERMISSION = arrayOf(
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+    )
+    val RC_CAMERA_PERMISSION = 128
+    val RC_FILE_PERMISSION = 130
+
     private var qiscusCore: QiscusCore? = null
     private var allQiscusCore: MutableList<QiscusCore> = ArrayList()
+
     fun setQiscusCore(qiscusCore: QiscusCore?) {
         Const.qiscusCore = qiscusCore
     }
+
     fun qiscusCore(): QiscusCore? {
         return if (qiscusCore != null) {
             qiscusCore
@@ -21,11 +42,11 @@ object Const {
         }
     }
 
-    fun setAllQiscusCore(allQiscusCores: MutableList<QiscusCore>){
-       Const.allQiscusCore =  allQiscusCores
+    fun setAllQiscusCore(allQiscusCore: MutableList<QiscusCore>) {
+        Const.allQiscusCore = allQiscusCore
     }
 
     fun getAllQiscusCore(): MutableList<QiscusCore> {
-       return allQiscusCore
+        return allQiscusCore
     }
 }

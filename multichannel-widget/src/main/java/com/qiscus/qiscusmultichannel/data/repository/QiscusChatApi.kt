@@ -1,6 +1,5 @@
 package com.qiscus.qiscusmultichannel.data.repository
 
-import com.qiscus.qiscusmultichannel.MultichannelWidget
 import com.qiscus.qiscusmultichannel.data.model.DataInitialChat
 import com.qiscus.qiscusmultichannel.data.repository.response.ResponseInitiateChat
 import okhttp3.OkHttpClient
@@ -11,13 +10,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 object QiscusChatApi {
-    fun create(): Api {
-        val logInterceptor = HttpLoggingInterceptor()
-        logInterceptor.level = HttpLoggingInterceptor.Level.BODY
-
+    fun create(isEnableLog: Boolean): Api {
         val client = OkHttpClient.Builder()
-        if (MultichannelWidget.config.isEnableLog()) {
-            client.addInterceptor(logInterceptor)
+        if (isEnableLog) {
+            client.addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
         }
 
         val retrofit: Retrofit = Retrofit.Builder()

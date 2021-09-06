@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_qiscus_avatar"
+            android:src="@drawable/qiscus_image_placeholder"
             android:background="@color/qiscus_black_mc"
             android:visibility="gone" />
 

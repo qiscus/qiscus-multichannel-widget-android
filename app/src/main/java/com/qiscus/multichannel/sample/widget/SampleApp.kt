@@ -2,8 +2,13 @@ package com.qiscus.multichannel.sample.widget
 
 import androidx.multidex.MultiDexApplication
 import com.qiscus.multichannel.sample.BuildConfig
-import com.qiscus.qiscusmultichannel.MultichannelWidget
-import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
+import com.qiscus.multichannel.sample.R
+import com.qiscus.multichannel.sample.widget.QiscusMultiChatEngine.Companion.MULTICHANNEL_CORE
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig.Avatar
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig.RoomSubtitle
 
 /**
  * Created on : 2020-02-28
@@ -12,26 +17,73 @@ import com.qiscus.qiscusmultichannel.MultichannelWidgetConfig
  */
 class SampleApp : MultiDexApplication() {
 
+    companion object {
+        @Volatile
+        private var INSTANCE: SampleApp? = null
+
+        @JvmStatic
+        val instance: SampleApp
+            get() {
+                if (INSTANCE == null) {
+                    synchronized(QiscusMultichannelWidget::class.java) {
+                        if (INSTANCE == null) {
+                            throw RuntimeException("Some ting wrong!!!")
+                        }
+                    }
+                }
+
+                return INSTANCE!!
+            }
+    }
+
+    private val appId = "akoop-i0xwcb7spjwzhro"
+    private val localKey = "qiscus_multichannel_user"
+
+    private val config = QiscusMultichannelWidgetConfig()
+        .setEnableLog(BuildConfig.DEBUG)
+        .setNotificationListener(null)
+        .setRoomTitle("Custom Title")
+        .setAvatar(Avatar.ENABLE)
+        .setNotificationIcon(R.drawable.ic_notification)
+        .setRoomSubtitle(RoomSubtitle.EDITABLE, "Custom subtitle")
+
+    private val color = QiscusMultichannelWidgetColor()
+        .setStatusBarColor(R.color.qiscusStatusBar)
+        .setNavigationColor(R.color.qiscusNavigation)
+        .setNavigationTitleColor(R.color.qiscusNavigationTittle)
+        .setBaseColor(R.color.qiscusBackground)
+        .setEmptyBacgroundColor(R.color.qiscusEmptyBackground)
+        .setEmptyTextColor(R.color.qiscusEmptyText)
+        .setTimeBackgroundColor(R.color.qiscusTimeBackground)
+        .setTimeLabelTextColor(R.color.qiscusTimeLable)
+        .setLeftBubbleColor(R.color.qiscusLeftBubble)
+        .setRightBubbleColor(R.color.qiscusRightBubble)
+        .setLeftBubbleTextColor(R.color.qiscusLeftTextBubble)
+        .setRightBubbleTextColor(R.color.qiscusRightTextBubble)
+        .setFieldChatBorderColor(R.color.qiscusFieldChat)
+        .setSystemEventTextColor(R.color.qiscusSystemEvent)
+        .setSendContainerColor(R.color.qiscusSendContainer)
+        .setSendContainerBackgroundColor(R.color.qiscusSendContainerBackground)
+
+    lateinit var qiscusMultichannelWidget: QiscusMultichannelWidget
+    lateinit var qiscusMultiChatEngine: QiscusMultiChatEngine
+
     override fun onCreate() {
         super.onCreate()
-
         //just 1 in 1 lifecircle
-        ConstCore.setCore()
+        qiscusMultiChatEngine = QiscusMultiChatEngine().apply {
+            setCores()
+        }
 
-        val configMultichannel: MultichannelWidgetConfig =
-            MultichannelWidgetConfig.setEnableLog(BuildConfig.DEBUG)
-                .setNotificationListener(null)
-                .setRoomTitle("Custom Title")
-                .setRoomSubtitle("Custom subtitle")
-                .setHardcodedAvatar("https://d1edrlpyc25xu0.cloudfront.net/cee-8xj32ozyfbnka0arz/image/upload/XBOSht7_hR/bebi.jpeg")
-
-        MultichannelWidget.setup(
+        qiscusMultichannelWidget = QiscusMultichannelWidget.setup(
             this,
-            ConstCore.qiscusCore1(),
-            "erliv-1vgncdxub60y7y8",
-            configMultichannel,
-            "user1"
+            qiscusMultiChatEngine.get(MULTICHANNEL_CORE),
+            appId,
+            config,
+            color,
+            localKey
         )
-        //MultichannelWidget.setup(this, ConstCore.qiscusCore1(), "erliv-1vgncdxub60y7y8", configMultichannel, "user1")
+        INSTANCE = this
     }
+
 }

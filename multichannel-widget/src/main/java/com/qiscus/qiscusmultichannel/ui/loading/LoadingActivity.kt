@@ -2,13 +2,18 @@ package com.qiscus.qiscusmultichannel.ui.loading
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
 import com.qiscus.qiscusmultichannel.R
-import com.qiscus.qiscusmultichannel.data.model.UserProperties
+import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
 import com.qiscus.qiscusmultichannel.ui.chat.ChatRoomActivity
 import com.qiscus.qiscusmultichannel.util.showToast
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
+import kotlinx.android.synthetic.main.activity_loading.*
 import org.json.JSONObject
 
 /**
@@ -25,6 +30,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
     private var extras: String? = null
     private var avatar: String? = null
     private var userProp: ArrayList<UserProperties>? = null
+    private var color: QiscusMultichannelWidgetColor = QiscusMultichannelWidget.instance.color
 
     companion object {
         private val PARAM_USERNAME = "username"
@@ -47,6 +53,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
+        initColor()
         presenter = LoadingPresenter()
 
         intent?.let {
@@ -56,6 +63,16 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
             avatar = it.getStringExtra(PARAM_AVATAR).toString()
             userProp = it.getSerializableExtra(PARAM_USER_PROPERTIES) as ArrayList<UserProperties>
         }
+    }
+
+    private fun initColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = color.getStatusBarColor()
+        }
+
+        container.setBackgroundColor(color.getNavigationColor())
+        textLoading.setTextColor(color.getNavigationTitleColor())
     }
 
     override fun onResume() {

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/margin_small"
+    android:paddingBottom="@dimen/margin_small"
+    tools:viewBindingIgnore="true">
+
+    <ViewStub
+        android:id="@+id/container_date_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/item_chat_date_indicator"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_name_sender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_bubble"
+        android:layout_marginLeft="@dimen/margin_bubble"
+        android:gravity="start"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_date_indicator"
+        tools:ignore="RtlSymmetry" />
+
+    <View
+        android:id="@+id/chat_from"
+        android:layout_width="24dp"
+        android:layout_height="14dp"
+        android:layout_marginStart="@dimen/margin_bubble_indicator"
+        android:layout_marginLeft="@dimen/margin_bubble_indicator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/containerBackground" />
+
+    <View
+        android:id="@+id/containerBackground"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:layout_marginTop="@dimen/margin_smaller"
+        android:layout_marginStart="@dimen/margin_bubble"
+        android:layout_marginLeft="@dimen/margin_bubble"
+        android:layout_marginEnd="@dimen/margin_bubble_space"
+        android:layout_marginRight="@dimen/margin_bubble_space"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_sender" />
+
+    <ImageView
+        android:id="@+id/iv_play"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_qiscus_play_audio"
+        app:layout_constraintBottom_toBottomOf="@+id/containerBackground"
+        app:layout_constraintStart_toStartOf="@+id/containerBackground"
+        app:layout_constraintTop_toTopOf="@+id/containerBackground" />
+
+    <com.qiscus.qiscusmultichannel.ui.view.QiscusCircleProgress
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:indeterminate="false"
+        android:max="100"
+        android:padding="@dimen/margin_smaller"
+        android:progress="0"
+        android:secondaryProgress="100"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/containerBackground"
+        app:layout_constraintStart_toStartOf="@+id/containerBackground"
+        app:layout_constraintTop_toTopOf="@+id/containerBackground"
+        tools:ignore="UnusedAttribute" />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp"
+        android:thumb="@drawable/qiscus_audio_progress_thumb"
+        app:layout_constraintEnd_toEndOf="@id/containerBackground"
+        app:layout_constraintStart_toEndOf="@+id/iv_play"
+        app:layout_constraintTop_toTopOf="@id/iv_play"
+        tools:ignore="RtlSymmetry,UnusedAttribute" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/seekbar"
+        app:layout_constraintTop_toBottomOf="@+id/seekbar" />
+
+    <ImageView
+        android:id="@+id/img_sender_avatar"
+        android:layout_width="@dimen/avatar_sender_size"
+        android:layout_height="@dimen/avatar_sender_size"
+        android:layout_marginStart="18dp"
+        android:layout_marginLeft="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_sender" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginTop="2dp"
+        android:textSize="@dimen/text_time_bubble"
+        app:layout_constraintStart_toEndOf="@+id/containerBackground"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_sender"
+        tools:ignore="SmallSp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

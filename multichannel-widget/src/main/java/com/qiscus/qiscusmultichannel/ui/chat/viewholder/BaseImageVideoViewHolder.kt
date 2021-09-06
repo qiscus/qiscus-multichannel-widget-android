@@ -11,27 +11,56 @@ import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.util.PatternsCompat
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
+import com.qiscus.qiscusmultichannel.ui.chat.CommentsAdapter
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
 import com.qiscus.qiscusmultichannel.util.Const
-import com.qiscus.qiscusmultichannel.util.DateUtil
+import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.qiscusmultichannel.util.getAuthority
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import org.json.JSONObject
 import java.io.File
 import java.util.regex.Matcher
 
-open class BaseImageVideoViewHolder(itemView: View) : BaseViewHolder(itemView) {
-    val thumbnail: ImageView = itemView.findViewById(R.id.thumbnail)
-    val message: TextView = itemView.findViewById(R.id.message)
-    val sender: TextView? = itemView.findViewById(R.id.sender)
-    val dateOfMessage: TextView? = itemView.findViewById(R.id.dateOfMessage)
+open class BaseImageVideoViewHolder(
+    itemView: View,
+    config: QiscusMultichannelWidgetConfig,
+    color: QiscusMultichannelWidgetColor,
+    viewType: Int
+) : BaseViewHolder(itemView, config, color) {
+
+    val thumbnail: ImageView = itemView.findViewById(R.id.iv_chat_comment)
+    val message: TextView = itemView.findViewById(R.id.tv_chat)
+
+    init {
+        val backgroundColor: Int
+        val colorText: Int
+
+        if (viewType == CommentsAdapter.TYPE_MY_IMAGE || viewType == CommentsAdapter.TYPE_MY_VIDEO) {
+            backgroundColor = color.getRightBubbleColor()
+            colorText = color.getRightBubbleTextColor()
+        } else {
+            backgroundColor = color.getLeftBubbleColor()
+            colorText = color.getLeftBubbleTextColor()
+        }
+
+        message.background = ResourceManager.getTintDrawable(
+            ContextCompat.getDrawable(
+                itemView.context,
+                R.drawable.bg_opponent_caption_image
+            ), backgroundColor
+        )
+        message.setTextColor(colorText)
+    }
 
     override fun bind(comment: QMessage) {
         super.bind(comment)
@@ -45,17 +74,12 @@ open class BaseImageVideoViewHolder(itemView: View) : BaseViewHolder(itemView) {
             } else { //Still uploading the image
                 showSendingImage(url)
             }
-
-            val chatRoom = Const.qiscusCore()?.getDataStore()?.getChatRoom(comment.chatRoomId)!!
-            sender?.visibility = if (chatRoom.type == "group") View.VISIBLE else View.GONE
-            dateOfMessage?.text = DateUtil.toFullDate(comment.timestamp)
-
             setUpLinks()
 
         } else {
             try {
                 val content = JSONObject(comment.payload)
-                var url = content.getString("url")
+                val url = content.getString("url")
                 val caption = content.getString("caption")
                 val filename = content.getString("file_name")
 
@@ -71,11 +95,6 @@ open class BaseImageVideoViewHolder(itemView: View) : BaseViewHolder(itemView) {
                     message.visibility = View.VISIBLE
                     message.text = caption
                 }
-
-                val chatRoom = Const.qiscusCore()?.getDataStore()?.getChatRoom(comment.chatRoomId)!!
-                sender?.visibility = if (chatRoom.type == "group") View.VISIBLE else View.GONE
-                dateOfMessage?.text = DateUtil.toFullDate(comment.timestamp)
-
                 setUpLinks()
             } catch (t: Throwable) {
 
@@ -106,40 +125,36 @@ open class BaseImageVideoViewHolder(itemView: View) : BaseViewHolder(itemView) {
 //            })
 //    }
 
-    override fun setNeedToShowDate(showDate: Boolean) {
-        dateOfMessage?.visibility = if (showDate) View.VISIBLE else View.GONE
-    }
-
     private fun showSendingImage(url: String) {
         val localPath = File(url)
         showLocalImage(localPath)
     }
 
     private fun showSentImage(comment: QMessage, url: String) {
-        val localPath = Const.qiscusCore()?.getDataStore()?.getLocalPath(comment.id)
+        val localPath = Const.qiscusCore()?.dataStore?.getLocalPath(comment.id)
         localPath?.let { showLocalImage(it) } ?: Nirmana.getInstance().get()
-            .setDefaultRequestOptions(
+            .load(url)
+            .apply(
                 RequestOptions()
-                    .placeholder(R.drawable.ic_qiscus_add_image)
-                    .error(R.drawable.ic_qiscus_add_image)
+                    .placeholder(R.drawable.qiscus_image_placeholder)
+                    .error(R.drawable.qiscus_image_placeholder)
                     .dontAnimate()
-                    .transforms(CenterCrop(), RoundedCorners(16))
+                    .transform(CenterCrop(), RoundedCorners(ResourceManager.DIMEN_ROUNDED_IMAGE))
 
             )
-            .load(url)
             .into(thumbnail)
     }
 
     private fun showLocalImage(localPath: File) {
         Nirmana.getInstance().get()
-            .setDefaultRequestOptions(
-                RequestOptions()
-                    .placeholder(R.drawable.ic_qiscus_add_image)
-                    .error(R.drawable.ic_qiscus_add_image)
-                    .dontAnimate()
-                    .transforms(CenterCrop(), RoundedCorners(16))
-            )
             .load(localPath)
+            .apply(
+                RequestOptions()
+                    .placeholder(R.drawable.qiscus_image_placeholder)
+                    .error(R.drawable.qiscus_image_placeholder)
+                    .dontAnimate()
+                    .transform(CenterCrop(), RoundedCorners(ResourceManager.DIMEN_ROUNDED_IMAGE))
+            )
             .into(thumbnail)
     }
 
@@ -189,7 +204,7 @@ open class BaseImageVideoViewHolder(itemView: View) : BaseViewHolder(itemView) {
             return
         }
         if (text is Spannable) {
-            (text as Spannable).setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            text.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         } else {
             val s: SpannableString = SpannableString.valueOf(text)
             s.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

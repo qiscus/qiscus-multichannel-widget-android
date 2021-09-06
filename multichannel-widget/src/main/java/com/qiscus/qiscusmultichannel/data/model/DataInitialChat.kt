@@ -1,6 +1,7 @@
 package com.qiscus.qiscusmultichannel.data.model
 
 import com.google.gson.annotations.SerializedName
+import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
 
 /**
  * Created on : 06/02/20
