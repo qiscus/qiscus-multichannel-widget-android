@@ -3,10 +3,10 @@ package com.qiscus.qiscusmultichannel.ui.chat.viewholder
 import android.net.Uri
 import android.view.View
 import androidx.core.content.ContextCompat
-import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
+import com.qiscus.qiscusmultichannel.ui.chat.CommentsAdapter
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
 import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
@@ -23,7 +23,8 @@ import org.json.JSONObject
 class ButtonVH(
     itemView: View,
     config: QiscusMultichannelWidgetConfig,
-    color: QiscusMultichannelWidgetColor
+    color: QiscusMultichannelWidgetColor,
+    private val listener: CommentsAdapter.ItemViewListener?
 ) : BaseViewHolder(itemView, config, color), ChatButtonView.ChatButtonClickListener {
 
     private var chatRoomId: Long = 0
@@ -92,15 +93,7 @@ class ButtonVH(
     }
 
     private fun sendComment(comment: QMessage) {
-        QiscusMultichannelWidget.instance.component.chatroomRepository.sendComment(
-            comment.chatRoomId,
-            comment,
-            {
-                it
-            },
-            {
-                it
-            })
+        listener?.onSendComment(comment)
     }
 
 }

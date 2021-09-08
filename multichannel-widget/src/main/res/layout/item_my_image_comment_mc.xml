@@ -21,11 +21,11 @@
         android:layout_height="190dp"
         android:layout_marginStart="@dimen/margin_bubble_space"
         android:layout_marginLeft="@dimen/margin_bubble_space"
-        android:layout_marginEnd="@dimen/margin_bubble"
-        android:layout_marginRight="@dimen/margin_bubble"
+        android:layout_marginEnd="@dimen/margin_chat_message"
+        android:layout_marginRight="@dimen/margin_chat_message"
+        app:layout_constraintEnd_toStartOf="@+id/img_sender_avatar"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/container_date_indicator"
         app:shapeAppearanceOverlay="@style/roundedCornersImageView" />
@@ -52,8 +52,13 @@
         android:id="@+id/img_sender_avatar"
         android:layout_width="@dimen/avatar_sender_size"
         android:layout_height="@dimen/avatar_sender_size"
-        android:layout_marginEnd="18dp"
-        android:layout_marginRight="18dp"
+        app:layout_constraintEnd_toStartOf="@id/avatar_anchor"
+        app:layout_constraintTop_toBottomOf="@+id/container_date_indicator" />
+
+    <View
+        android:id="@+id/avatar_anchor"
+        android:layout_width="18dp"
+        android:layout_height="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/container_date_indicator" />
 

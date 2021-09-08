@@ -10,7 +10,7 @@ import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.chat.viewholder.*
 import com.qiscus.qiscusmultichannel.util.AudioHandler
-import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.qiscusmultichannel.util.MultichannelConst
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.util.QiscusDateUtil
 
@@ -24,8 +24,7 @@ class CommentsAdapter(
     private val config: QiscusMultichannelWidgetConfig,
     private val color: QiscusMultichannelWidgetColor,
     private val audioHandler: AudioHandler
-) :
-    SortedRecyclerViewAdapter<QMessage, BaseViewHolder>() {
+) : SortedRecyclerViewAdapter<QMessage, BaseViewHolder>() {
 
     private var audioPlayerId: Long = 0
     private var lastDeliveredCommentId: Long = 0
@@ -41,7 +40,7 @@ class CommentsAdapter(
         } else if (item2.id == -1L && item1.id == -1L) { //Not completed comments
             return item2.timestamp.compareTo(item1.timestamp)
         } else if (item2.id != -1L && item1.id != -1L) { //Completed comments
-            return Const.qiscusCore()?.androidUtil?.compare(item2.id, item1.id)!!
+            return MultichannelConst.qiscusCore()?.androidUtil?.compare(item2.id, item1.id)!!
         } else if (item2.id == -1L) {
             return 1
         } else if (item1.id == -1L) {
@@ -51,7 +50,7 @@ class CommentsAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val me = Const.qiscusCore()?.qiscusAccount?.id
+        val me = MultichannelConst.qiscusCore()?.qiscusAccount?.id
         val comment = data.get(position)
         when (comment.type) {
             QMessage.Type.TEXT -> {
@@ -144,52 +143,49 @@ class CommentsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            TYPE_MY_TEXT, TYPE_OPPONENT_TEXT -> TextVH(
-                getView(parent, viewType),
-                config, color,
-                viewType
-            )
-            TYPE_MY_IMAGE, TYPE_OPPONENT_IMAGE -> ImageVH(
-                getView(parent, viewType),
-                config, color,
-                ietmViewListener,
-                viewType
-            )
-            TYPE_MY_VIDEO, TYPE_OPPONENT_VIDEO -> VideoVH(
-                getView(parent, viewType),
-                config, color,
-                ietmViewListener,
-                viewType
-            )
-            TYPE_MY_REPLY, TYPE_OPPONENT_REPLY -> ReplyVH(
-                getView(parent, viewType),
-                config, color,
-                viewType
-            )
+            TYPE_MY_TEXT, TYPE_OPPONENT_TEXT ->
+                TextVH(getView(parent, viewType), config, color, viewType)
+
+            TYPE_MY_IMAGE, TYPE_OPPONENT_IMAGE ->
+                ImageVH(getView(parent, viewType), config, color, itemViewListener, viewType)
+
+            TYPE_MY_VIDEO, TYPE_OPPONENT_VIDEO ->
+                VideoVH(getView(parent, viewType), config, color, itemViewListener, viewType)
+
+            TYPE_MY_REPLY, TYPE_OPPONENT_REPLY ->
+                ReplyVH(getView(parent, viewType), config, color, viewType)
+
             TYPE_EVENT ->
                 EventVH(getView(parent, viewType), config, color)
-            TYPE_MY_FILE, TYPE_OPPONENT_FILE -> FileVH(
-                getView(parent, viewType),
-                config, color,
-                viewType
-            )
-            TYPE_MY_AUDIO, TYPE_OPPONENT_AUDIO -> AudioVH(
-                getView(parent, viewType),
-                config, color,
-                viewType,
-                ietmViewListener,
-                audioHandler
-            )
+
+            TYPE_MY_FILE, TYPE_OPPONENT_FILE ->
+                FileVH(getView(parent, viewType), config, color, viewType)
+
+            TYPE_MY_AUDIO, TYPE_OPPONENT_AUDIO ->
+                AudioVH(
+                    getView(parent, viewType),
+                    config,
+                    color,
+                    viewType,
+                    itemViewListener,
+                    audioHandler
+                )
+
             TYPE_CARD ->
-                CardVH(getView(parent, viewType), config, color)
+                CardVH(getView(parent, viewType), config, color, itemViewListener)
+
             TYPE_CAROUSEL ->
-                CarouselVH(getView(parent, viewType), config, color)
+                CarouselVH(getView(parent, viewType), config, color, itemViewListener)
+
             TYPE_BUTTON ->
-                ButtonVH(getView(parent, viewType), config, color)
+                ButtonVH(getView(parent, viewType), config, color, itemViewListener)
+
             TYPE_MY_STICKER, TYPE_OPPONENT_STICKER ->
                 StickerVH(getView(parent, viewType), config, color)
+
             TYPE_MY_LOCATION, TYPE_OPPONENT_LOCATION ->
                 LocationVH(getView(parent, viewType), config, color, viewType)
+
             else ->
                 NoSupportVH(getView(parent, viewType), config, color)
         }
@@ -334,6 +330,8 @@ class CommentsAdapter(
 
 
     interface ItemViewListener {
+        fun onSendComment(comment: QMessage)
+
         fun onItemClick(view: View, position: Int)
 
         fun onItemLongClick(view: View, position: Int)

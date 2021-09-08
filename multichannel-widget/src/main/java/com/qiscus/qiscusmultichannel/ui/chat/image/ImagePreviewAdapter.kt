@@ -11,7 +11,7 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
-import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.data.model.ImageToSend
 
@@ -19,7 +19,8 @@ class ImagePreviewAdapter(
     private val context: Context,
     private val listener: ImagePreviewListener,
     private val dataList: List<ImageToSend>,
-    private val imageWidth: Int
+    private val imageWidth: Int,
+    private val color: QiscusMultichannelWidgetColor
 ) : RecyclerView.Adapter<ImagePreviewAdapter.Holder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -38,7 +39,7 @@ class ImagePreviewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        return Holder(inflater.inflate(R.layout.item_image_preview, parent, false))
+        return Holder(inflater.inflate(R.layout.item_image_preview, parent, false), color)
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
@@ -67,7 +68,8 @@ class ImagePreviewAdapter(
         fun onItemDelete(position: Int)
     }
 
-    class Holder(val view: View) : RecyclerView.ViewHolder(view) {
+    class Holder(val view: View, private val color: QiscusMultichannelWidgetColor) :
+        RecyclerView.ViewHolder(view) {
 
         private var backgroundImage: View = view.findViewById(R.id.backgroundImage)
         private var btnAddImage: AppCompatImageView = view.findViewById(R.id.btnAddImage)
@@ -77,8 +79,8 @@ class ImagePreviewAdapter(
         private var listener: ImagePreviewListener? = null
 
         init {
-            backgroundImage.setBackgroundColor(QiscusMultichannelWidget.instance.color.getNavigationColor())
-            btnAddImage.setColorFilter(QiscusMultichannelWidget.instance.color.getNavigationColor())
+            backgroundImage.setBackgroundColor(color.getNavigationColor())
+            btnAddImage.setColorFilter(color.getNavigationColor())
         }
 
         fun setListener(listener: ImagePreviewListener?) {

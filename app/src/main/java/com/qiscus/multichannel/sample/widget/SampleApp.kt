@@ -7,8 +7,6 @@ import com.qiscus.multichannel.sample.widget.QiscusMultiChatEngine.Companion.MUL
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
-import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig.Avatar
-import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig.RoomSubtitle
 
 /**
  * Created on : 2020-02-28
@@ -27,7 +25,7 @@ class SampleApp : MultiDexApplication() {
                 if (INSTANCE == null) {
                     synchronized(QiscusMultichannelWidget::class.java) {
                         if (INSTANCE == null) {
-                            throw RuntimeException("Some ting wrong!!!")
+                            throw RuntimeException("Something wrong!!!")
                         }
                     }
                 }
@@ -41,11 +39,9 @@ class SampleApp : MultiDexApplication() {
 
     private val config = QiscusMultichannelWidgetConfig()
         .setEnableLog(BuildConfig.DEBUG)
+        .setEnableNotification(true)
         .setNotificationListener(null)
-        .setRoomTitle("Custom Title")
-        .setAvatar(Avatar.ENABLE)
         .setNotificationIcon(R.drawable.ic_notification)
-        .setRoomSubtitle(RoomSubtitle.EDITABLE, "Custom subtitle")
 
     private val color = QiscusMultichannelWidgetColor()
         .setStatusBarColor(R.color.qiscusStatusBar)
@@ -71,9 +67,7 @@ class SampleApp : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         //just 1 in 1 lifecircle
-        qiscusMultiChatEngine = QiscusMultiChatEngine().apply {
-            setCores()
-        }
+        qiscusMultiChatEngine = QiscusMultiChatEngine()
 
         qiscusMultichannelWidget = QiscusMultichannelWidget.setup(
             this,

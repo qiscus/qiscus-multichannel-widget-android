@@ -16,7 +16,7 @@ open class ImageVH(
     itemView: View,
     config: QiscusMultichannelWidgetConfig,
     color: QiscusMultichannelWidgetColor,
-    var listener: CommentsAdapter.ItemViewListener?,
+    private val listener: CommentsAdapter.ItemViewListener?,
     viewType: Int
 ) : BaseImageVideoViewHolder(itemView, config, color, viewType) {
 

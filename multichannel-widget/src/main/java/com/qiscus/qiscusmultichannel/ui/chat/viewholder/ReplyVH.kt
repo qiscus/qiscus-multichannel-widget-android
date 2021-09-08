@@ -17,7 +17,7 @@ import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.chat.CommentsAdapter
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
-import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.qiscusmultichannel.util.MultichannelConst
 import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import kotlinx.android.synthetic.main.item_my_reply_mc.view.*
@@ -36,7 +36,7 @@ class ReplyVH(
     private val viewType: Int
 ) : BaseViewHolder(itemView, config, color) {
 
-    private val qiscusAccount = Const.qiscusCore()?.qiscusAccount!!
+    private val qiscusAccount = MultichannelConst.qiscusCore()?.qiscusAccount!!
 
     init {
         val backgroundColor: Int

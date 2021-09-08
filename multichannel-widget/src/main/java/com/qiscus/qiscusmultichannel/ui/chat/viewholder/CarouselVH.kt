@@ -8,6 +8,7 @@ import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.chat.CarouselAdapter
+import com.qiscus.qiscusmultichannel.ui.chat.CommentsAdapter
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import kotlinx.android.synthetic.main.item_carousel_mc.view.*
 import org.json.JSONObject
@@ -22,7 +23,8 @@ import org.json.JSONObject
 class CarouselVH(
     itemView: View,
     config: QiscusMultichannelWidgetConfig,
-    color: QiscusMultichannelWidgetColor
+    color: QiscusMultichannelWidgetColor,
+    private val listener: CommentsAdapter.ItemViewListener?
 ) : BaseViewHolder(itemView, config, color) {
 
     private var onScrollIsReady = false
@@ -52,9 +54,8 @@ class CarouselVH(
 
     override fun bind(comment: QMessage) {
         super.bind(comment)
-        val payload = JSONObject(comment.payload)
-        payload.getJSONArray("cards").let {
-            val adapter = CarouselAdapter(config, color, it, comment)
+        JSONObject(comment.payload).getJSONArray("cards").let {
+            val adapter = CarouselAdapter(config, color, it, comment, listener)
             itemView.rv_carousel.adapter = adapter
             itemView.page_indicator_view.count = adapter.itemCount
         }

@@ -2,12 +2,15 @@ package com.qiscus.multichannel.sample.widget
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.qiscus.multichannel.sample.R
 import com.qiscus.multichannel.sample.widget.service.FirebaseServices
-import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
+import com.qiscus.qiscusmultichannel.util.QiscusChatRoomBuilder
+import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -25,10 +28,8 @@ class MainActivity : AppCompatActivity() {
 
         login.setOnClickListener {
             if (qiscusMultichannelWidget.isLoggedIn()) {
-                Const.qiscusCore()?.let {
-                    qiscusMultichannelWidget.clearUser(it)
-                    Toast.makeText(this, "Logout Success", Toast.LENGTH_LONG).show()
-                }
+                qiscusMultichannelWidget.clearUser()
+                Toast.makeText(this, "Logout Success", Toast.LENGTH_LONG).show()
 
             } else {
                 val username = etDisplayName.text.toString()
@@ -56,21 +57,27 @@ class MainActivity : AppCompatActivity() {
     private fun initChat() {
         qiscusMultichannelWidget.initiateChat()
             .showLoadingWhenInitiate(true)
-            .startChat(this)
-        // initiateChat with callback
-/*                    .initiateWithCallback(this, object : MultichannelWidget.InitiateCallback {
-                        override fun onProgress() {
-                            Log.e("InitiateCallback", "onProgress: ")
-                        }
+            .setRoomTitle("Custom Title")
+            .setAvatar(QiscusMultichannelWidgetConfig.Avatar.DISABLE)
+            .setRoomSubtitle(
+                QiscusMultichannelWidgetConfig.RoomSubtitle.EDITABLE,
+                "Custom subtitle"
+            )
+            .setShowSystemMessage(true)
+            .setSessional(false)
+            .startChat(this, object : QiscusChatRoomBuilder.InitiateCallback {
+                override fun onProgress() {
+                    Log.i("InitiateCallback", "onProgress: ")
+                }
 
-                        override fun onSuccess(qChatRoom: QChatRoom) {
-                            Log.e("InitiateCallback", "onSuccess: ")
-                        }
+                override fun onSuccess(qChatRoom: QChatRoom) {
+                    Log.i("InitiateCallback", "onSuccess: ")
+                }
 
-                        override fun onError(throwable: Throwable) {
-                            Log.e("InitiateCallback", "onError: ${throwable.message}")
-                        }
-                    })*/
+                override fun onError(throwable: Throwable) {
+                    Log.e("InitiateCallback", "onError: ${throwable.message}")
+                }
+            })
 
         // only 1 after initiateChat
         if (qiscusMultichannelWidget.hasSetupUser()) {

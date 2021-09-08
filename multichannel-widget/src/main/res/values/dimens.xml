@@ -16,8 +16,7 @@
     <dimen name="state_size">14dp</dimen>
     <dimen name="avatar_sender_size">40dp</dimen>
     <dimen name="item_reply_height">58dp</dimen>
-    <dimen name="margin_bubble_indicator">60dp</dimen>
-    <dimen name="margin_bubble">70dp</dimen>
+    <dimen name="margin_bubble_indicator">2dp</dimen>
     <dimen name="margin_bubble_space">90dp</dimen>
     <dimen name="max_width_bubble">240dp</dimen>
     <dimen name="min_height_bubble">40dp</dimen>

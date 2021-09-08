@@ -20,7 +20,7 @@ import com.qiscus.qiscusmultichannel.ui.chat.CommentsAdapter
 import com.qiscus.qiscusmultichannel.ui.view.AudioMessageView
 import com.qiscus.qiscusmultichannel.ui.view.QiscusProgressView
 import com.qiscus.qiscusmultichannel.util.AudioHandler
-import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.qiscusmultichannel.util.MultichannelConst
 import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.util.QiscusAndroidUtil
@@ -108,7 +108,7 @@ class AudioVH(
                 if (!it.isDownloading && isLocal) {
                     playAudio(
                         it,
-                        Const.qiscusCore()?.dataStore?.getLocalPath(it.id)?.absolutePath.toString()
+                        MultichannelConst.qiscusCore()?.dataStore?.getLocalPath(it.id)?.absolutePath.toString()
                     )
                 } else {
                     itemView.callOnClick()
@@ -149,7 +149,7 @@ class AudioVH(
             audioHandler.pauseMedia()
             onPauseAudio()
         } else {
-            val file = Const.qiscusCore()?.dataStore?.getLocalPath(comment.id)
+            val file = MultichannelConst.qiscusCore()?.dataStore?.getLocalPath(comment.id)
             isLocal = file != null
             getDuration(if (isLocal) file?.absolutePath.toString() else "",
                 Action { setDurationView() })
@@ -293,7 +293,7 @@ class AudioVH(
                     playButton?.visibility = View.VISIBLE
                     playButton?.setImageResource(R.drawable.ic_qiscus_play_audio)
 
-                    val file = Const.qiscusCore()?.dataStore?.getLocalPath(comment.id)
+                    val file = MultichannelConst.qiscusCore()?.dataStore?.getLocalPath(comment.id)
                     isLocal = file != null
                     getDuration(if (isLocal) file?.absolutePath.toString() else "",
                         Action { setDurationView() })

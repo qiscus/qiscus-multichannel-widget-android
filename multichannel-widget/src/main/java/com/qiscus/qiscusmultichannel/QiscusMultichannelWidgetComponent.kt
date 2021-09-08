@@ -13,4 +13,5 @@ class QiscusMultichannelWidgetComponent(isEnableLog: Boolean) {
 
     var chatroomRepository = ChatroomRepositoryImpl()
     var qiscusChatRepository = QiscusChatRepository(QiscusChatApi.create(isEnableLog))
+
 }

@@ -2,7 +2,7 @@ package com.qiscus.qiscusmultichannel.util
 
 import com.qiscus.sdk.chat.core.QiscusCore
 
-object Const {
+internal object MultichannelConst {
 
     val TAKE_PICTURE_REQUEST = 3
     val IMAGE_GALLERY_REQUEST = 7
@@ -26,7 +26,7 @@ object Const {
     private var allQiscusCore: MutableList<QiscusCore> = ArrayList()
 
     fun setQiscusCore(qiscusCore: QiscusCore?) {
-        Const.qiscusCore = qiscusCore
+        MultichannelConst.qiscusCore = qiscusCore
     }
 
     fun qiscusCore(): QiscusCore? {
@@ -43,7 +43,7 @@ object Const {
     }
 
     fun setAllQiscusCore(allQiscusCore: MutableList<QiscusCore>) {
-        Const.allQiscusCore = allQiscusCore
+        MultichannelConst.allQiscusCore = allQiscusCore
     }
 
     fun getAllQiscusCore(): MutableList<QiscusCore> {

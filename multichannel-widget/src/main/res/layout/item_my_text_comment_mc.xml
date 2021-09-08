@@ -28,17 +28,18 @@
         android:id="@+id/chat_from"
         android:layout_width="24dp"
         android:layout_height="14dp"
-        android:layout_marginEnd="@dimen/margin_bubble_indicator"
-        android:layout_marginRight="@dimen/margin_bubble_indicator"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/margin_bubble_indicator"
+        android:layout_marginLeft="@dimen/margin_bubble_indicator"
+        app:layout_constraintEnd_toStartOf="@+id/img_sender_avatar"
         app:layout_constraintTop_toBottomOf="@+id/container_date_indicator" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="70dp"
-        android:layout_marginRight="70dp"
+        android:layout_marginEnd="@dimen/margin_chat_message"
+        android:layout_marginRight="@dimen/margin_chat_message"
+        app:layout_constraintEnd_toStartOf="@+id/img_sender_avatar"
         android:autoLink="all"
         android:gravity="center_vertical"
         android:linksClickable="true"
@@ -48,7 +49,6 @@
         android:paddingRight="@dimen/margin_normal"
         android:paddingBottom="10dp"
         app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toEndOf="@+id/spacer_message"
         app:layout_constraintTop_toBottomOf="@+id/container_date_indicator" />
@@ -57,8 +57,13 @@
         android:id="@+id/img_sender_avatar"
         android:layout_width="@dimen/avatar_sender_size"
         android:layout_height="@dimen/avatar_sender_size"
-        android:layout_marginEnd="18dp"
-        android:layout_marginRight="18dp"
+        app:layout_constraintEnd_toStartOf="@id/avatar_anchor"
+        app:layout_constraintTop_toBottomOf="@+id/container_date_indicator" />
+
+    <View
+        android:id="@+id/avatar_anchor"
+        android:layout_width="18dp"
+        android:layout_height="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/container_date_indicator" />
 

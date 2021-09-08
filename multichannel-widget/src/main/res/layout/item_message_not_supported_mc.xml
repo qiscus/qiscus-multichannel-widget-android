@@ -18,4 +18,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/qiscus_type_not_support_mc" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

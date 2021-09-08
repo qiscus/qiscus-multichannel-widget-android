@@ -7,10 +7,10 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
-import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
 import com.qiscus.qiscusmultichannel.ui.chat.ChatRoomActivity
+import com.qiscus.qiscusmultichannel.util.MultichanelChatWidget
 import com.qiscus.qiscusmultichannel.util.showToast
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import kotlinx.android.synthetic.main.activity_loading.*
@@ -30,7 +30,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
     private var extras: String? = null
     private var avatar: String? = null
     private var userProp: ArrayList<UserProperties>? = null
-    private var color: QiscusMultichannelWidgetColor = QiscusMultichannelWidget.instance.color
+    private val qiscusMultichannelWidget: MultichanelChatWidget = QiscusMultichannelWidget.instance
 
     companion object {
         private val PARAM_USERNAME = "username"
@@ -54,7 +54,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
         initColor()
-        presenter = LoadingPresenter()
+        presenter = LoadingPresenter(qiscusMultichannelWidget)
 
         intent?.let {
             username = it.getStringExtra(PARAM_USERNAME).toString()
@@ -68,11 +68,11 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
     private fun initColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = color.getStatusBarColor()
+            window.statusBarColor = qiscusMultichannelWidget.getColor().getStatusBarColor()
         }
 
-        container.setBackgroundColor(color.getNavigationColor())
-        textLoading.setTextColor(color.getNavigationTitleColor())
+        container.setBackgroundColor(qiscusMultichannelWidget.getColor().getNavigationColor())
+        textLoading.setTextColor(qiscusMultichannelWidget.getColor().getNavigationTitleColor())
     }
 
     override fun onResume() {

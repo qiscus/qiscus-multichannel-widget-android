@@ -23,7 +23,7 @@ import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.chat.CommentsAdapter
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
-import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.qiscusmultichannel.util.MultichannelConst
 import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.qiscusmultichannel.util.getAuthority
 import com.qiscus.sdk.chat.core.data.model.QMessage
@@ -131,7 +131,7 @@ open class BaseImageVideoViewHolder(
     }
 
     private fun showSentImage(comment: QMessage, url: String) {
-        val localPath = Const.qiscusCore()?.dataStore?.getLocalPath(comment.id)
+        val localPath = MultichannelConst.qiscusCore()?.dataStore?.getLocalPath(comment.id)
         localPath?.let { showLocalImage(it) } ?: Nirmana.getInstance().get()
             .load(url)
             .apply(

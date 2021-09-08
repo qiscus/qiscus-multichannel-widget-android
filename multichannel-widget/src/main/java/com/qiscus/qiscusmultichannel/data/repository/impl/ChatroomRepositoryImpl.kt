@@ -1,16 +1,11 @@
 package com.qiscus.qiscusmultichannel.data.repository.impl
 
-import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
-import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
-import com.qiscus.qiscusmultichannel.data.model.DataInitialChat
 import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
 import com.qiscus.qiscusmultichannel.data.repository.ChatroomRepository
-import com.qiscus.qiscusmultichannel.data.repository.response.ResponseInitiateChat
-import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.qiscusmultichannel.util.MultichannelConst
 import com.qiscus.qiscusmultichannel.util.QiscusChatLocal
-import com.qiscus.sdk.chat.core.data.model.QAccount
 import com.qiscus.sdk.chat.core.data.model.QMessage
-import com.qiscus.sdk.chat.core.data.model.QUser
+import com.qiscus.sdk.chat.core.data.model.QiscusNonce
 import org.json.JSONObject
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -22,26 +17,26 @@ import rx.schedulers.Schedulers
  */
 class ChatroomRepositoryImpl : ChatroomRepository {
 
-    fun sendComment(
+    fun sendMessage(
         roomId: Long,
         message: QMessage,
         onSuccess: (QMessage) -> Unit,
         onError: (Throwable) -> Unit
     ) {
-        val qAccount: QAccount = Const.qiscusCore()?.qiscusAccount!!
+        /*val qAccount: QAccount = MultichannelConst.qiscusCore()?.qiscusAccount!!
         val qUser = QUser()
         qUser.avatarUrl = qAccount.avatarUrl
         qUser.id = qAccount.id
         qUser.extras = qAccount.extras
         qUser.name = qAccount.name
-        message.sender = qUser
+        message.sender = qUser*/
 
         if (message.type == QMessage.Type.TEXT && message.text.trim().isEmpty()) {
             onError(Throwable("message can't empty"))
         }
 
-        Const.qiscusCore()?.api?.sendMessage(message)
-            ?.doOnSubscribe { Const.qiscusCore()?.dataStore?.addOrUpdate(message) }
+        MultichannelConst.qiscusCore()?.api?.sendMessage(message)
+            ?.doOnSubscribe { MultichannelConst.qiscusCore()?.dataStore?.addOrUpdate(message) }
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe({
@@ -60,27 +55,25 @@ class ChatroomRepositoryImpl : ChatroomRepository {
         roomId: Long,
         data: JSONObject
     ) {
-        Const.qiscusCore()?.pusherApi?.publishCustomEvent(roomId, data)
+        MultichannelConst.qiscusCore()?.pusherApi?.publishCustomEvent(roomId, data)
     }
 
     fun subscribeCustomEvent(
         roomId: Long
     ) {
-        Const.qiscusCore()?.pusherApi?.subsribeCustomEvent(roomId)
+        MultichannelConst.qiscusCore()?.pusherApi?.subsribeCustomEvent(roomId)
     }
 
     fun loginMultichannel(
-        name: String?,
         userId: String?,
         avatar: String?,
         extras: String?,
         userProp: List<UserProperties>?,
-        config: QiscusMultichannelWidgetConfig?,
-        responseInitiateChat: (ResponseInitiateChat) -> Unit,
+        onSuccess: (QiscusNonce) -> Unit,
         onError: (Throwable) -> Unit
     ) {
 
-        Const.qiscusCore()?.api?.jwtNonce
+        MultichannelConst.qiscusCore()?.api?.jwtNonce
             ?.doOnNext {
                 QiscusChatLocal.saveExtras(extras)
                 QiscusChatLocal.saveUserProps(userProp)
@@ -90,24 +83,7 @@ class ChatroomRepositoryImpl : ChatroomRepository {
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe({
-                QiscusMultichannelWidget.instance.component.qiscusChatRepository.initiateChat(
-                    DataInitialChat(
-                        Const.qiscusCore()?.appId!!,
-                        userId,
-                        name,
-                        avatar,
-                        it.nonce,
-                        null,
-                        extras,
-                        userProp
-                    ), { response ->
-                        response.data.isSessional?.let { sessional ->
-                            config?.setSessional(sessional)
-                        }
-                        responseInitiateChat(response)
-                    }, { throwable ->
-                        onError(throwable)
-                    })
+                onSuccess(it)
             }, {
                 onError(it)
             })

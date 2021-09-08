@@ -17,7 +17,7 @@ import com.qiscus.qiscusmultichannel.R
 import com.qiscus.qiscusmultichannel.ui.chat.CommentsAdapter
 import com.qiscus.qiscusmultichannel.ui.view.QiscusProgressView
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
-import com.qiscus.qiscusmultichannel.util.Const
+import com.qiscus.qiscusmultichannel.util.MultichannelConst
 import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import org.json.JSONObject
@@ -50,13 +50,6 @@ class FileVH(
         val iconColor: Int
 
         if (viewType == CommentsAdapter.TYPE_OPPONENT_FILE) {
-            ivDownloadIcon?.background = ResourceManager.getTintDrawable(
-                ContextCompat.getDrawable(
-                    itemView.context,
-                    R.drawable.ic_qiscus_opponent_download_file
-                ), color.getNavigationColor()
-            )
-
             backgroundColor = color.getLeftBubbleColor()
             iconColor = color.getNavigationColor()
             tvTitle?.setTextColor(color.getLeftBubbleTextColor())
@@ -82,6 +75,15 @@ class FileVH(
                 ), iconColor
             )
         )
+        ivDownloadIcon?.setImageDrawable(
+            ResourceManager.getTintDrawable(
+                ContextCompat.getDrawable(
+                    itemView.context,
+                    R.drawable.ic_qiscus_download_file
+                ), iconColor
+            )
+        )
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -101,12 +103,12 @@ class FileVH(
             tvTitle?.text = title.toString()
             extention?.text = "${tipe[tipe.size - 1].toUpperCase()} File"
         } catch (ex: Exception) {
-
+            ex.printStackTrace()
         }
 
-        if (Const.qiscusCore()?.dataStore?.getLocalPath(comment.id) != null) {
-            ivDownloadIcon?.visibility = View.GONE
-        }
+        ivDownloadIcon?.visibility =
+            if (MultichannelConst.qiscusCore()?.dataStore?.getLocalPath(comment.id) != null) View.GONE else View.VISIBLE
+
     }
 
     override fun onProgress(qiscusComment: QMessage?, percentage: Int) {
@@ -126,22 +128,8 @@ class FileVH(
     }
 
     private fun setUpDownloadIcon(qiscusComment: QMessage) {
-        val me = Const.qiscusCore()?.qiscusAccount?.id
-        qiscusComment.isMyComment(me)
-        if (ivDownloadIcon != null) {
-            if (qiscusComment.status <= QMessage.STATE_SENDING) {
-                if (qiscusComment.isMyComment(me)) {
-                    ivDownloadIcon.setImageResource(R.drawable.ic_qiscus_upload_file_mc)
-                } else {
-                    ivDownloadIcon.setImageResource(R.drawable.ic_qiscus_opponent_upload_file_mc)
-                }
-            } else {
-                if (qiscusComment.isMyComment(me)) {
-                    ivDownloadIcon.setImageResource(R.drawable.ic_qiscus_download_file)
-                } else {
-                    ivDownloadIcon.setImageResource(R.drawable.ic_qiscus_opponent_download_file)
-                }
-            }
+        ivDownloadIcon?.let {
+            it.rotation = if (qiscusComment.status <= QMessage.STATE_SENDING) 180F else 0F
         }
     }
 

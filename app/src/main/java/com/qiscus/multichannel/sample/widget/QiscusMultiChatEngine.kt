@@ -14,7 +14,7 @@ class QiscusMultiChatEngine {
 
     private val qiscusCores: MutableList<QiscusCore> = ArrayList()
 
-    fun setCores() {
+    init {
         qiscusCores.add(MULTICHANNEL_CORE, QiscusCore())
         qiscusCores.add(ANOTHER_CHAT_CORE, QiscusCore())
     }
@@ -23,7 +23,7 @@ class QiscusMultiChatEngine {
         return qiscusCores[type]
     }
 
-    fun allQiscusCore(): MutableList<QiscusCore> {
+    fun getAll(): MutableList<QiscusCore> {
         return qiscusCores
     }
 

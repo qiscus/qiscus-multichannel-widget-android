@@ -22,27 +22,28 @@ import org.json.JSONObject
 class CarouselAdapter(
     private val config: QiscusMultichannelWidgetConfig,
     private val color: QiscusMultichannelWidgetColor,
-    private val mData: JSONArray, val qiscusComment: QMessage
-) :
-    RecyclerView.Adapter<BaseViewHolder>() {
+    private val mData: JSONArray,
+    private val qiscusComment: QMessage,
+    private val listener: CommentsAdapter.ItemViewListener?
+) : RecyclerView.Adapter<BaseViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return CardVH(
             LayoutInflater.from(parent.context).inflate(R.layout.view_card_item, parent, false),
-            config, color
+            config, color, listener
         )
     }
 
     override fun getItemCount(): Int = mData.length()
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        val qiscusComment =
+        holder.bind(
             QMessage.generatePostBackMessage(
                 qiscusComment.chatRoomId,
                 qiscusComment.text,
                 mData[position] as JSONObject?
             )
-        holder.bind(qiscusComment)
+        )
     }
 
 }

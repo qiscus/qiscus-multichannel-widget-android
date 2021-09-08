@@ -13,7 +13,7 @@ import org.json.JSONObject
  */
 object QiscusChatLocal {
 
-    private var sharedPreferences: SharedPreferences = Const.qiscusCore()?.apps!!
+    private var sharedPreferences: SharedPreferences = MultichannelConst.qiscusCore()?.apps!!
         .getSharedPreferences("qiscus_multichannel_chat", Context.MODE_PRIVATE)
 
     fun getPref(): SharedPreferences {

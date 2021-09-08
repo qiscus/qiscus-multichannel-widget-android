@@ -37,15 +37,15 @@ object QiscusImageUtil {
 
         if (actualWidth < 0 || actualHeight < 0) {
             val bitmap2 = BitmapFactory.decodeFile(filePath)
-            actualWidth = bitmap2.getWidth()
-            actualHeight = bitmap2.getHeight()
+            actualWidth = bitmap2.width
+            actualHeight = bitmap2.height
         }
 
         //max Height and width values of the compressed image is taken as 1440x900
         val maxHeight =
-            Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()?.getMaxHeight()!!
+            MultichannelConst.qiscusCore()?.chatConfig?.qiscusImageCompressionConfig?.maxHeight!!
         val maxWidth =
-            Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()?.getMaxWidth()!!
+            MultichannelConst.qiscusCore()?.chatConfig?.qiscusImageCompressionConfig?.maxWidth!!
         var imgRatio = (actualWidth / actualHeight).toFloat()
         val maxRatio = maxWidth / maxHeight
 
@@ -103,8 +103,8 @@ object QiscusImageUtil {
         canvas.setMatrix(scaleMatrix)
         canvas.drawBitmap(
             bmp,
-            middleX - bmp.getWidth() / 2,
-            middleY - bmp.getHeight() / 2,
+            middleX - bmp.width / 2,
+            middleY - bmp.height / 2,
             Paint(Paint.FILTER_BITMAP_FLAG)
         )
 
@@ -123,8 +123,8 @@ object QiscusImageUtil {
                 matrix.postRotate(270f)
             }
             scaledBitmap = Bitmap.createBitmap(
-                scaledBitmap!!, 0, 0,
-                scaledBitmap!!.getWidth(), scaledBitmap!!.getHeight(), matrix,
+                scaledBitmap, 0, 0,
+                scaledBitmap.width, scaledBitmap.height, matrix,
                 true
             )
         } catch (e: IOException) {
@@ -137,15 +137,15 @@ object QiscusImageUtil {
     fun compressImage(imageFile: File): File {
 
         var out: FileOutputStream? = null
-        val filename = QiscusFileUtil.generateFilePath(imageFile.getName(), ".jpg")
+        val filename = QiscusFileUtil.generateFilePath(imageFile.name, ".jpg")
         try {
             out = FileOutputStream(filename)
 
             //write the compressed bitmap at the destination specified by filename.
             QiscusImageUtil.getScaledBitmap(Uri.fromFile(imageFile))!!.compress(
                 Bitmap.CompressFormat.JPEG,
-                Const.qiscusCore()?.getChatConfig()?.getQiscusImageCompressionConfig()
-                    ?.getQuality()!!, out
+                MultichannelConst.qiscusCore()?.chatConfig?.qiscusImageCompressionConfig
+                    ?.quality!!, out
             )
 
         } catch (e: FileNotFoundException) {
@@ -153,7 +153,7 @@ object QiscusImageUtil {
         } finally {
             try {
                 if (out != null) {
-                    out!!.close()
+                    out.close()
                 }
             } catch (ignored: IOException) {
                 //Do nothing
@@ -189,7 +189,7 @@ object QiscusImageUtil {
     }
 
     fun isImage(file: File): Boolean {
-        return QiscusFileUtil.isImage(file.getPath())
+        return QiscusFileUtil.isImage(file.path)
     }
 
     fun addImageToGallery(picture: File) {
@@ -240,13 +240,13 @@ object QiscusImageUtil {
                 SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
             val imageFileName = "JPEG-$timeStamp-"
             val storageDir: File? =
-                Const.qiscusCore()?.getApps()?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                MultichannelConst.qiscusCore()?.apps?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             val image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",  /* suffix */
                 storageDir /* directory */
             )
-            Const.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.absolutePath)
+            MultichannelConst.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.absolutePath)
             return image
         } else {
             val timeStamp = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
@@ -254,7 +254,7 @@ object QiscusImageUtil {
             val storageDir =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
             val image = File.createTempFile(imageFileName, ".jpg", storageDir)
-            Const.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.getAbsolutePath())
+            MultichannelConst.qiscusCore()?.cacheManager?.cacheLastImagePath("file:" + image.absolutePath)
             return image
         }
     }
@@ -265,26 +265,26 @@ object QiscusImageUtil {
         val bitmap = ThumbnailUtils.extractThumbnail(bm, size, size)
 
         val output =
-            Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888)
+            Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
 
         val canvas = Canvas(output)
 
         val color = -0x10000
         val paint = Paint()
-        val rect = Rect(0, 0, bitmap.getWidth(), bitmap.getHeight())
+        val rect = Rect(0, 0, bitmap.width, bitmap.height)
         val rectF = RectF(rect)
 
-        paint.setAntiAlias(true)
-        paint.setDither(true)
-        paint.setFilterBitmap(true)
+        paint.isAntiAlias = true
+        paint.isDither = true
+        paint.isFilterBitmap = true
         canvas.drawARGB(0, 0, 0, 0)
-        paint.setColor(color)
+        paint.color = color
         canvas.drawOval(rectF, paint)
 
-        paint.setColor(Color.BLUE)
-        paint.setStyle(Paint.Style.STROKE)
-        paint.setStrokeWidth(4.toFloat())
-        paint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.SRC_IN))
+        paint.color = Color.BLUE
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 4.toFloat()
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
         canvas.drawBitmap(bitmap, rect, rect, paint)
 
         return output
@@ -301,12 +301,12 @@ object QiscusImageUtil {
             return null
         }
 
-        var i = imageUrl!!.indexOf("upload/")
+        var i = imageUrl.indexOf("upload/")
         if (i > 0) {
             i += 7
-            var blurryImageUrl = imageUrl!!.substring(0, i)
+            var blurryImageUrl = imageUrl.substring(0, i)
             blurryImageUrl += "w_$width,h_$height,c_limit,e_blur:$blur/"
-            var file = imageUrl!!.substring(i)
+            var file = imageUrl.substring(i)
             i = file.lastIndexOf('.')
             if (i > 0) {
                 file = file.substring(0, i)

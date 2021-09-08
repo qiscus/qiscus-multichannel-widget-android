@@ -26,26 +26,28 @@ class PNUtil {
 
     companion object {
         fun showPn(context: Context, qiscusComment: QMessage) {
-            if (Const.qiscusCore()?.dataStore?.isContains(qiscusComment)!!) {
+            if (MultichannelConst.qiscusCore()?.dataStore?.isContains(qiscusComment)!!) {
                 return
             }
-            Const.qiscusCore()?.dataStore?.addOrUpdate(qiscusComment)
+            MultichannelConst.qiscusCore()?.dataStore?.addOrUpdate(qiscusComment)
 
-            val lastActivity = Const.qiscusCore()?.cacheManager?.lastChatActivity!!
+            val lastActivity = MultichannelConst.qiscusCore()?.cacheManager?.lastChatActivity!!
             if (lastActivity.first!! && lastActivity.second == qiscusComment.chatRoomId) {
                 return
             }
 
-            if (Const.qiscusCore()?.qiscusAccount?.id == qiscusComment.sender.id) {
+            if (MultichannelConst.qiscusCore()?.qiscusAccount?.id == qiscusComment.sender.id) {
                 return
             }
 
-            if (QiscusMultichannelWidget.instance.config.getHideUIEvent() && qiscusComment.type == QMessage.Type.SYSTEM_EVENT) {
+            if (QiscusMultichannelWidget.instance.getConfig()
+                    .isShowSystemMessage() && qiscusComment.type == QMessage.Type.SYSTEM_EVENT
+            ) {
                 return
             }
 
             val notificationChannelId =
-                Const.qiscusCore()?.apps?.packageName + ".qiscus.sdk.notification.channel"
+                MultichannelConst.qiscusCore()?.apps?.packageName + ".qiscus.sdk.notification.channel"
             if (BuildVersionUtil.isOreoOrHigher()) {
                 val notificationChannel = NotificationChannel(
                     notificationChannelId,
@@ -65,14 +67,15 @@ class PNUtil {
                 openIntent, PendingIntent.FLAG_CANCEL_CURRENT
             )
 
-            val room = Const.qiscusCore()?.dataStore?.getChatRoom(qiscusComment.chatRoomId)
+            val room =
+                MultichannelConst.qiscusCore()?.dataStore?.getChatRoom(qiscusComment.chatRoomId)
             val notificationBuilder = NotificationCompat.Builder(context, notificationChannelId)
             notificationBuilder.setContentTitle(room?.name)
                 .setContentIntent(pendingIntent)
                 .setContentText(getContent(context, qiscusComment))
                 .setTicker(getContent(context, qiscusComment))
                 //@TODO Change background image
-                .setSmallIcon(QiscusMultichannelWidget.instance.config.getNotificationIcon())
+                .setSmallIcon(QiscusMultichannelWidget.instance.getConfig().getNotificationIcon())
                 .setColor(ContextCompat.getColor(context, R.color.qiscus_notification_mc))
                 .setGroup("CHAT_NOTIF_" + qiscusComment.chatRoomId)
                 .setAutoCancel(true)
@@ -89,10 +92,11 @@ class PNUtil {
 
         private fun getContent(context: Context, qiscusComment: QMessage): String {
 
-            val account = Const.qiscusCore()?.qiscusAccount!!
+            val account = MultichannelConst.qiscusCore()?.qiscusAccount!!
             var sender = ""
 
-            var chatRoom = Const.qiscusCore()?.dataStore?.getChatRoom(qiscusComment.chatRoomId)
+            var chatRoom =
+                MultichannelConst.qiscusCore()?.dataStore?.getChatRoom(qiscusComment.chatRoomId)
             if (chatRoom?.type == "group" &&
                 qiscusComment.type != QMessage.Type.CUSTOM &&
                 qiscusComment.type != QMessage.Type.LOCATION

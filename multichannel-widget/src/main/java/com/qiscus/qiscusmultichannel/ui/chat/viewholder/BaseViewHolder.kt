@@ -52,8 +52,6 @@ open class BaseViewHolder(
                 ), color.getTimeBackgroundColor()
             )
         }
-        avatar?.visibility =
-            if (config.isAvatarActived()) View.VISIBLE else View.GONE
         time?.setTextColor(color.getTimeLabelTextColor())
         sender?.setTextColor(color.getRightBubbleColor())
     }
@@ -94,32 +92,36 @@ open class BaseViewHolder(
     }
 
     private fun setNeedNameAndAvatar(isShow: Boolean, comment: QMessage?) {
-        if (config.isAvatarActived() && isShow) {
-            avatar?.let {
-                Nirmana.getInstance().get()
-                    .load(comment!!.sender.avatarUrl)
-                    .apply(
-                        RequestOptions()
-                            .circleCrop()
-                            .placeholder(R.drawable.ic_avatar)
-                            .error(R.drawable.ic_avatar)
-                            .dontAnimate()
-                    )
-                    .into(it)
-            }
-            sender?.text = comment!!.sender.name
-
-            avatar?.visibility = View.VISIBLE
-            sender?.visibility = View.VISIBLE
-            chatFrom?.apply {
-                background = getChatFrom()
-                visibility = View.VISIBLE
+        if (isShow) {
+            chatFrom?.let {
+                it.background = getChatFrom()
+                it.visibility = View.VISIBLE
             }
 
+            if (config.isAvatarActived()) {
+                sender?.text = comment!!.sender.name
+                sender?.visibility = View.VISIBLE
+                avatar?.let {
+                    Nirmana.getInstance().get()
+                        .load(comment.sender.avatarUrl)
+                        .apply(
+                            RequestOptions()
+                                .circleCrop()
+                                .placeholder(R.drawable.ic_avatar)
+                                .error(R.drawable.ic_avatar)
+                                .dontAnimate()
+                        )
+                        .into(it)
+                    it.visibility = View.VISIBLE
+                }
+            } else {
+                sender?.visibility = View.GONE
+                avatar?.visibility = View.GONE
+            }
         } else {
-            avatar?.visibility = View.GONE
-            sender?.visibility = View.GONE
             chatFrom?.visibility = View.GONE
+            sender?.visibility = View.GONE
+            avatar?.visibility = if (config.isAvatarActived()) View.INVISIBLE else View.GONE
         }
     }
 

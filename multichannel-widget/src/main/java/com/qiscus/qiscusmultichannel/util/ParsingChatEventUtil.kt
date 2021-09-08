@@ -30,11 +30,11 @@ class ParsingChatEventUtil {
     }
 
     private fun getString(str: Int): String {
-        return Const.qiscusCore()?.apps!!.getString(str)
+        return MultichannelConst.qiscusCore()?.apps!!.getString(str)
     }
 
     private fun getString(str: Int, param: String): String {
-        return Const.qiscusCore()?.apps!!.getString(str, param)
+        return MultichannelConst.qiscusCore()?.apps!!.getString(str, param)
     }
 
 }

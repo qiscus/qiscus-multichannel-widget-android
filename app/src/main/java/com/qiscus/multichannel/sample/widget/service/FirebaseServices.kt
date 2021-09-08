@@ -29,7 +29,7 @@ class FirebaseServices : FirebaseMessagingService() {
         super.onMessageReceived(remoteMessage)
 
         if (QiscusMultichannelWidget.instance.isMultichannelMessage(
-                remoteMessage, qiscusMultiChatEngine.allQiscusCore()
+                remoteMessage, qiscusMultiChatEngine.getAll()
             )
         ) {
             Log.e("debug", "notif")

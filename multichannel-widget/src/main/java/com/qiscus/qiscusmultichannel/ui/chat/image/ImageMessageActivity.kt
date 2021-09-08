@@ -71,7 +71,7 @@ class ImageMessageActivity : AppCompatActivity(),
     private var avatarTarget: CustomTarget<Drawable>? = null
     private var ubcritionResultFiles: Subscription? = null
     private var currentPosition = 0
-    private val color = QiscusMultichannelWidget.instance.color
+    private val color = QiscusMultichannelWidget.instance.getColor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -231,7 +231,7 @@ class ImageMessageActivity : AppCompatActivity(),
             e.printStackTrace()
         }
         if (type != null && type.contains("image") && adapter == null) {
-            adapter = ImagePreviewAdapter(this, this, dataList, displayMetrics!!.widthPixels)
+            adapter = ImagePreviewAdapter(this, this, dataList, displayMetrics!!.widthPixels, color)
             rvImagePrev.also {
                 it.setHasFixedSize(true)
                 it.itemAnimator = null
@@ -245,7 +245,7 @@ class ImageMessageActivity : AppCompatActivity(),
 
     override fun onItemClick(position: Int) {
         if (adapter == null) {
-            adapter = ImagePreviewAdapter(this, this, dataList, displayMetrics!!.widthPixels)
+            adapter = ImagePreviewAdapter(this, this, dataList, displayMetrics!!.widthPixels, color)
             rvImagePrev.also {
                 it.setHasFixedSize(true)
                 it.itemAnimator = null
@@ -317,7 +317,7 @@ class ImageMessageActivity : AppCompatActivity(),
     @SuppressLint("QueryPermissionsNeeded")
     private fun openCamera() {
         val permission =
-            if (Build.VERSION.SDK_INT <= 28) Const.CAMERA_PERMISSION_28 else Const.CAMERA_PERMISSION
+            if (Build.VERSION.SDK_INT <= 28) MultichannelConst.CAMERA_PERMISSION_28 else MultichannelConst.CAMERA_PERMISSION
         if (QiscusPermissionsUtil.hasPermissions(this, permission)) {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (intent.resolveActivity(packageManager) != null) {
@@ -346,7 +346,7 @@ class ImageMessageActivity : AppCompatActivity(),
                             )
                         )
                     }
-                    startActivityForResult(intent, Const.TAKE_PICTURE_REQUEST)
+                    startActivityForResult(intent, MultichannelConst.TAKE_PICTURE_REQUEST)
                 }
 
             }
@@ -357,7 +357,7 @@ class ImageMessageActivity : AppCompatActivity(),
 
     private fun openGallery() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            if (QiscusPermissionsUtil.hasPermissions(this, Const.FILE_PERMISSION)) {
+            if (QiscusPermissionsUtil.hasPermissions(this, MultichannelConst.FILE_PERMISSION)) {
                 pickImageUsingJupuk()
             } else {
                 requestFilePermission()
@@ -384,7 +384,7 @@ class ImageMessageActivity : AppCompatActivity(),
             intent.action = Intent.ACTION_GET_CONTENT
         }
 
-        startActivityForResult(intent, Const.IMAGE_GALLERY_REQUEST)
+        startActivityForResult(intent, MultichannelConst.IMAGE_GALLERY_REQUEST)
     }
 
     override fun onItemDelete(position: Int) {
@@ -420,29 +420,29 @@ class ImageMessageActivity : AppCompatActivity(),
         if (Build.VERSION.SDK_INT <= 28) {
             if (!QiscusPermissionsUtil.hasPermissions(
                     this,
-                    Const.CAMERA_PERMISSION_28
+                    MultichannelConst.CAMERA_PERMISSION_28
                 )
             ) {
                 QiscusPermissionsUtil.requestPermissions(
                     this, getString(R.string.qiscus_permission_request_title_mc),
-                    Const.RC_CAMERA_PERMISSION, Const.CAMERA_PERMISSION_28
+                    MultichannelConst.RC_CAMERA_PERMISSION, MultichannelConst.CAMERA_PERMISSION_28
                 )
             }
         } else {
-            if (!QiscusPermissionsUtil.hasPermissions(this, Const.CAMERA_PERMISSION)) {
+            if (!QiscusPermissionsUtil.hasPermissions(this, MultichannelConst.CAMERA_PERMISSION)) {
                 QiscusPermissionsUtil.requestPermissions(
                     this, getString(R.string.qiscus_permission_request_title_mc),
-                    Const.RC_CAMERA_PERMISSION, Const.CAMERA_PERMISSION
+                    MultichannelConst.RC_CAMERA_PERMISSION, MultichannelConst.CAMERA_PERMISSION
                 )
             }
         }
     }
 
     private fun requestFilePermission() {
-        if (!QiscusPermissionsUtil.hasPermissions(this, Const.FILE_PERMISSION)) {
+        if (!QiscusPermissionsUtil.hasPermissions(this, MultichannelConst.FILE_PERMISSION)) {
             QiscusPermissionsUtil.requestPermissions(
                 this, getString(R.string.qiscus_permission_request_title_mc),
-                Const.RC_FILE_PERMISSION, Const.FILE_PERMISSION
+                MultichannelConst.RC_FILE_PERMISSION, MultichannelConst.FILE_PERMISSION
             )
         }
     }
@@ -454,17 +454,17 @@ class ImageMessageActivity : AppCompatActivity(),
             dataList.removeAt(dataList.size - 1)
         }
 
-        if (requestCode == Const.TAKE_PICTURE_REQUEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == MultichannelConst.TAKE_PICTURE_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
                 val imageFile =
-                    QiscusFileUtil.from(Uri.parse(Const.qiscusCore()?.cacheManager?.lastImagePath))
+                    QiscusFileUtil.from(Uri.parse(MultichannelConst.qiscusCore()?.cacheManager?.lastImagePath))
                 toList(arrayOf(imageFile.absolutePath))
             } catch (e: Exception) {
                 showToast(getString(R.string.qiscus_chat_error_failed_read_picture_mc))
                 e.printStackTrace()
             }
 
-        } else if (requestCode == Const.IMAGE_GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == MultichannelConst.IMAGE_GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
                 data?.let {
                     val list: Array<String?>

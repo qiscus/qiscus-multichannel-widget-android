@@ -1,7 +1,7 @@
 package com.qiscus.qiscusmultichannel.ui.loading
 
-import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
 import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
+import com.qiscus.qiscusmultichannel.util.MultichanelChatWidget
 import com.qiscus.qiscusmultichannel.util.QiscusChatLocal
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 
@@ -10,7 +10,7 @@ import com.qiscus.sdk.chat.core.data.model.QChatRoom
  * Author     : Taufik Budi S
  * Github     : https://github.com/tfkbudi
  */
-class LoadingPresenter {
+class LoadingPresenter(private val multichannelWidget: MultichanelChatWidget) {
 
     private var view: LoadingView? = null
 
@@ -34,7 +34,7 @@ class LoadingPresenter {
             QiscusChatLocal.setRoomId(0)
         }
 
-        QiscusMultichannelWidget.instance.loginMultiChannel(
+        multichannelWidget.loginMultiChannel(
             username,
             userId,
             avatar,
@@ -49,7 +49,7 @@ class LoadingPresenter {
     }
 
     fun openRoomById() {
-        QiscusMultichannelWidget.instance.openChatRoomById(QiscusChatLocal.getRoomId(), {
+        multichannelWidget.openChatRoomById(QiscusChatLocal.getRoomId(), {
             view?.onSuccess(it)
         }, {
             view?.onError(it.localizedMessage)

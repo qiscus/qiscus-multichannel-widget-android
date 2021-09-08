@@ -17,10 +17,10 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.nirmana.Nirmana
-import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.qiscusmultichannel.R
+import com.qiscus.qiscusmultichannel.ui.chat.CommentsAdapter
 import com.qiscus.qiscusmultichannel.ui.webView.WebViewHelper
 import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
@@ -40,7 +40,8 @@ import java.util.regex.Matcher
 class CardVH(
     itemView: View,
     config: QiscusMultichannelWidgetConfig,
-    color: QiscusMultichannelWidgetColor
+    color: QiscusMultichannelWidgetColor,
+    private val listener: CommentsAdapter.ItemViewListener?
 ) : BaseViewHolder(itemView, config, color), ChatButtonView.ChatButtonClickListener {
 
     private var chatRoomId: Long = 0
@@ -86,15 +87,7 @@ class CardVH(
     }
 
     private fun sendComment(comment: QMessage) {
-        QiscusMultichannelWidget.instance.component.chatroomRepository.sendComment(
-            comment.chatRoomId,
-            comment,
-            {
-                it
-            },
-            {
-                it
-            })
+        listener?.onSendComment(comment)
     }
 
     @SuppressLint("DefaultLocale", "RestrictedApi")

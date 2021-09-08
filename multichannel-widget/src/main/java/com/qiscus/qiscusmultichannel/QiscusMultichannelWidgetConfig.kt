@@ -19,56 +19,70 @@ class QiscusMultichannelWidgetConfig {
     private var enableNotification: Boolean = true
     private var roomTitle: String? = null
     private var roomSubtitle: String? = null
-    private var hardcodedAvatar: String? = null
     private var hideUIEvent: Boolean = false // hide system event
-    private var videoPreviewSend: Boolean = true // show video preview on send confirmation activity
 
-    fun setEnableLog(enableLog: Boolean) = apply { this.enableLog = enableLog }
-    fun isEnableLog() = enableLog
-    fun isSessional() = isSessional
-    fun setSessional(isSessional: Boolean) = apply { this.isSessional = isSessional }
+    fun setEnableLog(enableLog: Boolean) = apply {
+        this.enableLog = enableLog
+    }
+
     fun setNotificationListener(multichannelNotificationListener: MultichannelNotificationListener?) =
-        apply { this.multichannelNotificationListener = multichannelNotificationListener }
+        apply {
+            this.multichannelNotificationListener = multichannelNotificationListener
+        }
 
-    fun getNotificationListener() = multichannelNotificationListener
-    fun setEnableNotification(enableNotification: Boolean) =
-        apply { this.enableNotification = enableNotification }
+    fun setEnableNotification(enableNotification: Boolean) = apply {
+        this.enableNotification = enableNotification
+    }
 
-    fun setNotificationIcon(@DrawableRes iconId: Int) =
-        apply { this.notificationIcon = iconId }
+    fun setNotificationIcon(@DrawableRes iconId: Int) = apply {
+        this.notificationIcon = iconId
+    }
 
-    fun isEnableNotification() = enableNotification
-    fun setRoomTitle(roomTitle: String?) = apply { this.roomTitle = roomTitle }
-    fun getRoomTitle(): String? = roomTitle
-    fun setRoomSubtitle(subtitleType: RoomSubtitle, roomSubtitle: String?) = apply {
+    internal fun setSessional(isSessional: Boolean) {
+        this.isSessional = isSessional
+    }
+
+    internal fun setRoomTitle(roomTitle: String?) {
+        this.roomTitle = roomTitle
+    }
+
+    internal fun setRoomSubtitle(subtitleType: RoomSubtitle, roomSubtitle: String?) {
         this.subtitleType = subtitleType
         this.roomSubtitle = if (subtitleType == RoomSubtitle.EDITABLE) roomSubtitle else null
     }
 
-    fun setRoomSubtitle(subtitleType: RoomSubtitle) = apply {
+    internal fun setRoomSubtitle(subtitleType: RoomSubtitle) {
         if (subtitleType == RoomSubtitle.EDITABLE) this.subtitleType = RoomSubtitle.ENABLE
         else this.subtitleType = subtitleType
     }
 
-    fun setAvatar(avatarConfig: Avatar) = apply {
+    internal fun setAvatar(avatarConfig: Avatar) {
         this.avatarConfig = avatarConfig
     }
 
-    fun getRoomSubtitle(): String? = roomSubtitle
-    fun getRoomSubtitleType(): RoomSubtitle = subtitleType
-    fun setHideUIEvent(isHidden: Boolean) = apply { this.hideUIEvent = isHidden }
-    fun getHideUIEvent(): Boolean = hideUIEvent
-    fun setVideoPreviewOnSend(isShow: Boolean) = apply { this.videoPreviewSend = isShow }
-    fun getVideoPreviewOnSend(): Boolean = videoPreviewSend
-    fun isAvatarActived(): Boolean = avatarConfig == Avatar.ENABLE
+    internal fun setShowSystemMessage(isHidden: Boolean) {
+        this.hideUIEvent = isHidden
+    }
 
-    @Deprecated("move using configuration from dashboard")
-    fun setHardcodedAvatar(hardcodedAvatar: String) =
-        apply { this.hardcodedAvatar = hardcodedAvatar }
+    internal fun isEnableLog() = enableLog
 
-    @Deprecated("move using configuration from dashboard")
-    fun getHardcodedAvatar(): String? = hardcodedAvatar
-    fun getNotificationIcon(): Int = this.notificationIcon
+    internal fun isEnableNotification() = enableNotification
+
+    internal fun getNotificationListener() = multichannelNotificationListener
+
+    internal fun getNotificationIcon(): Int = this.notificationIcon
+
+    internal fun isSessional() = isSessional
+
+    internal fun getRoomTitle(): String? = roomTitle
+
+    internal fun getRoomSubtitle(): String? = roomSubtitle
+
+    internal fun getRoomSubtitleType(): RoomSubtitle = subtitleType
+
+    internal fun isShowSystemMessage(): Boolean = hideUIEvent
+
+    internal fun isAvatarActived(): Boolean = avatarConfig == Avatar.ENABLE
 
     enum class RoomSubtitle {
         ENABLE, DISABLE, EDITABLE

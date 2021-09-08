@@ -59,7 +59,7 @@ import java.util.*
 class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     ChatRoomPresenter.ChatRoomView, QiscusPermissionsUtil.PermissionCallbacks {
 
-    private val qiscusMultichannelWidget = QiscusMultichannelWidget.instance
+    private val qiscusMultichannelWidget: MultichanelChatWidget = QiscusMultichannelWidget.instance
     private var isChatNoEmpty: Boolean = false
     protected val SEND_PICTURE_CONFIRMATION_REQUEST = 4
     protected val GET_TEMPLATE = 5
@@ -111,7 +111,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
         btnSend.setOnClickListener { sendingComment() }
         btn_new_room.setOnClickListener {
-            val account = Const.qiscusCore()?.qiscusAccount!!
+            val account = MultichannelConst.qiscusCore()?.qiscusAccount!!
             QiscusChatLocal.setRoomId(0)
             LoadingActivity.generateIntent(
                 ctx,
@@ -125,7 +125,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         }
         btnCancelReply.setOnClickListener { rootViewSender.visibility = View.GONE }
         qiscusChatRoom?.let {
-            presenter = ChatRoomPresenter(it)
+            presenter =
+                ChatRoomPresenter(it, qiscusMultichannelWidget.getComponent().qiscusChatRepository)
             presenter.attachView(this)
             presenter.loadComments(20)
             showNewChatButton(it.extras.getBoolean("is_resolved"))
@@ -145,7 +146,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         }
     }
 
-    private fun initColor() = with(qiscusMultichannelWidget.color) {
+    private fun initColor() = with(qiscusMultichannelWidget.getColor()) {
         context?.let {
             etMessage.background = GradientDrawable().apply {
                 setColor(ContextCompat.getColor(it, R.color.qiscus_white_mc))
@@ -187,15 +188,18 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun onResume() {
         super.onResume()
-        Const.qiscusCore()?.cacheManager?.setLastChatActivity(true, qiscusChatRoom!!.id)
-        Const.qiscusCore()?.pusherApi?.subscribeChatRoom(qiscusChatRoom)
+        MultichannelConst.qiscusCore()?.cacheManager?.setLastChatActivity(true, qiscusChatRoom!!.id)
+        MultichannelConst.qiscusCore()?.pusherApi?.subscribeChatRoom(qiscusChatRoom)
         notifyLatestRead()
     }
 
     override fun onPause() {
         super.onPause()
-        Const.qiscusCore()?.pusherApi?.unsubsribeChatRoom(qiscusChatRoom)
-        Const.qiscusCore()?.cacheManager?.setLastChatActivity(false, qiscusChatRoom!!.id)
+        MultichannelConst.qiscusCore()?.pusherApi?.unsubsribeChatRoom(qiscusChatRoom)
+        MultichannelConst.qiscusCore()?.cacheManager?.setLastChatActivity(
+            false,
+            qiscusChatRoom!!.id
+        )
     }
 
     override fun onDestroyView() {
@@ -213,13 +217,17 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         audioHandler = AudioHandler(ctx)
         commentsAdapter = CommentsAdapter(
             ctx,
-            qiscusMultichannelWidget.config,
-            qiscusMultichannelWidget.color,
+            qiscusMultichannelWidget.getConfig(),
+            qiscusMultichannelWidget.getColor(),
             audioHandler
         )
         rvMessage.adapter = commentsAdapter
 
         commentsAdapter.setOnItemClickListener(object : CommentsAdapter.ItemViewListener {
+
+            override fun onSendComment(comment: QMessage) {
+                presenter.sendComment(comment)
+            }
 
             override fun onItemClick(view: View, position: Int) {
                 handleItemClick(commentsAdapter.data[position])
@@ -239,11 +247,15 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         if (isChatNoEmpty) return
 
         if (isNoEmpty) {
-            containerBackground.setBackgroundColor(qiscusMultichannelWidget.color.getBaseColor())
+            containerBackground.setBackgroundColor(
+                qiscusMultichannelWidget.getColor().getBaseColor()
+            )
             tvEmpty.visibility = View.GONE
         } else if (context != null) {
-            containerBackground.setBackgroundColor(qiscusMultichannelWidget.color.getEmptyBacgroundColor())
-            tvEmpty.setTextColor(qiscusMultichannelWidget.color.getEmptyTextColor())
+            containerBackground.setBackgroundColor(
+                qiscusMultichannelWidget.getColor().getEmptyBacgroundColor()
+            )
+            tvEmpty.setTextColor(qiscusMultichannelWidget.getColor().getEmptyTextColor())
             tvEmpty.text = HtmlCompat.fromHtml(
                 context!!.getString(R.string.qiscus_empyText),
                 HtmlCompat.FROM_HTML_MODE_LEGACY
@@ -258,7 +270,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         clearSelectedComment()
         when (comment.type) {
             QMessage.Type.AUDIO -> {
-                if (Const.qiscusCore()?.dataStore?.getLocalPath(comment.id) == null)
+                if (MultichannelConst.qiscusCore()?.dataStore?.getLocalPath(comment.id) == null)
                     downloadFile(comment)
             }
             QMessage.Type.FILE -> {
@@ -296,7 +308,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     @SuppressLint("QueryPermissionsNeeded")
     private fun openCamera() {
         val permission =
-            if (Build.VERSION.SDK_INT <= 28) Const.CAMERA_PERMISSION_28 else Const.CAMERA_PERMISSION
+            if (Build.VERSION.SDK_INT <= 28) MultichannelConst.CAMERA_PERMISSION_28 else MultichannelConst.CAMERA_PERMISSION
         if (QiscusPermissionsUtil.hasPermissions(ctx, permission)) {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (intent.resolveActivity(ctx.packageManager) != null) {
@@ -325,7 +337,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                             )
                         )
                     }
-                    startActivityForResult(intent, Const.TAKE_PICTURE_REQUEST)
+                    startActivityForResult(intent, MultichannelConst.TAKE_PICTURE_REQUEST)
                 }
 
             }
@@ -336,14 +348,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     private fun pickImageUsingIntentSystem() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
+        intent.type = "image/* video/*"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             intent.action = Intent.ACTION_GET_CONTENT
         }
 
-        startActivityForResult(intent, Const.IMAGE_GALLERY_REQUEST)
+        startActivityForResult(intent, MultichannelConst.IMAGE_GALLERY_REQUEST)
     }
 
     private fun pickImageUsingJupuk() {
@@ -354,7 +366,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     private fun openGallery() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            if (QiscusPermissionsUtil.hasPermissions(ctx, Const.FILE_PERMISSION)) {
+            if (QiscusPermissionsUtil.hasPermissions(ctx, MultichannelConst.FILE_PERMISSION)) {
                 pickImageUsingJupuk()
             } else {
                 requestFilePermission()
@@ -369,7 +381,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     private fun openFile() {
         if ((Build.VERSION.SDK_INT >= 29) || (Build.VERSION.SDK_INT <= 28 && QiscusPermissionsUtil.hasPermissions(
                 ctx,
-                Const.FILE_PERMISSION
+                MultichannelConst.FILE_PERMISSION
             ))
         ) {
             JupukBuilder().setMaxCount(1)
@@ -381,27 +393,31 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     private fun requestCameraPermission() {
         if (Build.VERSION.SDK_INT <= 28) {
-            if (!QiscusPermissionsUtil.hasPermissions(ctx, Const.CAMERA_PERMISSION_28)) {
+            if (!QiscusPermissionsUtil.hasPermissions(
+                    ctx,
+                    MultichannelConst.CAMERA_PERMISSION_28
+                )
+            ) {
                 QiscusPermissionsUtil.requestPermissions(
                     this, getString(R.string.qiscus_permission_request_title_mc),
-                    Const.RC_CAMERA_PERMISSION, Const.CAMERA_PERMISSION_28
+                    MultichannelConst.RC_CAMERA_PERMISSION, MultichannelConst.CAMERA_PERMISSION_28
                 )
             }
         } else {
-            if (!QiscusPermissionsUtil.hasPermissions(ctx, Const.CAMERA_PERMISSION)) {
+            if (!QiscusPermissionsUtil.hasPermissions(ctx, MultichannelConst.CAMERA_PERMISSION)) {
                 QiscusPermissionsUtil.requestPermissions(
                     this, getString(R.string.qiscus_permission_request_title_mc),
-                    Const.RC_CAMERA_PERMISSION, Const.CAMERA_PERMISSION
+                    MultichannelConst.RC_CAMERA_PERMISSION, MultichannelConst.CAMERA_PERMISSION
                 )
             }
         }
     }
 
     private fun requestFilePermission() {
-        if (!QiscusPermissionsUtil.hasPermissions(ctx, Const.FILE_PERMISSION)) {
+        if (!QiscusPermissionsUtil.hasPermissions(ctx, MultichannelConst.FILE_PERMISSION)) {
             QiscusPermissionsUtil.requestPermissions(
                 this, getString(R.string.qiscus_permission_request_title_mc),
-                Const.RC_FILE_PERMISSION, Const.FILE_PERMISSION
+                MultichannelConst.RC_FILE_PERMISSION, MultichannelConst.FILE_PERMISSION
             )
         }
     }
@@ -616,7 +632,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     override fun showNewChatButton(it: Boolean) {
-        if (it && qiscusMultichannelWidget.config.isSessional()) {
+        if (it && qiscusMultichannelWidget.getConfig().isSessional()) {
             newChatPanel.visibility = View.VISIBLE
             messageInputPanel.visibility = View.GONE
         } else {
@@ -638,14 +654,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     private fun notifyLatestRead() {
         val qiscusComment = commentsAdapter.getLatestSentComment()
         if (qiscusComment != null && qiscusChatRoom != null) {
-            Const.qiscusCore()?.pusherApi
+            MultichannelConst.qiscusCore()?.pusherApi
                 ?.markAsRead(qiscusChatRoom!!.id, qiscusComment.id)
         }
     }
 
     private fun notifyServerTyping(typing: Boolean) {
         if (isTyping != typing) {
-            Const.qiscusCore()?.pusherApi?.publishTyping(qiscusChatRoom!!.id, typing)
+            MultichannelConst.qiscusCore()?.pusherApi?.publishTyping(qiscusChatRoom!!.id, typing)
             isTyping = typing
         }
     }
@@ -654,15 +670,10 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode != Activity.RESULT_OK) return
 
-        if (requestCode == Const.TAKE_PICTURE_REQUEST) {
+        if (requestCode == MultichannelConst.TAKE_PICTURE_REQUEST) {
             try {
                 val imageFile =
-                    QiscusFileUtil.from(Uri.parse(Const.qiscusCore()?.cacheManager?.lastImagePath))
-
-                // will be delete
-//                val qiscusPhoto = QiscusPhoto(imageFile)
-//                val intent =
-//                    SendImageConfirmationActivity.generateIntent(ctx, qiscusChatRoom!!, qiscusPhoto)
+                    QiscusFileUtil.from(Uri.parse(MultichannelConst.qiscusCore()?.cacheManager?.lastImagePath))
 
                 val list: Array<String?> = arrayOf(imageFile.absolutePath)
                 val intent =
@@ -675,20 +686,6 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             }
 
         } else if (requestCode == SEND_PICTURE_CONFIRMATION_REQUEST) {
-            /* if (data == null) {
-                 showError(getString(R.string.qiscus_chat_error_failed_open_picture_mc))
-                 return
-             }
-
-             val caption = data.getStringExtra(SendImageConfirmationActivity.EXTRA_CAPTIONS)
-             val qiscusPhoto =
-                 data.getParcelableExtra<QiscusPhoto>(SendImageConfirmationActivity.EXTRA_PHOTOS)
-             if (qiscusPhoto != null) {
-                 presenter.sendFile(qiscusPhoto.photoFile, caption)
-             } else {
-                 showError(getString(R.string.qiscus_chat_error_failed_read_picture_mc))
-             }*/
-
             data?.let {
                 val paths = it.getStringArrayListExtra(DATA)
                 val captions = it.getStringArrayListExtra(CAPTION_COMMENT_IMAGE)
@@ -701,7 +698,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                 val template = it.getStringExtra("template")
                 sendComment(template!!)
             }
-        } else if (requestCode == Const.IMAGE_GALLERY_REQUEST) {
+        } else if (requestCode == MultichannelConst.IMAGE_GALLERY_REQUEST) {
             try {
                 data?.let {
                     val list: Array<String?>
@@ -810,15 +807,15 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
         dialogView.background = ResourceManager.getTintDrawable(
             ContextCompat.getDrawable(ctx, R.drawable.bottom_sheet_style),
-            qiscusMultichannelWidget.color.getSendContainerBackgroundColor()
+            qiscusMultichannelWidget.getColor().getSendContainerBackgroundColor()
         )
 
         dialogView.findViewById<LinearLayout>(R.id.linTakePhoto).also {
             it.findViewById<ImageView>(R.id.imgCamera).setColorFilter(
-                qiscusMultichannelWidget.color.getNavigationColor()
+                qiscusMultichannelWidget.getColor().getNavigationColor()
             )
             it.findViewById<TextView>(R.id.textCamera).setTextColor(
-                qiscusMultichannelWidget.color.getNavigationColor()
+                qiscusMultichannelWidget.getColor().getNavigationColor()
             )
             it.setOnClickListener {
                 dialog.dismiss()
@@ -827,10 +824,10 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         }
         dialogView.findViewById<LinearLayout>(R.id.linImageGallery).also {
             it.findViewById<ImageView>(R.id.imgGallery).setColorFilter(
-                qiscusMultichannelWidget.color.getNavigationColor()
+                qiscusMultichannelWidget.getColor().getNavigationColor()
             )
             it.findViewById<TextView>(R.id.textGallery).setTextColor(
-                qiscusMultichannelWidget.color.getNavigationColor()
+                qiscusMultichannelWidget.getColor().getNavigationColor()
             )
             it.setOnClickListener {
                 dialog.dismiss()
@@ -849,14 +846,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     override fun onSessionalChange(isSessional: Boolean) {
-        qiscusMultichannelWidget.config.setSessional(isSessional)
+        qiscusMultichannelWidget.getConfig().setSessional(isSessional)
     }
 
     override fun onDestroy() {
         audioHandler.destroyMedia()
         audioHandler.detach()
         super.onDestroy()
-        Const.qiscusCore()?.cacheManager?.setLastChatActivity(false, 0)
+        MultichannelConst.qiscusCore()?.cacheManager?.setLastChatActivity(false, 0)
         presenter.detachView()
         rvMessage.adapter = null
         clearFindViewByIdCache()
