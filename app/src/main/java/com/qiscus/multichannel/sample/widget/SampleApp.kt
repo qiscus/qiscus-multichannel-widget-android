@@ -1,5 +1,6 @@
 package com.qiscus.multichannel.sample.widget
 
+import android.content.Context
 import androidx.multidex.MultiDexApplication
 import com.qiscus.multichannel.sample.BuildConfig
 import com.qiscus.multichannel.sample.R
@@ -7,6 +8,9 @@ import com.qiscus.multichannel.sample.widget.QiscusMultiChatEngine.Companion.MUL
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetColor
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
+import com.qiscus.qiscusmultichannel.util.MultichannelNotificationListener
+import com.qiscus.qiscusmultichannel.util.PNUtil
+import com.qiscus.sdk.chat.core.data.model.QMessage
 
 /**
  * Created on : 2020-02-28
@@ -34,13 +38,22 @@ class SampleApp : MultiDexApplication() {
             }
     }
 
-    private val appId = "akoop-i0xwcb7spjwzhro"
-    private val localKey = "qiscus_multichannel_user"
+    private val appId = "akoop-i0xwcb7spjwzhro" // change with your AppId
+    private val localKey = "qiscus_multichannel_user" // change with your localKey
 
     private val config = QiscusMultichannelWidgetConfig()
         .setEnableLog(BuildConfig.DEBUG)
         .setEnableNotification(true)
-        .setNotificationListener(null)
+        .setNotificationListener(object : MultichannelNotificationListener {
+
+            override fun handleMultichannelListener(context: Context?, qiscusComment: QMessage?) {
+                // show your notification here
+                if (context != null && qiscusComment != null) {
+                    PNUtil.showPn(context, qiscusComment)
+                }
+            }
+
+        })
         .setNotificationIcon(R.drawable.ic_notification)
 
     private val color = QiscusMultichannelWidgetColor()
@@ -74,9 +87,10 @@ class SampleApp : MultiDexApplication() {
             qiscusMultiChatEngine.get(MULTICHANNEL_CORE),
             appId,
             config,
-            color,
+//            color,
             localKey
         )
+
         INSTANCE = this
     }
 

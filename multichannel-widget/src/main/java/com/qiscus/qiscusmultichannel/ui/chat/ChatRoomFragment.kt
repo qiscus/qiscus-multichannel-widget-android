@@ -31,6 +31,7 @@ import com.qiscus.jupuk.JupukConst
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
 import com.qiscus.qiscusmultichannel.R
+import com.qiscus.qiscusmultichannel.data.local.QiscusChatLocal
 import com.qiscus.qiscusmultichannel.ui.chat.image.ImageMessageActivity
 import com.qiscus.qiscusmultichannel.ui.chat.image.ImageMessageActivity.Companion.CAPTION_COMMENT_IMAGE
 import com.qiscus.qiscusmultichannel.ui.chat.image.ImageMessageActivity.Companion.DATA

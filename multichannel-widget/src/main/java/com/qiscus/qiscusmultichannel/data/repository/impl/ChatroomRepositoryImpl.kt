@@ -1,9 +1,9 @@
 package com.qiscus.qiscusmultichannel.data.repository.impl
 
+import com.qiscus.qiscusmultichannel.data.local.QiscusChatLocal
 import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
 import com.qiscus.qiscusmultichannel.data.repository.ChatroomRepository
 import com.qiscus.qiscusmultichannel.util.MultichannelConst
-import com.qiscus.qiscusmultichannel.util.QiscusChatLocal
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.data.model.QiscusNonce
 import org.json.JSONObject

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ import com.qiscus.qiscusmultichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.event.QMessageReceivedEvent
+import com.qiscus.sdk.chat.core.event.QiscusMqttStatusEvent
 import com.qiscus.sdk.chat.core.event.QiscusUserStatusEvent
 import com.qiscus.sdk.chat.core.util.QiscusDateUtil
 import kotlinx.android.synthetic.*
@@ -55,13 +57,16 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
 
         fun generateIntent(
             context: Context,
-            qiscusChatRoom: QChatRoom
-        ): Intent {
-
+            qiscusChatRoom: QChatRoom,
+            clearTaskActivity: Boolean
+        ) {
             val intent = Intent(context, ChatRoomActivity::class.java)
-            //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            if (clearTaskActivity) intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra(CHATROOM_KEY, qiscusChatRoom)
-            return intent
+
+//            Handler(Looper.getMainLooper()).postDelayed({
+            context.startActivity(intent)
+//            }, 3000)
         }
     }
 
@@ -160,7 +165,12 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
 
     override fun onResume() {
         super.onResume()
-        bindRoomData()
+        for (member in qiscusChatRoom.participants) {
+            if (member.id != qiscusMultichannelWidget.getQiscusAccount().id) {
+                users.add(member.id)
+                MultichannelConst.qiscusCore()?.pusherApi?.subscribeUserOnlinePresence(member.id)
+            }
+        }
     }
 
     private fun getChatFragment(): ChatRoomFragment {
@@ -196,15 +206,6 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         if (isTyping) {
             handler.removeCallbacks(runnable)
             handler.postDelayed(runnable, 3000)
-        }
-    }
-
-    private fun bindRoomData() {
-        for (member in qiscusChatRoom.participants) {
-            if (member.id != qiscusMultichannelWidget.getQiscusAccount().id) {
-                users.add(member.id)
-                MultichannelConst.qiscusCore()?.pusherApi?.subscribeUserOnlinePresence(member.id)
-            }
         }
     }
 
@@ -259,5 +260,17 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         }
         EventBus.getDefault().unregister(this)
         clearFindViewByIdCache()
+    }
+
+    @Subscribe
+    fun onConnection(mqttStatusEvent: QiscusMqttStatusEvent) {
+        when (mqttStatusEvent) {
+            QiscusMqttStatusEvent.CONNECTED -> {
+                Log.i("test_mqtt:", "connected")
+            }
+            QiscusMqttStatusEvent.DISCONNECTED -> {
+                Log.i("test_mqtt:", "disconnected")
+            }
+        }
     }
 }

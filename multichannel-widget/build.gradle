@@ -42,7 +42,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.0.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'id.zelory:compressor:2.1.0'
-    api 'com.qiscus.sdk:chat-core:3.0.0-beta.16'
+    api 'com.qiscus.sdk:chat-core:3.0.0-beta.21'
 
     //circle indicator
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'

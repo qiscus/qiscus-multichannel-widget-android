@@ -1,8 +1,8 @@
 package com.qiscus.qiscusmultichannel.ui.loading
 
+import com.qiscus.qiscusmultichannel.data.local.QiscusChatLocal
 import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
 import com.qiscus.qiscusmultichannel.util.MultichanelChatWidget
-import com.qiscus.qiscusmultichannel.util.QiscusChatLocal
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 
 /**

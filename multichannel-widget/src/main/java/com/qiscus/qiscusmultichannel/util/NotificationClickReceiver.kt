@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
+import com.qiscus.qiscusmultichannel.data.local.QiscusChatLocal
 import com.qiscus.sdk.chat.core.data.model.QMessage
 
 /**

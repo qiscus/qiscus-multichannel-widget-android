@@ -2,10 +2,10 @@ package com.qiscus.qiscusmultichannel
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import com.google.firebase.messaging.RemoteMessage
 import com.qiscus.jupuk.Jupuk
 import com.qiscus.nirmana.Nirmana
+import com.qiscus.qiscusmultichannel.data.local.QiscusChatLocal
 import com.qiscus.qiscusmultichannel.data.model.DataInitialChat
 import com.qiscus.qiscusmultichannel.data.model.user.User
 import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
@@ -115,6 +115,7 @@ class QiscusMultichannelWidget private constructor(
         setCoreConfig()
         Nirmana.init(application)
         Jupuk.init(application)
+        config.prepare(application)
         chatRoomBuilder = QiscusChatRoomBuilder(this)
     }
 
@@ -145,15 +146,6 @@ class QiscusMultichannelWidget private constructor(
     override fun getConfig(): QiscusMultichannelWidgetConfig = config
 
     override fun getColor(): QiscusMultichannelWidgetColor = color
-
-    override fun updateConfig(config: QiscusMultichannelWidgetConfig) {
-        this.config = config
-        setCoreConfig()
-    }
-
-    override fun updateColor(color: QiscusMultichannelWidgetColor) {
-        this.color = color
-    }
 
     override fun loginMultiChannel(
         name: String?,
@@ -352,11 +344,7 @@ class QiscusMultichannelWidget private constructor(
         }
 
         openChatRoomById(roomId, {
-            val intent = ChatRoomActivity.generateIntent(context, it)
-            if (clearTaskActivity) {
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-            context.startActivity(intent)
+            ChatRoomActivity.generateIntent(context, it, clearTaskActivity)
         }, {
             onError(it)
         })

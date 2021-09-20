@@ -27,10 +27,6 @@ interface MultichanelChatWidget {
 
     fun getColor(): QiscusMultichannelWidgetColor
 
-    fun updateConfig(config: QiscusMultichannelWidgetConfig)
-
-    fun updateColor(color: QiscusMultichannelWidgetColor)
-
     fun getNonce(onSuccess: (QiscusNonce) -> Unit, onError: (Throwable) -> Unit)
 
     fun getAppId(): String

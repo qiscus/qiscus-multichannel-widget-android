@@ -6,6 +6,7 @@ import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.qiscus.multichannel.sample.R
 import com.qiscus.multichannel.sample.widget.service.FirebaseServices
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initChat() {
         qiscusMultichannelWidget.initiateChat()
-            .showLoadingWhenInitiate(true)
+            .showLoadingWhenInitiate(false)
             .setRoomTitle("Custom Title")
             .setAvatar(QiscusMultichannelWidgetConfig.Avatar.DISABLE)
             .setRoomSubtitle(
@@ -68,14 +69,36 @@ class MainActivity : AppCompatActivity() {
             .startChat(this, object : QiscusChatRoomBuilder.InitiateCallback {
                 override fun onProgress() {
                     Log.i("InitiateCallback", "onProgress: ")
+                    login.isEnabled = false
+                    login.background = ContextCompat.getDrawable(
+                        this@MainActivity,
+                        R.drawable.bt_qiscus_radius_disable
+                    )
                 }
 
                 override fun onSuccess(qChatRoom: QChatRoom) {
                     Log.i("InitiateCallback", "onSuccess: ")
+                    qiscusMultichannelWidget.openChatRoomById(
+                        this@MainActivity,
+                        qChatRoom.id,
+                        true
+                    ) { throwable ->
+                        throwable.printStackTrace()
+                    }
+                    login.isEnabled = true
+                    login.background = ContextCompat.getDrawable(
+                        this@MainActivity,
+                        R.drawable.bt_qiscus_radius_sdk
+                    )
                 }
 
                 override fun onError(throwable: Throwable) {
                     Log.e("InitiateCallback", "onError: ${throwable.message}")
+                    login.isEnabled = true
+                    login.background = ContextCompat.getDrawable(
+                        this@MainActivity,
+                        R.drawable.bt_qiscus_radius_sdk
+                    )
                 }
             })
 

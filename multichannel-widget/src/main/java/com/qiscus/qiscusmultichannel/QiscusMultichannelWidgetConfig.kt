@@ -1,5 +1,7 @@
 package com.qiscus.qiscusmultichannel
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.annotation.DrawableRes
 import com.qiscus.qiscusmultichannel.util.MultichannelNotificationListener
 
@@ -11,15 +13,24 @@ import com.qiscus.qiscusmultichannel.util.MultichannelNotificationListener
 class QiscusMultichannelWidgetConfig {
 
     private var notificationIcon: Int = R.drawable.ic_notification
-    private var avatarConfig: Avatar = Avatar.ENABLE
-    private var subtitleType: RoomSubtitle = RoomSubtitle.EDITABLE
     private var enableLog: Boolean = false
-    private var isSessional: Boolean = false
     private var multichannelNotificationListener: MultichannelNotificationListener? = null
     private var enableNotification: Boolean = true
-    private var roomTitle: String? = null
-    private var roomSubtitle: String? = null
-    private var hideUIEvent: Boolean = false // hide system event
+
+    private lateinit var sharedPreferences: SharedPreferences
+
+    fun prepare(context: Context) {
+        this.sharedPreferences =
+            context.getSharedPreferences("qiscus_multichannel_config", Context.MODE_PRIVATE)
+    }
+
+    fun getPref(): SharedPreferences {
+        return sharedPreferences
+    }
+
+    private fun edit(): SharedPreferences.Editor {
+        return getPref().edit()
+    }
 
     fun setEnableLog(enableLog: Boolean) = apply {
         this.enableLog = enableLog
@@ -39,29 +50,35 @@ class QiscusMultichannelWidgetConfig {
     }
 
     internal fun setSessional(isSessional: Boolean) {
-        this.isSessional = isSessional
+        edit().putBoolean("isSessional", isSessional).apply()
     }
 
     internal fun setRoomTitle(roomTitle: String?) {
-        this.roomTitle = roomTitle
+        edit().putString("roomTitle", roomTitle).apply()
     }
 
     internal fun setRoomSubtitle(subtitleType: RoomSubtitle, roomSubtitle: String?) {
-        this.subtitleType = subtitleType
-        this.roomSubtitle = if (subtitleType == RoomSubtitle.EDITABLE) roomSubtitle else null
+        edit().putString("subtitleType", subtitleType.toString()).apply()
+        edit().putString(
+            "roomSubtitle",
+            if (subtitleType == RoomSubtitle.EDITABLE) roomSubtitle else null
+        ).apply()
     }
 
     internal fun setRoomSubtitle(subtitleType: RoomSubtitle) {
-        if (subtitleType == RoomSubtitle.EDITABLE) this.subtitleType = RoomSubtitle.ENABLE
-        else this.subtitleType = subtitleType
+        if (subtitleType == RoomSubtitle.EDITABLE) {
+            edit().putString("subtitleType", RoomSubtitle.EDITABLE.toString()).apply()
+        } else {
+            edit().putString("subtitleType", subtitleType.toString()).apply()
+        }
     }
 
     internal fun setAvatar(avatarConfig: Avatar) {
-        this.avatarConfig = avatarConfig
+        edit().putString("avatarConfig", avatarConfig.toString()).apply()
     }
 
     internal fun setShowSystemMessage(isHidden: Boolean) {
-        this.hideUIEvent = isHidden
+        edit().putBoolean("hideUIEvent", isHidden).apply()
     }
 
     internal fun isEnableLog() = enableLog
@@ -72,17 +89,27 @@ class QiscusMultichannelWidgetConfig {
 
     internal fun getNotificationIcon(): Int = this.notificationIcon
 
-    internal fun isSessional() = isSessional
+    internal fun isSessional() = getPref().getBoolean("isSessional", false)
 
-    internal fun getRoomTitle(): String? = roomTitle
+    internal fun getRoomTitle(): String? = getPref().getString("roomTitle", null)
 
-    internal fun getRoomSubtitle(): String? = roomSubtitle
+    internal fun getRoomSubtitle(): String? = getPref().getString("roomSubtitle", null)
 
-    internal fun getRoomSubtitleType(): RoomSubtitle = subtitleType
+    internal fun getRoomSubtitleType(): RoomSubtitle = RoomSubtitle.valueOf(
+        getPref().getString(
+            "subtitleType",
+            RoomSubtitle.EDITABLE.toString()
+        )!!
+    )
 
-    internal fun isShowSystemMessage(): Boolean = hideUIEvent
+    internal fun isShowSystemMessage(): Boolean = getPref().getBoolean("hideUIEvent", false)
 
-    internal fun isAvatarActived(): Boolean = avatarConfig == Avatar.ENABLE
+    internal fun isAvatarActived(): Boolean = Avatar.valueOf(
+        getPref().getString(
+            "avatarConfig",
+            Avatar.ENABLE.toString()
+        )!!
+    ) == Avatar.ENABLE
 
     enum class RoomSubtitle {
         ENABLE, DISABLE, EDITABLE

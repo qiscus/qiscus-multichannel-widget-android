@@ -3,6 +3,7 @@ package com.qiscus.qiscusmultichannel.util
 import android.content.Context
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig.Avatar
 import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig.RoomSubtitle
+import com.qiscus.qiscusmultichannel.data.local.QiscusChatLocal
 import com.qiscus.qiscusmultichannel.ui.chat.ChatRoomActivity
 import com.qiscus.qiscusmultichannel.ui.loading.LoadingActivity
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
@@ -55,6 +56,7 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
     }
 
     fun startChat(context: Context, initiateCallback: InitiateCallback?) {
+        multichannelWidget.clearUser()
         multichannelWidget.userCheck { user, userProp ->
             if (this.showLoading) {
                 LoadingActivity.generateIntent(
@@ -88,7 +90,7 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
             if (initiateCallback != null) {
                 initiateCallback.onSuccess(it)
             } else {
-                context.startActivity(ChatRoomActivity.generateIntent(context, it))
+                ChatRoomActivity.generateIntent(context, it, false)
             }
         }, {
             initiateCallback?.onError(it)

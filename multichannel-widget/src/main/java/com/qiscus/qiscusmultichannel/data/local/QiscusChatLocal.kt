@@ -1,9 +1,10 @@
-package com.qiscus.qiscusmultichannel.util
+package com.qiscus.qiscusmultichannel.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.qiscus.qiscusmultichannel.data.model.user.UserProperties
+import com.qiscus.qiscusmultichannel.util.MultichannelConst
 import org.json.JSONObject
 
 /**

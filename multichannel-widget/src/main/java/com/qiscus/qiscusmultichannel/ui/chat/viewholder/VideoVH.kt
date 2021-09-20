@@ -31,8 +31,7 @@ class VideoVH(
                     itemView.context,
                     R.drawable.ic_play
                 ),
-                if (viewType == CommentsAdapter.TYPE_MY_VIDEO) color.getRightBubbleTextColor()
-                else color.getNavigationColor()
+                color.getNavigationColor()
             )
         )
     }
