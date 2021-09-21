@@ -37,7 +37,7 @@ class PreviewDialogUtil {
             val mDialog =
                 LayoutInflater.from(context).inflate(R.layout.image_dialog_view_mc, null)
 
-            val exoPlayer: SimpleExoPlayer
+            var exoPlayer: SimpleExoPlayer? = null
             val imageView = mDialog.findViewById<ImageView>(R.id.ivDialogView)
             val videoView = mDialog.findViewById<PlayerView>(R.id.exoplayerView)
             val ibDialogView = mDialog.findViewById<ImageButton>(R.id.ibDialogView)
@@ -86,6 +86,15 @@ class PreviewDialogUtil {
 
             ibDialogView.setOnClickListener {
                 dialog.dismiss()
+            }
+
+            dialog.setOnDismissListener {
+                if (qMessage.type == QMessage.Type.VIDEO) {
+                    exoPlayer?.let {
+                        it.stop()
+                        it.release()
+                    }
+                }
             }
         }
 

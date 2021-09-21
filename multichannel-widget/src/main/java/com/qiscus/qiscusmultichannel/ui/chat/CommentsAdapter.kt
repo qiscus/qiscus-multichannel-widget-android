@@ -328,7 +328,6 @@ class CommentsAdapter(
         return null
     }
 
-
     interface ItemViewListener {
         fun onSendComment(comment: QMessage)
 

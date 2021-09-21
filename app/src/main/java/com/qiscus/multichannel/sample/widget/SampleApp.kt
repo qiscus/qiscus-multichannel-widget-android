@@ -42,7 +42,7 @@ class SampleApp : MultiDexApplication() {
     private val localKey = "qiscus_multichannel_user" // change with your localKey
 
     private val config = QiscusMultichannelWidgetConfig()
-        .setEnableLog(BuildConfig.DEBUG)
+        .setEnableLog(BuildConfig.DEBUG)  // change it to false if your app is ready for release
         .setEnableNotification(true)
         .setNotificationListener(object : MultichannelNotificationListener {
 

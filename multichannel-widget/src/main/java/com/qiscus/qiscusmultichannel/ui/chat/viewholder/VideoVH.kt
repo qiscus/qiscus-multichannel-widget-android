@@ -43,7 +43,7 @@ class VideoVH(
         }
 
         thumbnail.setOnLongClickListener {
-            listener?.onItemLongClick(itemView, adapterPosition)
+            listener?.onItemLongClick(itemView, absoluteAdapterPosition)
             true
         }
     }
