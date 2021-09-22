@@ -7,10 +7,10 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.sample.R
 import com.qiscus.multichannel.sample.widget.service.FirebaseServices
-import com.qiscus.qiscusmultichannel.QiscusMultichannelWidgetConfig
-import com.qiscus.qiscusmultichannel.util.QiscusChatRoomBuilder
+import com.qiscus.multichannel.util.QiscusChatRoomBuilder
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import kotlinx.android.synthetic.main.activity_main.*
 

@@ -76,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_title_file"
         tools:ignore="SmallSp" />
 
-    <com.qiscus.qiscusmultichannel.ui.view.QiscusCircleProgress
+    <com.qiscus.multichannel.ui.view.QiscusCircleProgress
         android:id="@+id/pb_file"
         android:layout_width="18dp"
         android:layout_height="18dp"

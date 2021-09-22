@@ -1,4 +1,4 @@
-package com.qiscus.qiscusmultichannel;
+package com.qiscus.multichannel;
 
 import org.junit.Test;
 

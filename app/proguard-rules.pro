@@ -79,6 +79,14 @@
 -keep interface android.support.design.** { *; }
 -keep public class android.support.design.R$* { *; }
 
+#Google Material ui
+-dontwarn com.google.android.material.**
+-keep class com.google.android.material.** { *; }
+
+-dontwarn androidx.**
+-keep class androidx.** { *; }
+-keep interface androidx.** { *; }
+
 #Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
@@ -110,7 +118,7 @@
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
 
 #multichannel & sdk
--keep class com.qiscus.qiscusmultichannel.** { *; }
--keep interface com.qiscus.qiscusmultichannel.** { *; }
+-keep class com.qiscus.multichannel.** { *; }
+-keep interface com.qiscus.multichannel.** { *; }
 -keep class com.qiscus.sdk.chat.core.** { *; }
 -keep interface com.qiscus.sdk.chat.core.** { *; }

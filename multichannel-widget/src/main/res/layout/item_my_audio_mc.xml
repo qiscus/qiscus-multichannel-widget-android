@@ -48,7 +48,7 @@
         app:layout_constraintTop_toTopOf="@+id/containerBackground"
         android:src="@drawable/ic_qiscus_play_audio" />
 
-    <com.qiscus.qiscusmultichannel.ui.view.QiscusCircleProgress
+    <com.qiscus.multichannel.ui.view.QiscusCircleProgress
         android:id="@+id/progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="36dp"

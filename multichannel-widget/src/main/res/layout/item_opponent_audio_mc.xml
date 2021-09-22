@@ -61,7 +61,7 @@
         app:layout_constraintStart_toStartOf="@+id/containerBackground"
         app:layout_constraintTop_toTopOf="@+id/containerBackground" />
 
-    <com.qiscus.qiscusmultichannel.ui.view.QiscusCircleProgress
+    <com.qiscus.multichannel.ui.view.QiscusCircleProgress
         android:id="@+id/progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="36dp"

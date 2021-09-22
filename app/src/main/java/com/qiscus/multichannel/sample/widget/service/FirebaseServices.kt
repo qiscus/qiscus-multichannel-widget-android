@@ -5,9 +5,9 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.sample.widget.QiscusMultiChatEngine.Companion.MULTICHANNEL_CORE
 import com.qiscus.multichannel.sample.widget.SampleApp
-import com.qiscus.qiscusmultichannel.QiscusMultichannelWidget
 
 /**
  * Created on : 26/03/20
