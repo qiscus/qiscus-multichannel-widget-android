@@ -1,18 +1,16 @@
 # Qiscus Multichannel Widget Android
+Requirements
 
-Qiscus Multichannel Widget Android is official [sdk](https://github.com/qiscus/qiscus-sdk-android/tree/multiple-appid) widget to implement [Qiscus Multichannel Customer](https://www.qiscus.com/customer-service-chat) to your app.
+* Android Studio v4.1.3 or latest
+* Min sdk 16
+* Java 8
+* Kotlin v1.3.50
+* build gradle 4.0.1
 
-## Screenshot
-<p float="left">
-   <img src="https://user-images.githubusercontent.com/56247115/121902988-092eb380-cd52-11eb-8cd0-fd5f68ba2a41.png" alt="Login" width="240"/>
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   <img src="https://user-images.githubusercontent.com/56247115/121903017-12b81b80-cd52-11eb-87bc-b39c5501f745.png" alt="Conversation" width="240"/>
-</p>
-
-## Installation
+Installation
 
 Add this URL reference in your project build.gradle
-```
+
 allprojects {
    repositories {
        ...
@@ -21,123 +19,231 @@ allprojects {
        }
    }
 }
-```
 
 Then add this to your app build.gradle
 
-```
 dependencies {
     ...
-    implementation 'com.qiscus.integrations:multichannel-widget:0.1.1-v3'
+    implementation 'com.qiscus.multichannel:multichannel-widget:2.0.0-beta.1'
 }
-```
 
-## Setup
+How To Use
 
-You need to initiate your `APP ID` for your chat app before carry out to authentication. This initialization only needs to be done once in the app lifecycle.
+Initialization
 
-```
+In order to use QiscusMultichannelWidget, you need to initialize it with your AppID (YOUR_APP_ID). Get more information to get AppID from here (https://multichannel.qiscus.com/)
+
 class SampleApp : Application() {
+
+    lateinit var qiscusMultichannelWidget: QiscusMultichannelWidget
 
     override fun onCreate() {
         super.onCreate()
 
         val qiscusCore = QiscusCore()
         
-        MultichannelWidget.setup(this, qiscusCore, APPID, LOCALPREFKEY)
+        qiscusMultichannelWidget = QiscusMultichannelWidget.setup(this, qiscusCore, "YOUR_APP_ID", "LOCALPREFKEY")
 
         ...
     }
 }
-```
-**APPID** : Multichannel APPID, you can get your AppId from [here](https://multichannel.qiscus.com)
 
-**LOCALPREFKEY** : local data identifier
+LOCALPREFKEY : local data identifier
+After the initialization, you can access all the widget's functions.
 
-You can customize your configuration like logging, notification listener, room title, room subtitle, etc using
+Set The User
 
-```
-val config = MultichannelWidgetConfig
-               .setEnableLog(BuildConfig.DEBUG)
-               .setNotificationListener(null)
-               .setRoomTitle("Custom Title")
-               .setRoomSubtitle("Custom Subtitle")
+Set UserId before start the chat, this is mandatory.
 
-MultichannelWidget.setup(context, qiscusCore, APPID, config, LOCALPREFKEY)
-```
+qiscusMultichannelWidget.setUser(id: "UserId", displayName: "Cus Tom R", avatarUrl: "https://customer.avatar-url.com (https://customer.avatar-url.com/)")
 
-## Initiate Chat
-Start chatting can be done in single method
-```java
-MultichannelWidget.InitiateChat()
-    .withName(userName) // required
-    .withUserId(userId) // required
-    .initiateAndOpenChatRoom(this) // required
+Get Login Status
 
-```
-**withName(String)** : required value for user name
+You can check whether the user has already logged in.
 
-**withUserId(String)** : A user identifier that will be used to identify a user and used whenever another user need to chat with this user. It can be anything, whether is user's email, your user database index, etc. As long as it is unique and a string.
+qiscusMultichannelWidget.isLoggedIn()
 
-**withAvatar** (String) : user avatar, if empty it will use the default avatar
+Start Chat
 
-**withUserProperties**(Map<String, String>, optional) : user properties for multichannel
+Use this function to start a chat.
 
-**showLoadingWhenInitiate**(Boolean) : set true if you want to show Multichannel Widget default loading page
+qiscusMultichannelWidget.initiateChat()
+    .initiateAndOpenChatRoom(this)
 
-**initiateAndOpenChatRoom** (Context) : method to initiate chat and open Multichannel Widget Chat Room Activity
+withUserProperties(Map<String, String>, optional) : user properties for multichannel
+showLoadingWhenInitiate(Boolean) : set true if you want to show Multichannel Widget default loading page
+initiateAndOpenChatRoom (Context) : method to initiate chat and open Multichannel Widget Chat Room Activity
 
-## Customization
+Customization
 
-There are some additional configuration that you can change
+We provide several functions to customize the User Interface.
 
-No | Config | Desciption 
---- | --- | --- 
-1 | setEnableLog | Set true if you want to show multichannel widget log 
-2 | setNotificationListener | Set your custom notification handler
-3 | setEnableNotification | Enable app notification 
-4 | setRoomTitle | Set Room Title 
-5 | setRoomSubtitle | Set Room Subtitle 
-6 | setHideUIEvent | Show / Hide System Event 
-7 | setVideoPreviewOnSend | Show / Hide video preview after user select video in attachment 
-8 | ~~setHardcodedAvatar~~ | Set your user default avatar (Deprecated) 
+Config
 
-And for color configuration you just need to change it from your app [color res](https://developer.android.com/guide/topics/resources/more-resources#Color)
+Title	Description
+setRoomTitle	Set room name base on customer's name or static default.
+setRoomSubTitle	
+	setRoomSubTitle(RoomSubtitle.Enabled)	Set enable room sub name by the system.
+	setRoomSubTitle(RoomSubtitle.Disabled)	Set disable room sub name.
+	setRoomSubTitle(RoomSubtitle.Editable, "Custom subtitle")	Set enable room sub name base on static default.
+setHideUIEvent	Show/hide system event.
+setAvatar	
+	setAvatar(Avatar.Enable)	Set enable avatar and name
+	setAvatar(Avatar.Disabled)	Set disable avatar and name
+setEnableNotification	Set enable app notification.
 
-No | Color Name | Desciption 
---- | --- | --- 
-1 | qiscus_statusbar_mc | Chat room status bar color
-2 | qiscus_appbar_mc | Chat room appbar bar color
-3 | qiscus_accent_mc | Widget accent color
-4 | qiscus_text_reply_mc | Reply line color
-5 | qiscus_send_button_mc | Send button color
-6 | qiscus_pick_image_mc | Pick image icon color 
-7 | qiscus_pick_doc_mc | Pick document icon color
-8 | qiscus_title_mc | Chat room title color
-9 | qiscus_subtitle_mc | Chat room subtitle color
-10 | qiscus_back_icon_mc | Chat room back icon color
-11 | qiscus_left_bubble_mc | Left (Friend) bubble chat color
-12 | qiscus_right_bubble_mc | Right (Me) bubble chat color
-13 | qiscus_left_bubble_text_mc | Left (Friend) bubble chat text color
-14 | qiscus_right_bubble_text_mc | Right (Me) bubble chat text color
-15 | qiscus_send_container_mc | Message box container color
-16 | read_message_mc | Message status color if readed
-17 | pending_message_mc | Message status color when pending
-18 | jupuk_primary | Image & Doc picker appbar color
-19 | jupuk_primary_dark | Image & Doc picker statusbar color
-20 | jupuk_accent | Image & Doc picker accent color
+Color
 
-## Proguard
-if your app using [Proguard](https://www.guardsquare.com/proguard), make sure you add Proguard Rules of Qiscus from [Qiscus Proguard Rules](https://github.com/qiscus/qiscus-sdk-android/blob/master/app/proguard-rules.pro) to your Proguard Rules
+No	Title	Description
+1	setNavigationColor	Set navigation color.
+2	setSendContainerColor	Set icon send border-color.
+3	setFieldChatBorderColor	Set field chat border-color.
+4	setSendContainerBackgroundColor	Set send container background-color.
+5	setNavigationTitleColor	Set room title, room subtitle, and back button border color.
+6	setSystemEventTextColor	Set system event text and border color.
+7	setLeftBubbleColor	Set left bubble chat color (for: Admin, Supervisor, Agent).
+8	setRightBubbleColor	Set right bubble chat color (Customer).
+9	setLeftBubbleTextColor	Set left bubble text color (for: Admin, Supervisor, Agent).
+10	setRightBubbleTextColor	Set right bubble text color (Customer).
+11	setTimeLabelTextColor	Set time text color.
+12	setTimeBackgroundColor	Set time background color.
+13	setBaseColor	Set background color of the room chat.
+14	setEmptyTextColor	Set empty state text color.
+15	setEmptyBackgroundColor	Set empty state background color.
 
-## Troubleshoot
+Push Notification
+
+Follow these steps to set push notifications on your application
+
+1. *Setup Firebase to Your Android App*
+
+If you already have setup Firebase in your Android app, you can skip this step and go to next step which is *Generate FCM Server key*. Otherwise, you can setup Firebase to your Android app by following these steps (https://firebase.google.com/docs/cloud-messaging/android/client).
+
+1. *Get FCM Server Key in Firebase Console*
+
+You can get FCM Server Key by following these steps:
+
+* Go to Firebase Console (https://console.firebase.google.com/)
+* Click your *projects* to see the overview your 
+
+[Image: image.png]
+* On the top of left panel, click the *gear icon* on Project Overview menu. From the drop-down menu, click *Project Settings*.
+
+[Image: image.png]
+* Click the *Cloud Messaging* tab under *Settings*. On the *Project Credentials*, find and copy your *Server Key.*
+
+[Image: image.png]
+1. *Setup FCM Server Key in The (https://documentation.qiscus.com/chat-sdk-android/push-notifications#step-3-setup-fcm-server-key-in-the-qiscus-dashboard) Qiscus Multichannel Dashboard*
+
+You can set FCM Secret Key by following these steps:
+
+* Go to Qiscus Multichannel Chat page (https://multichannel.qiscus.com/) to register your email
+* Log in to Qiscus Multichannel Chat with yout email and password
+* Go to ‘Setting’ menu on the left bar
+* Look for ‘Notification’
+* Click Android's Customer Widget Push Notification
+
+[Image: multichannel_notif_fcm_setting.png]
+* In the Android (FCM Server Key) section, click *+Add FCM Server Key* to add your FCM Server Key,
+* Paste FCM Server Key value and click *Save change*
+
+
+
+*NOTE*
+One App Id can only be associated with one FCM Project, *make sure* the FCM Server keys are from the same FCM Project, If you already put multiple FCM server keys but they are different FCM project, then our system deletes the related device token and the effect you will not receive FCM notification.
+
+1. *Register Your FCM Token to Qiscus Multichannel Widget*
+
+* First you need to enable FCM for your app by calling configuration, for example:
+
+val config = QiscusMultichannelWidgetConfig()
+    .setEnableNotification(true) // default is true
+    .setNotificationListener(object : MultichannelNotificationListener {
+            
+            override fun handleMultichannelListener(context: Context?, qiscusComment: QMessage?) {
+                // show your notification here
+            }
+            
+     })
+    .setNotificationIcon(R.drawable.ic_notification)
+
+* set configuration before calling QiscusMultichannelWidget.setup(), for example:
+
+// input the configuration 
+QiscusMultichannelWidget.setup(application, qiscusCore, "YOUR_APP_ID", config, color, "LOCALPREFKEY")
+
+* To enable FCM in *ChatConfig*, you need to register FCM token to notify Qiscus Multicahnnel Widget, for example:
+
+class FirebaseServices : FirebaseMessagingService() {
+
+    override fun onNewToken(newToken: String) {
+        super.onNewToken(newToken)
+        QiscusMultichannelWidget.instance.registerDeviceToken(
+            qiscusCore, newToken
+        )
+    }
+}
+
+* You need to make sure every time open the app, the FCM token always needs to be registered in Qiscus  Multicahnnel Widget. To retrieve the current FCM token, you can see below code:
+
+ FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.e("Qiscus", "getCurrentDeviceToken Failed : " + task.exception)
+                    return@OnCompleteListener
+                }
+                if (task.result != null) {
+                    val currentToken = task.result!!.token
+                    QiscusMultichannelWidget.instance.registerDeviceToken(
+                        qiscusCore, currentToken
+                    )
+                }
+            })
+
+* Add the *service.FirebaseServices* in Manifest, for example:
+
+<service android:name="com.qiscus.multichannel.sample.widget.service.FirebaseServices">
+   <intent-filter>
+       <action android:name="com.google.firebase.MESSAGING_EVENT" />
+   </intent-filter>
+</service>
+
+*NOTE*
+Make sure always to register FCM token when open the app
+
+1. *Handle Incoming Message From Push Notification*
+
+After registering your FCM token, you will get data from FCM Qiscus  Multicahnnel Widget, you can handle by using isMultichannelMessage() function, for example
+
+
+class FirebaseServices : FirebaseMessagingService() {
+
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        super.onMessageReceived(remoteMessage)
+
+        if (QiscusMultichannelWidget.instance.isMultichannelMessage(
+                remoteMessage, allQiscusCore
+            )
+        ) {
+            return
+        }
+    }
+}
+
+Proguard
+
+if your app using Proguard (https://www.guardsquare.com/proguard), make sure you add Proguard Rules of Qiscus from Qiscus Proguard Rules (https://github.com/qiscus/qiscus-sdk-android/blob/master/app/proguard-rules.pro) to your Proguard Rules (https://github.com/qiscus/qiscus-multichannel-widget-android/blob/develop/app/proguard-rules.pro)
+
+Troubleshoot
+
 If you facing error like this
-```
+
+
 More than one file was found with OS independent path 'META-INF/rxjava.properties'
-```
+
 Add this to your app build.gradle
 
-```
+
 android {
     .....
     .....
@@ -146,4 +252,32 @@ android {
         exclude 'META-INF/rxjava.properties'
     }
 } 
+
+How to Run the Example
+
+1. *Get your APPID*
+
+* Go to Qiscus Multichannel Chat page (https://multichannel.qiscus.com/) to register your email
+* Log in to Qiscus Multichannel Chat with yout email and password
+* Go to ‘Setting’ menu on the left bar
+* Look for ‘App Information’
+* You can find APPID in the App Info 
+
+1. *Activate Qiscus Widget Integration*
+
+* Go to ‘Integration’ menu on the left bar
+* Look for ‘Qiscus Widget’
+* Slide the toggle to activate the Qiscus widget
+
+1. *Set YOUR_APP_ID in the Example*
+
+* Open SampleApp.kt
+* Replace the appId with YOUR_ APP_ID (step 1)
+
+qiscusMultichannelWidget = QiscusMultichannelWidget.setup(application, qiscusCore, "YOUR_APP_ID", "LOCALPREFKEY")
+
+1. *Start Chat*
+
+The Example is ready to use. You can start to chat with your agent from the Qiscus Multichannel Chat dashboard.
+
 ```
