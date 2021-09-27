@@ -519,8 +519,8 @@ class ChatRoomPresenter(
                     qiscusChatRepository.checkSessional(
                         MultichannelConst.qiscusCore()!!.appId,
                         {
-                            it.data.isSessional?.let {
-                                view?.onSessionalChange(it)
+                            it.data.isSessional?.let { isSessional ->
+                                view?.onSessionalChange(isSessional)
                                 view?.showNewChatButton(resolved)
                             }
                         },

@@ -17,5 +17,6 @@ data class DataInitialChat(
     @SerializedName("nonce") val nonce: String?,
     @SerializedName("origin") val origin: String? = "",
     @SerializedName("extras") val extras: String? = null,
-    @SerializedName("user_properties") val userProp: List<UserProperties>?
+    @SerializedName("user_properties") val userProp: List<UserProperties>?,
+    @SerializedName("channel_id") val channelId: Int?
 )

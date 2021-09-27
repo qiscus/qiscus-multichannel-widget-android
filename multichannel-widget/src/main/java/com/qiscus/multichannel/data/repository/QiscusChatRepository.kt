@@ -13,7 +13,7 @@ class QiscusChatRepository(val api: QiscusChatApi.Api) {
         onSuccess: (ResponseInitiateChat) -> Unit,
         onError: (Throwable) -> Unit
     ) {
-        api.getNonce(dataInitialChat).enqueue(object : Callback<ResponseInitiateChat?> {
+        api.initiateChat(dataInitialChat).enqueue(object : Callback<ResponseInitiateChat?> {
             override fun onFailure(call: Call<ResponseInitiateChat?>, t: Throwable) {
                 onError(t)
             }
@@ -23,10 +23,7 @@ class QiscusChatRepository(val api: QiscusChatApi.Api) {
                 response: Response<ResponseInitiateChat?>
             ) {
                 if (response.isSuccessful) {
-                    val result = response.body()?.data?.let {
-                        ResponseInitiateChat(it)
-                    }
-                    result?.let {
+                    response.body()?.let {
                         onSuccess(it)
                     }
 
@@ -52,10 +49,9 @@ class QiscusChatRepository(val api: QiscusChatApi.Api) {
                 response: Response<ResponseInitiateChat>
             ) {
                 if (response.isSuccessful) {
-                    val result = response.body()?.data?.let {
-                        ResponseInitiateChat(it)
+                    response.body()?.let {
+                        onSuccess(it)
                     }
-                    result?.let(onSuccess)
                 } else {
                     onError(Throwable("Error get data from api"))
                 }
@@ -63,4 +59,6 @@ class QiscusChatRepository(val api: QiscusChatApi.Api) {
 
         })
     }
+
+
 }

@@ -28,14 +28,12 @@ object QiscusChatApi {
 
     interface Api {
         @Headers("Content-Type: application/json")
-        @POST("api/v1/qiscus/initiate_chat")
-        fun getNonce(@Body dataInitialChat: DataInitialChat): Call<ResponseInitiateChat>
-
-        @POST("api/v1/qiscus/initiate_chat")
+        @POST("api/v2/qiscus/initiate_chat")
         fun initiateChat(@Body dataInitialChat: DataInitialChat): Call<ResponseInitiateChat>
 
         @GET("{appCode}/get_session")
         fun sessionalCheck(@Path("appCode") appCode: String?): Call<ResponseInitiateChat>
+
     }
 }
 

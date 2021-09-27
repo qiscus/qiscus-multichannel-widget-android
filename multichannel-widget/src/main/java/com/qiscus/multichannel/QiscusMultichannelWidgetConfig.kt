@@ -65,13 +65,13 @@ class QiscusMultichannelWidgetConfig {
         ).apply()
     }
 
-    internal fun setRoomSubtitle(subtitleType: RoomSubtitle) {
+    /*internal fun setRoomSubtitle(subtitleType: RoomSubtitle) {
         if (subtitleType == RoomSubtitle.EDITABLE) {
             edit().putString("subtitleType", RoomSubtitle.EDITABLE.toString()).apply()
         } else {
             edit().putString("subtitleType", subtitleType.toString()).apply()
         }
-    }
+    }*/
 
     internal fun setAvatar(avatarConfig: Avatar) {
         edit().putString("avatarConfig", avatarConfig.toString()).apply()
@@ -79,6 +79,15 @@ class QiscusMultichannelWidgetConfig {
 
     internal fun setShowSystemMessage(isHidden: Boolean) {
         edit().putBoolean("hideUIEvent", isHidden).apply()
+    }
+
+    internal fun setChannelId(channelId: Int) {
+        edit().putInt("channelId", channelId).apply()
+    }
+
+    internal fun getChannelId(): Int? {
+        val channelId = getPref().getInt("channelId", 0)
+        return if (channelId == 0) null else channelId
     }
 
     internal fun isEnableLog() = enableLog

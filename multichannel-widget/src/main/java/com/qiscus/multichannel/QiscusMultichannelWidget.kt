@@ -172,13 +172,14 @@ class QiscusMultichannelWidget private constructor(
                         it.nonce,
                         null,
                         extras,
-                        userProperties
+                        userProperties,
+                        getConfig().getChannelId()
                     ), { response ->
                         response.data.isSessional?.let { sessional ->
                             config.setSessional(sessional)
                         }
 
-                        response.data.roomId?.toLong()?.let { id ->
+                        response.data.customerRoom?.roomId?.toLong()?.let { id ->
                             QiscusChatLocal.setRoomId(id)
                         }
 
@@ -224,38 +225,6 @@ class QiscusMultichannelWidget private constructor(
     override fun firebaseMessagingUtil(remoteMessage: RemoteMessage) {
         MultichannelConst.qiscusCore()?.firebaseMessagingUtil?.handleMessageReceived(remoteMessage)
     }
-
-//    /**
-//     *
-//     */
-//    fun setUser(token: String, onSuccess: (QAccount) -> Unit, onError: (Throwable) -> Unit) {
-//        Const.qiscusCore()?.setUserWithIdentityToken(token)
-//            ?.subscribeOn(Schedulers.io())
-//            ?.observeOn(AndroidSchedulers.mainThread())
-//            ?.subscribe(onSuccess, onError)
-//    }
-//
-//    /**
-//     * abaikan
-//     */
-//    fun setUser(
-//        userId: String,
-//        userKey: String,
-//        username: String,
-//        onSuccess: (QAccount) -> Unit,
-//        onError: (Throwable) -> Unit
-//    ) {
-//        Const.qiscusCore()?.setUser(userId, userKey)
-//            ?.withUsername(username)
-//            ?.save()
-//            ?.subscribeOn(Schedulers.io())
-//            ?.observeOn(AndroidSchedulers.mainThread())
-//            ?.subscribe({
-//                onSuccess(it)
-//            }, onError)
-//
-//
-//    }
 
     override fun updateUser(
         username: String, avatarUrl: String, extras: JSONObject?,

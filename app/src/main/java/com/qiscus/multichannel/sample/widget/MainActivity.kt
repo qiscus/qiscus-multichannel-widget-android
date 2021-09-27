@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // always call when aktif app
+        // always call when active app
         if (qiscusMultichannelWidget.hasSetupUser()) {
             FirebaseServices().getCurrentDeviceToken()
         }
@@ -39,10 +39,14 @@ class MainActivity : AppCompatActivity() {
                     "https://vignette.wikia.nocookie.net/fatal-fiction-fanon/images/9/9f/Doraemon.png/revision/latest?cb=20170922055255"
 
                 if (isValidEmail(email)) {
-                    val userProperties = mapOf("city" to "jogja", "job" to "developer")
+                    val userProperties = mapOf(
+                        "city" to "jogja",
+                        "job" to "developer"
+                    ) // userProperties are additional details of the user(optional)
                     qiscusMultichannelWidget.setUser(email, username, avatarUrl, userProperties)
 
-                    initChat()
+                    initChat(0)
+
                 } else {
                     Toast.makeText(this, "Please check email format", Toast.LENGTH_LONG).show()
                 }
@@ -55,9 +59,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initChat() {
+    private fun initChat(channelId: Int) {
         qiscusMultichannelWidget.initiateChat()
             .showLoadingWhenInitiate(false)
+//            .setChannelId(channelId) // manual set channels id
             .setRoomTitle("Custom Title")
             .setAvatar(QiscusMultichannelWidgetConfig.Avatar.DISABLE)
             .setRoomSubtitle(

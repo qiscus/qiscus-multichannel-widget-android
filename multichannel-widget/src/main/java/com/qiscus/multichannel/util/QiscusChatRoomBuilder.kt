@@ -15,7 +15,14 @@ import com.qiscus.sdk.chat.core.data.model.QChatRoom
  */
 class QiscusChatRoomBuilder internal constructor(private val multichannelWidget: MultichanelChatWidget) {
 
+    private var roomTitle: String? = null
+    private var roomSubtitle: String? = null
+    private var subtitleType: RoomSubtitle = RoomSubtitle.ENABLE
+    private var avatarConfig: Avatar = Avatar.DISABLE
+    private var isHidden: Boolean = false
+    private var isSessional: Boolean = false
     private var showLoading: Boolean = false
+    private var channelId: Int = 0
 
     /**
      * update config
@@ -24,38 +31,55 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
         this.showLoading = showLoading
     }
 
+    fun setChannelId(channelId: Int) = apply {
+        this.channelId = channelId
+    }
+
     fun setRoomTitle(roomTitle: String?) = apply {
-        multichannelWidget.getConfig().setRoomTitle(roomTitle)
+        this.roomTitle = roomSubtitle
     }
 
     fun setRoomSubtitle(subtitleType: RoomSubtitle, roomSubtitle: String?) = apply {
-        multichannelWidget.getConfig().setRoomSubtitle(subtitleType, roomSubtitle)
+        this.subtitleType = subtitleType
+        this.roomSubtitle = roomSubtitle
     }
 
     fun setRoomSubtitle(subtitleType: RoomSubtitle) = apply {
-        multichannelWidget.getConfig().setRoomSubtitle(subtitleType)
+        this.subtitleType = subtitleType
     }
 
     fun setAvatar(avatarConfig: Avatar) = apply {
-        multichannelWidget.getConfig().setAvatar(avatarConfig)
+        this.avatarConfig = avatarConfig
     }
 
     fun setShowSystemMessage(isHidden: Boolean) = apply {
-        multichannelWidget.getConfig().setShowSystemMessage(isHidden)
+        this.isHidden = isHidden
     }
 
     fun setSessional(isSessional: Boolean) = apply {
-        multichannelWidget.getConfig().setSessional(isSessional)
+        this.isSessional = isSessional
     }
 
     /**
      * open chat
      */
+    private fun saveConfig() {
+        multichannelWidget.getConfig().apply {
+            setRoomTitle(roomTitle)
+            setRoomSubtitle(subtitleType, roomSubtitle)
+            setAvatar(avatarConfig)
+            setChannelId(channelId)
+            setSessional(isSessional)
+            setShowSystemMessage(isHidden)
+        }
+    }
+
     fun startChat(context: Context) {
         startChat(context, null)
     }
 
     fun startChat(context: Context, initiateCallback: InitiateCallback?) {
+        saveConfig()
         multichannelWidget.clearUser()
         multichannelWidget.userCheck { user, userProp ->
             if (this.showLoading) {
