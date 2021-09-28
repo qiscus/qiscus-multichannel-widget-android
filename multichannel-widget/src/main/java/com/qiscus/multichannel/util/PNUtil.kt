@@ -40,7 +40,7 @@ class PNUtil {
                 return
             }
 
-            if (QiscusMultichannelWidget.instance.getConfig()
+            if (!QiscusMultichannelWidget.instance.getConfig()
                     .isShowSystemMessage() && qiscusComment.type == QMessage.Type.SYSTEM_EVENT
             ) {
                 return

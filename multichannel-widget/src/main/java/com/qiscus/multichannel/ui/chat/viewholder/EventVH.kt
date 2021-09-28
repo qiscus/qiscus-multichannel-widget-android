@@ -33,7 +33,7 @@ class EventVH(
         super.bind(comment)
         tvEvent?.text = comment.text
 
-        if (config.isShowSystemMessage()) hidenUI()
+        if (!config.isShowSystemMessage()) hidenUI()
     }
 
     fun hidenUI() {

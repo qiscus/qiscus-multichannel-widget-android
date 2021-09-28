@@ -77,8 +77,8 @@ class QiscusMultichannelWidgetConfig {
         edit().putString("avatarConfig", avatarConfig.toString()).apply()
     }
 
-    internal fun setShowSystemMessage(isHidden: Boolean) {
-        edit().putBoolean("hideUIEvent", isHidden).apply()
+    internal fun setShowSystemMessage(isShowing: Boolean) {
+        edit().putBoolean("hideUIEvent", isShowing).apply()
     }
 
     internal fun setChannelId(channelId: Int) {

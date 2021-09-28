@@ -19,7 +19,7 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
     private var roomSubtitle: String? = null
     private var subtitleType: RoomSubtitle = RoomSubtitle.ENABLE
     private var avatarConfig: Avatar = Avatar.DISABLE
-    private var isHidden: Boolean = false
+    private var isShowSystemMessage: Boolean = false
     private var isSessional: Boolean = false
     private var showLoading: Boolean = false
     private var channelId: Int = 0
@@ -52,8 +52,8 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
         this.avatarConfig = avatarConfig
     }
 
-    fun setShowSystemMessage(isHidden: Boolean) = apply {
-        this.isHidden = isHidden
+    fun setShowSystemMessage(isShowing: Boolean) = apply {
+        this.isShowSystemMessage = isShowing
     }
 
     fun setSessional(isSessional: Boolean) = apply {
@@ -70,7 +70,7 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
             setAvatar(avatarConfig)
             setChannelId(channelId)
             setSessional(isSessional)
-            setShowSystemMessage(isHidden)
+            setShowSystemMessage(isShowSystemMessage)
         }
     }
 
