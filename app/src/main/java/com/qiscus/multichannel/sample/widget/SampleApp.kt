@@ -5,7 +5,6 @@ import androidx.multidex.MultiDexApplication
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.QiscusMultichannelWidgetColor
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
-import com.qiscus.multichannel.sample.BuildConfig
 import com.qiscus.multichannel.sample.R
 import com.qiscus.multichannel.sample.widget.QiscusMultiChatEngine.Companion.MULTICHANNEL_CORE
 import com.qiscus.multichannel.util.MultichannelNotificationListener
@@ -42,7 +41,7 @@ class SampleApp : MultiDexApplication() {
     private val localKey = "qiscus_multichannel_user" // change with your localKey
 
     private val config = QiscusMultichannelWidgetConfig()
-        .setEnableLog(BuildConfig.DEBUG)  // change it to false if your app is ready for release
+        .setEnableLog(true)  // change it to false if your app is ready for release
         .setEnableNotification(true)
         .setNotificationListener(object : MultichannelNotificationListener {
 
