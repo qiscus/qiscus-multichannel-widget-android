@@ -30,7 +30,7 @@ Then add this to your app build.gradle
 ```
 dependencies {
     ...
-    implementation 'com.qiscus.multichannel:multichannel-widget:2.0.0-beta.1'
+    implementation 'com.qiscus.multichannel:multichannel-widget:2.0.0'
 }
 ```
 
@@ -90,8 +90,7 @@ qiscusMultichannelWidget.isLoggedIn()
 Use this function to start a chat.
 
 ```
-qiscusMultichannelWidget
-    .initiateChat()
+qiscusMultichannelWidget.initiateChat()
      .setRoomTitle("Custom Title")
      .setRoomSubtitle(
                 QiscusMultichannelWidgetConfig.RoomSubtitle.EDITABLE,
