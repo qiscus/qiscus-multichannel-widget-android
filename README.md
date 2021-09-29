@@ -99,8 +99,6 @@ qiscusMultichannelWidget.initiateChat()
     .startChat(Context)
 ```
 
-`showLoadingWhenInitiate(Boolean)` : set true if you want to show Multichannel Widget default loading page
-
 `startChat (Context)` : method to initiate chat and open Multichannel Widget Chat Room Activity
 
 ### Clear User
