@@ -116,7 +116,7 @@ configure system message visibility by calling setShowSystemMessage(isShowing: B
 ```
 qiscusWidget.initiateChat()
             ...
-            .setShowSystemMessage(isShowing: false)
+            .setShowSystemMessage(false)
             ...
             .startChat(Context)
 ```
