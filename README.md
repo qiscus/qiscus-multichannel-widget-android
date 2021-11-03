@@ -17,10 +17,11 @@ Add this URL reference in your project build.gradle
 ```
 allprojects {
    repositories {
-       ...
-       maven {
-           url "https://artifactory.qiscus.com/artifactory/qiscus-library-open-source"
-       }
+      google()
+      jcenter()
+      maven {
+          url "https://artifactory.qiscus.com/artifactory/qiscus-library-open-source"
+      }
    }
 }
 ```
@@ -31,7 +32,6 @@ Then add this to your app build.gradle
 dependencies {
     ...
     implementation 'com.qiscus.multichannel:multichannel-widget:2.0.0'
-}
 ```
 
 ## How To Use

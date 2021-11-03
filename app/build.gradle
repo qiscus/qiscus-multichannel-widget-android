@@ -36,14 +36,14 @@ dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
-    implementation 'com.google.firebase:firebase-messaging:20.0.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation project(":multichannel-widget")
-//    implementation 'com.qiscus.integrations:multichannel-widget:0.0.20-v3'
+    //implementation 2 library, 1 from multichannel-widget & 1 from androidx.multidex
+    implementation project(":multichannel-widget") //from local
+//    com.qiscus.multichannel:multichannel-widget:2.0.0 //from artifactory
     implementation 'androidx.multidex:multidex:2.0.1'
 
 }
