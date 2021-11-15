@@ -2,12 +2,14 @@ package com.qiscus.multichannel.sample.widget.service
 
 import android.util.Log
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.android.gms.tasks.Task
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.sample.widget.QiscusMultiChatEngine.Companion.MULTICHANNEL_CORE
 import com.qiscus.multichannel.sample.widget.SampleApp
+
 
 /**
  * Created on : 26/03/20
@@ -38,18 +40,21 @@ class FirebaseServices : FirebaseMessagingService() {
     }
 
     fun getCurrentDeviceToken() {
-        FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener(OnCompleteListener { task ->
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener OnCompleteListener@{ task: Task<String?> ->
                 if (!task.isSuccessful) {
                     Log.e("Qiscus", "getCurrentDeviceToken Failed : " + task.exception)
                     return@OnCompleteListener
                 }
-                if (task.result != null) {
-                    val currentToken = task.result!!.token
-                    QiscusMultichannelWidget.instance.registerDeviceToken(
-                        qiscusMultiChatEngine.get(MULTICHANNEL_CORE), currentToken
-                    )
+
+                if (task.isSuccessful && task.result != null) {
+                    val currentToken = task.result
+                    currentToken?.let {
+                        QiscusMultichannelWidget.instance.registerDeviceToken(
+                            qiscusMultiChatEngine.get(MULTICHANNEL_CORE), it
+                        )
+                    }
                 }
-            })
+            }
     }
 }

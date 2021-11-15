@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-    <activity android:name="com.qiscus.multichannel.sample.widget.MainActivity">
+    <activity android:name="com.qiscus.multichannel.sample.widget.MainActivity"
+        android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,7 +34,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/qiscus_provider_paths" />
         </provider>
-        <service android:name="com.qiscus.multichannel.sample.widget.service.FirebaseServices">
+        <service android:name="com.qiscus.multichannel.sample.widget.service.FirebaseServices"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
