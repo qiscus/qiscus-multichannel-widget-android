@@ -246,19 +246,22 @@ class FirebaseServices : FirebaseMessagingService() {
 * You need to make sure every time open the app, the FCM token always needs to be registered in Qiscus  Multicahnnel Widget. To retrieve the current FCM token, you can see below code:
 
 ```
- FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener(OnCompleteListener { task ->
+ FirebaseMessaging.getInstance().token
+            .addOnCompleteListener OnCompleteListener@{ task: Task<String?> ->
                 if (!task.isSuccessful) {
                     Log.e("Qiscus", "getCurrentDeviceToken Failed : " + task.exception)
                     return@OnCompleteListener
                 }
-                if (task.result != null) {
-                    val currentToken = task.result!!.token
-                    QiscusMultichannelWidget.instance.registerDeviceToken(
-                        qiscusCore, currentToken
-                    )
+
+                if (task.isSuccessful && task.result != null) {
+                    val currentToken = task.result
+                    currentToken?.let {
+                        QiscusMultichannelWidget.instance.registerDeviceToken(
+                            qiscusMultiChatEngine.get(MULTICHANNEL_CORE), it
+                        )
+                    }
                 }
-            })
+            }
 ```
 
 * Add the **service.FirebaseServices** in Manifest, for example:
