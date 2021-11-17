@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -16,6 +17,7 @@ import com.qiscus.sdk.chat.core.util.BuildVersionUtil
 import com.qiscus.sdk.chat.core.util.QiscusAndroidUtil
 import com.qiscus.sdk.chat.core.util.QiscusNumberUtil
 import org.json.JSONObject
+
 
 /**
  * Created on : 2019-11-08
@@ -62,10 +64,18 @@ class PNUtil {
             val pendingIntent: PendingIntent
             val openIntent = Intent(context, NotificationClickReceiver::class.java)
             openIntent.putExtra("data", qiscusComment)
-            pendingIntent = PendingIntent.getBroadcast(
-                context, QiscusNumberUtil.convertToInt(qiscusComment.chatRoomId),
-                openIntent, PendingIntent.FLAG_CANCEL_CURRENT
-            )
+
+            pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.getBroadcast(
+                    context, QiscusNumberUtil.convertToInt(qiscusComment.chatRoomId),
+                    openIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            } else {
+                PendingIntent.getBroadcast(
+                    context, QiscusNumberUtil.convertToInt(qiscusComment.chatRoomId),
+                    openIntent, PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            }
 
             val room =
                 MultichannelConst.qiscusCore()?.dataStore?.getChatRoom(qiscusComment.chatRoomId)

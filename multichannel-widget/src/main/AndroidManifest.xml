@@ -10,8 +10,24 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <queries>
+        <!-- Browser -->
         <intent>
             <action android:name="android.media.browse.MediaBrowserService" />
+        </intent>
+
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+
+        <!-- Camera -->
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+
+        <!-- Gallery -->
+        <intent>
+            <action android:name="android.intent.action.GET_CONTENT" />
         </intent>
     </queries>
 
@@ -20,7 +36,8 @@
         <activity android:name="com.qiscus.multichannel.ui.chat.image.ImageMessageActivity" />
         <activity
             android:name="com.qiscus.multichannel.ui.chat.ChatRoomActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="com.qiscus.example.mybb" />
