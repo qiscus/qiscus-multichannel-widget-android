@@ -3,7 +3,7 @@
 
 * Android Studio v4.1.3 or latest
 * Min sdk 16
-* compailer Java 8
+* compailer Java 11
 * Kotlin v1.3.50
 * build gradle 4.0.1
 
