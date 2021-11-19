@@ -32,7 +32,7 @@ Then add this to your app build.gradle
 ```
 dependencies {
     ...
-    implementation 'com.qiscus.multichannel:multichannel-widget:2.0.0'
+    implementation 'com.qiscus.multichannel:multichannel-widget:2.0.1'
 ```
 
 ## How To Use
