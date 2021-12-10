@@ -36,7 +36,7 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
     }
 
     fun setRoomTitle(roomTitle: String?) = apply {
-        this.roomTitle = roomSubtitle
+        this.roomTitle = roomTitle
     }
 
     fun setRoomSubtitle(subtitleType: RoomSubtitle, roomSubtitle: String?) = apply {
