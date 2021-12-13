@@ -249,7 +249,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             }
         }
 
-        return qiscusChatRoom.avatarUrl
+        return getString(R.string.default_avatar_url)
     }
 
     override fun onDestroy() {
