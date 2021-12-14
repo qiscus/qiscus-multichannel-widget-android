@@ -37,4 +37,5 @@
     <string name="max_image_selected">Max image selected</string>
     <string name="add_image">add image</string>
     <string name="qiscus_gallery_mc">Gallery</string>
+    <string name="default_avatar_url">https://d1edrlpyc25xu0.cloudfront.net/kiwari-prod/image/upload/Ri-pxHv6e1/default_avatar.png</string>
 </resources>

@@ -63,10 +63,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             val intent = Intent(context, ChatRoomActivity::class.java)
             if (clearTaskActivity) intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra(CHATROOM_KEY, qiscusChatRoom)
-
-//            Handler(Looper.getMainLooper()).postDelayed({
             context.startActivity(intent)
-//            }, 3000)
         }
     }
 
@@ -244,13 +241,15 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
 
     fun getAvatar(): String {
         for (member in qiscusChatRoom.participants) {
-            val type = member.extras.getString("type")
-            if (type.isNotEmpty() && type == "agent") {
-                return member.avatarUrl
+            if (member.extras.has("type")) {
+                val type = member.extras.getString("type")
+                if (type.isNotEmpty() && type == "agent") {
+                    return member.avatarUrl
+                }
             }
         }
 
-        return qiscusChatRoom.avatarUrl
+        return getString(R.string.default_avatar_url)
     }
 
     override fun onDestroy() {
