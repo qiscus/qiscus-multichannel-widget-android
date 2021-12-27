@@ -30,7 +30,7 @@
     <string name="qiscus_delete_message_title">Delete Message</string>
     <string name="qiscus_delete">Delete</string>
     <string name="qiscus_cancel">Cancel</string>
-    <string name="qiscus_empyText"><![CDATA[<b>No Message here yet…</b><br><br>Greate discution start from greeting each others first]]></string>
+    <string name="qiscus_empyText"><![CDATA[<b>No Message here yet…</b><br><br>Great discussion start from greeting each others first]]></string>
     <string name="scroll_first_indicator">You\'ve reached first page</string>
     <!--Image Message-->
     <string name="add_caption">Add caption&#8230;</string>

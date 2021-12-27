@@ -347,18 +347,6 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         }
     }
 
-    private fun pickImageUsingIntentSystem() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/* video/*"
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            intent.action = Intent.ACTION_GET_CONTENT
-        }
-
-        startActivityForResult(intent, MultichannelConst.IMAGE_GALLERY_REQUEST)
-    }
-
     private fun pickImageUsingJupuk() {
         JupukBuilder().setMaxCount(30)
             .enableVideoPicker(true)
@@ -366,16 +354,10 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     private fun openGallery() {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            if (QiscusPermissionsUtil.hasPermissions(ctx, MultichannelConst.FILE_PERMISSION)) {
-                pickImageUsingJupuk()
-            } else {
-                requestFilePermission()
-            }
-        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+        if (QiscusPermissionsUtil.hasPermissions(ctx, MultichannelConst.FILE_PERMISSION)) {
             pickImageUsingJupuk()
         } else {
-            pickImageUsingIntentSystem()
+            requestFilePermission()
         }
     }
 
