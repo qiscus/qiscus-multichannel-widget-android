@@ -676,11 +676,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                     presenter.sendFile(File(Uri.parse(paths[i]).path), captions!![i])
                 }
             }
+
+            setChatNoEmpty(true)
         } else if (requestCode == GET_TEMPLATE) {
             data?.let {
                 val template = it.getStringExtra("template")
                 sendComment(template!!)
             }
+            setChatNoEmpty(true)
         } else if (requestCode == MultichannelConst.IMAGE_GALLERY_REQUEST) {
             try {
                 data?.let {
@@ -742,6 +745,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             if (paths != null && paths.isNotEmpty()) {
                 presenter.sendFile(File(paths[0]))
             }
+            setChatNoEmpty(true)
         }
 
     }
