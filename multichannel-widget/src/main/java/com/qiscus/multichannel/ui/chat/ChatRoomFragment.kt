@@ -347,17 +347,39 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         }
     }
 
+    /**
+     * open images using default gallery for android 11 or higher
+     * */
+    private fun pickImageUsingIntentSystem() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/* video/*"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            intent.action = Intent.ACTION_GET_CONTENT
+        }
+
+        startActivityForResult(intent, MultichannelConst.IMAGE_GALLERY_REQUEST)
+    }
+
+    /**
+     * open images using jupuk gallery for android under 11 version
+     * */
     private fun pickImageUsingJupuk() {
         JupukBuilder().setMaxCount(30)
-            .enableVideoPicker(true)
-            .pickPhoto(this)
+                .enableVideoPicker(true)
+                .pickPhoto(this)
     }
 
     private fun openGallery() {
-        if (QiscusPermissionsUtil.hasPermissions(ctx, MultichannelConst.FILE_PERMISSION)) {
-            pickImageUsingJupuk()
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            if (QiscusPermissionsUtil.hasPermissions(ctx, MultichannelConst.FILE_PERMISSION)) {
+                pickImageUsingJupuk()
+            } else {
+                requestFilePermission()
+            }
         } else {
-            requestFilePermission()
+            pickImageUsingIntentSystem()
         }
     }
 
