@@ -356,14 +356,12 @@ class ImageMessageActivity : AppCompatActivity(),
     }
 
     private fun openGallery() {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
             if (QiscusPermissionsUtil.hasPermissions(this, MultichannelConst.FILE_PERMISSION)) {
                 pickImageUsingJupuk()
             } else {
                 requestFilePermission()
             }
-        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-            pickImageUsingJupuk()
         } else {
             pickImageUsingIntentSystem()
         }
