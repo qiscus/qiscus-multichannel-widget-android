@@ -29,20 +29,16 @@
             android:padding="6.5dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <com.rd.PageIndicatorView
-            android:id="@+id/page_indicator_view"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/margin_medium"
+        <com.qiscus.multichannel.ui.view.DotIndicatorView
+            android:id="@+id/dot_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginBottom="18dp"
-            app:piv_animationType="color"
-            app:piv_dynamicCount="true"
-            app:piv_interactiveAnimation="true"
-            app:piv_orientation="horizontal"
-            app:piv_padding="4dp"
-            app:piv_radius="4dp"
-            app:piv_scaleFactor="0" />
+            android:layout_marginBottom="18dp" />
+
 
     </androidx.cardview.widget.CardView>
 

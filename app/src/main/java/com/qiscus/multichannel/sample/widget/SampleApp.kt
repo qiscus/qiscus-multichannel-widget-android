@@ -37,7 +37,7 @@ class SampleApp : MultiDexApplication() {
             }
     }
 
-    private val appId = "your_app_id" // change with your AppId
+    private val appId = "akoop-i0xwcb7spjwzhro" // change with your AppId
     private val localKey = "qiscus_multichannel_user" // change with your localKey
 
     private val config = QiscusMultichannelWidgetConfig()
