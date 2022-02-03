@@ -5,7 +5,8 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        jcenter() // will be deleted
+        gradlePluginPortal()
+//        jcenter() // will be deleted
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -25,7 +26,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter() // will be deleted
+        gradlePluginPortal()
+//        jcenter() // will be deleted
         maven {
             url "https://artifactory.qiscus.com/artifactory/qiscus-library-open-source"
         }
