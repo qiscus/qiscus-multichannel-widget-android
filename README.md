@@ -19,7 +19,8 @@ Add this URL reference in your project build.gradle
 allprojects {
    repositories {
       google()
-      jcenter()
+      mavenCentral()
+      gradlePluginPortal()
       maven {
           url "https://artifactory.qiscus.com/artifactory/qiscus-library-open-source"
       }
@@ -297,6 +298,22 @@ class FirebaseServices : FirebaseMessagingService() {
         }
     }
 }
+```
+
+6. **Manage access to data stored**
+
+* Add the **provider** in Manifest, for example:
+
+```
+<provider
+    android:name="androidx.core.content.FileProvider"
+    android:authorities="${applicationId}"
+    android:exported="false"
+    android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/qiscus_provider_paths" />
+</provider>
 ```
 
 ## Proguard
