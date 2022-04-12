@@ -302,7 +302,7 @@ class FirebaseServices : FirebaseMessagingService() {
 
 6. **Manage access to data stored**
 
-* Add the **provider** in Manifest, for example:
+Add the **provider** in Manifest, for example:
 
 ```
 <provider
