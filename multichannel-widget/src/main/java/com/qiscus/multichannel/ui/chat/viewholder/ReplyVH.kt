@@ -1,8 +1,10 @@
 package com.qiscus.multichannel.ui.chat.viewholder
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
@@ -17,6 +19,7 @@ import com.qiscus.multichannel.R
 import com.qiscus.multichannel.ui.chat.CommentsAdapter
 import com.qiscus.multichannel.ui.webView.WebViewHelper
 import com.qiscus.multichannel.util.MultichannelConst
+import com.qiscus.multichannel.util.MultichannelQMessageUtils
 import com.qiscus.multichannel.util.ResourceManager
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.data.model.QMessage
@@ -33,9 +36,11 @@ class ReplyVH(
     itemView: View,
     config: QiscusMultichannelWidgetConfig,
     color: QiscusMultichannelWidgetColor,
+    private val listener: CommentsAdapter.ItemViewListener?,
     private val viewType: Int
 ) : BaseViewHolder(itemView, config, color) {
 
+    private var origin: QMessage? = null
     private val qiscusAccount = MultichannelConst.qiscusCore()?.qiscusAccount!!
 
     init {
@@ -57,6 +62,15 @@ class ReplyVH(
             ), backgroundColor
         )
         itemView.tv_chat.setTextColor(colorText)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            itemView.iv_play.imageTintList = ColorStateList.valueOf(color.getNavigationColor())
+        }
+
+        itemView.vs_reply.setOnClickListener { v ->
+            origin?.let {
+                listener?.onItemReplyClick(v, it)
+            }
+        }
     }
 
     override fun getChatFrom(): Drawable? =
@@ -64,27 +78,30 @@ class ReplyVH(
 
     override fun bind(comment: QMessage) {
         super.bind(comment)
-        val origin = comment.replyTo
+        origin = comment.replyTo
 
         itemView.tv_replied_username?.text =
-            if (qiscusAccount.id == origin.sender.id) itemView.context.getString(R.string.qiscus_you_mc) else origin.sender.name
+            if (qiscusAccount.id == origin?.sender?.id) itemView.context.getString(R.string.qiscus_you_mc) else origin?.sender?.name
 
-        itemView.tv_replied_message?.text = origin.text
         itemView.tv_chat.text = comment.text
 
         setUpLinks()
 
-        when (origin.type) {
-            QMessage.Type.TEXT -> {
-                itemView.img_replied_image.visibility = View.GONE
-            }
-            QMessage.Type.IMAGE -> {
-                val obj = JSONObject(origin.payload)
+        when (origin?.type) {
+            QMessage.Type.IMAGE, QMessage.Type.VIDEO -> {
+                val obj = JSONObject(origin!!.payload)
                 itemView.img_replied_image.visibility = View.VISIBLE
+
+                itemView.iv_play.visibility =
+                    if (origin?.type == QMessage.Type.IMAGE) View.GONE else View.VISIBLE
+
                 itemView.tv_replied_message.text =
-                    if (obj.getString("caption") == "") "Image" else obj.getString("caption")
+                    if (obj.getString("caption") == "" ) {
+                        if (origin?.type == QMessage.Type.IMAGE) "Image" else "Video"
+                    } else obj.getString("caption")
+
                 Nirmana.getInstance().get()
-                    .load(origin.attachmentUri)
+                    .load(origin?.attachmentUri)
                     .apply(
                         RequestOptions()
                             .placeholder(R.drawable.qiscus_image_placeholder)
@@ -95,6 +112,10 @@ class ReplyVH(
             }
             QMessage.Type.FILE -> {
                 itemView.img_replied_image.visibility = View.VISIBLE
+                itemView.iv_play.visibility = View.GONE
+
+                itemView.tv_replied_message?.text =  MultichannelQMessageUtils.getFileName(origin?.text)
+
                 itemView.img_replied_image.setImageDrawable(
                     ResourceManager.getTintDrawable(
                         ContextCompat.getDrawable(
@@ -107,8 +128,9 @@ class ReplyVH(
                 )
             }
             else -> {
+                itemView.iv_play.visibility = View.GONE
                 itemView.img_replied_image.visibility = View.GONE
-                itemView.tv_replied_message.text = origin.text
+                itemView.tv_replied_message.text = origin?.text
             }
         }
     }

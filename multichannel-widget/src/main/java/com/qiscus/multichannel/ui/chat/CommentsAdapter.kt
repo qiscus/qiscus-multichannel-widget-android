@@ -13,6 +13,7 @@ import com.qiscus.multichannel.util.AudioHandler
 import com.qiscus.multichannel.util.MultichannelConst
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.util.QiscusDateUtil
+import rx.functions.Action2
 
 /**
  * Created on : 19/08/19
@@ -153,7 +154,7 @@ class CommentsAdapter(
                 VideoVH(getView(parent, viewType), config, color, itemViewListener, viewType)
 
             TYPE_MY_REPLY, TYPE_OPPONENT_REPLY ->
-                ReplyVH(getView(parent, viewType), config, color, viewType)
+                ReplyVH(getView(parent, viewType), config, color, itemViewListener, viewType)
 
             TYPE_EVENT ->
                 EventVH(getView(parent, viewType), config, color)
@@ -235,26 +236,38 @@ class CommentsAdapter(
         this.audioPlayerId = RecyclerView.NO_ID
     }
 
-    override fun addOrUpdate(comments: List<QMessage>) {
-        for (comment in comments) {
-            val index = findPosition(comment)
+    override fun addOrUpdate(items: List<QMessage>) {
+        val lastPosition = data.size() - 1;
+        var index: Int
+        var comment: QMessage
+
+        for (i in items.indices) {
+            comment = items[i]
+            index = findPosition(comment)
+
             if (index == -1) {
                 data.add(comment)
+                notifyItemInserted(data.size() - 1)
             } else {
                 data.updateItemAt(index, comment)
+                notifyItemChanged(index)
             }
         }
-        notifyDataSetChanged()
+        notifyItemChanged(lastPosition)
     }
 
     override fun addOrUpdate(comment: QMessage) {
+        val lastPosition = data.size() - 1;
         val index = findPosition(comment)
+
         if (index == -1) {
             data.add(comment)
+            notifyItemInserted(data.size() - 1)
         } else {
             data.updateItemAt(index, comment)
+            notifyItemChanged(index)
         }
-        notifyDataSetChanged()
+        notifyItemChanged(lastPosition)
     }
 
     override fun remove(comment: QMessage) {
@@ -274,6 +287,14 @@ class CommentsAdapter(
     fun setSelectedComment(comment: QMessage) = apply { this.selectedComment = comment }
 
     fun getSelectedComment() = selectedComment
+
+    fun clearSelected(position: Int) {
+        val size = data.size()
+        if (position > size - 1) return
+
+        data[position].isSelected = false
+        notifyItemChanged(position)
+    }
 
     fun clearSelected() {
         val size = data.size()
@@ -328,6 +349,25 @@ class CommentsAdapter(
         return null
     }
 
+    fun goToComment(commentId: Long, action: Action2<QMessage, Int>) {
+        val size = data.size()
+        var comment: QMessage
+
+        for (i in 0 until size) {
+            comment = data.get(i)
+            if (comment.id == commentId) {
+                comment.isSelected = true
+                action.call(comment, i)
+                notifyItemChanged(i)
+                break
+            }
+        }
+    }
+
+    fun getLatestComment(): QMessage {
+        return data[data.size() - 1]
+    }
+
     interface ItemViewListener {
         fun onSendComment(comment: QMessage)
 
@@ -335,7 +375,10 @@ class CommentsAdapter(
 
         fun onItemLongClick(view: View, position: Int)
 
+        fun onItemReplyClick(view: View, comment: QMessage)
+
         fun stopAnotherAudio(comment: QMessage)
+
     }
 
     companion object {

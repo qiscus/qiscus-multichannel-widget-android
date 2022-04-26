@@ -128,7 +128,7 @@ class QiscusMultichannelWidgetColor {
     )
 
     @ColorInt
-    fun getTimeLabelTextColor() = getColor(this.timeLabelText, R.color.qiscus_white_mc)
+    fun getTimeLabelTextColor() = getColor(this.timeLabelText, R.color.qiscus_time_color_mc)
 
     @ColorInt
     fun getTimeBackgroundColor() = getColor(this.timeBackground, R.color.dateBackground_mc)

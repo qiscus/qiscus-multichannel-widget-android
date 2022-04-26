@@ -4,6 +4,11 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.*
+import android.content.res.ColorStateList
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
@@ -46,6 +51,8 @@ import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_chat_room_mc.*
 import kotlinx.android.synthetic.main.message_layout_reply.*
 import org.json.JSONObject
+import rx.functions.Action1
+import rx.functions.Action2
 import java.io.File
 import java.io.IOException
 import java.lang.reflect.Field
@@ -171,6 +178,17 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             rootViewSender.setBackgroundColor(getBaseColor())
             originSender.setTextColor(getNavigationColor())
             btnCancelReply.setColorFilter(getSendContainerColor())
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                progressBar.indeterminateDrawable.colorFilter =
+                    BlendModeColorFilter(
+                        getNavigationColor(), BlendMode.SRC_IN
+                    )
+            } else {
+                progressBar.indeterminateDrawable.setColorFilter(
+                    getNavigationColor(), PorterDuff.Mode.SRC_IN);
+            }
+
         }
     }
 
@@ -213,8 +231,10 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         val layoutManager = LinearLayoutManager(ctx)
         layoutManager.reverseLayout = true
         rvMessage.layoutManager = layoutManager
+        rvMessage.itemAnimator = null
         rvMessage.setHasFixedSize(true)
         rvMessage.addOnScrollListener(QiscusChatScrollListener(layoutManager, this))
+
         audioHandler = AudioHandler(ctx)
         commentsAdapter = CommentsAdapter(
             ctx,
@@ -238,10 +258,30 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                 toggleSelectedComment(commentsAdapter.data[position])
             }
 
+            override fun onItemReplyClick(view: View, comment: QMessage) {
+                if (commentsAdapter.findPosition(comment) > -1) {
+                    onLoadReply(comment)
+                } else {
+                    showLoading()
+                    presenter.loadOlderCommentByReply(commentsAdapter.getLatestComment(), comment)
+                }
+
+            }
+
             override fun stopAnotherAudio(comment: QMessage) {
                 commentsAdapter.stopAnotherAudio(comment.id)
             }
         })
+    }
+
+    override fun onLoadReply(comment: QMessage) {
+        commentsAdapter.goToComment(comment.id,
+            Action2 { _, position ->
+                rvMessage.scrollToPosition(position)
+                rvMessage.postDelayed( {
+                    commentsAdapter.clearSelected(position)
+                }, 2000)
+            })
     }
 
     private fun setChatNoEmpty(isNoEmpty: Boolean) {
@@ -427,17 +467,27 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         }
     }
 
-
     private fun bindReplyView(origin: QMessage) {
         val obj = JSONObject(origin.payload)
-        originSender.text = origin.sender.name
+        val me = MultichannelConst.qiscusCore()?.qiscusAccount?.id
+
+        originSender.text =
+            if (origin.isMyComment(me)) ctx.getText(R.string.qiscus_you_mc)
+            else origin.sender.name
+
         when (origin.type) {
-            QMessage.Type.IMAGE -> {
+            QMessage.Type.IMAGE,  QMessage.Type.VIDEO -> {
                 originImage.visibility = View.VISIBLE
+
                 Nirmana.getInstance().get()
                     .load(origin.attachmentUri)
                     .into(originImage)
-                originContent.text = obj.getString("caption")
+
+                val caption: String? = obj.getString("caption")
+                originContent.text = MultichannelQMessageUtils.getFileName(
+                    if (caption != null && caption == "") origin.text
+                    else caption
+                )
             }
             QMessage.Type.FILE -> {
                 originContent.text = origin.attachmentName
@@ -671,6 +721,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         }
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode != Activity.RESULT_OK) return

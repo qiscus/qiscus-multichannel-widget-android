@@ -87,6 +87,22 @@
                 android:scaleType="centerCrop"
                 android:visibility="gone" />
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_play"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignStart="@+id/img_replied_image"
+                android:layout_alignLeft="@+id/img_replied_image"
+                android:layout_alignTop="@+id/img_replied_image"
+                android:layout_alignEnd="@+id/img_replied_image"
+                android:layout_alignRight="@+id/img_replied_image"
+                android:layout_alignBottom="@+id/img_replied_image"
+                android:layout_margin="10dp"
+                android:background="@drawable/rounded_play_bg"
+                android:src="@drawable/ic_play"
+                android:tint="@color/colorPrimary"
+                android:visibility="gone" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_replied_username"
                 android:layout_width="wrap_content"

@@ -25,7 +25,7 @@
 
     <color name="read_message_mc">#0071BB</color>
     <color name="pending_message_mc">#757575</color>
-    <color name="dateBackground_mc">#B5B5B5</color>
+    <color name="dateBackground_mc">#DDDDDD</color>
     <color name="qiscus_transparent_black_mc">#88000000</color>
 
     <color name="qiscus_bottom_sheet_mc">#FAFAFA</color>
@@ -52,6 +52,8 @@
     <color name="qiscus_title_mc">#FFFFFF</color>
     <color name="qiscus_subtitle_mc">#FFFFFF</color>
     <color name="qiscus_back_icon_mc">#FFFFFF</color>
+    <color name="qiscus_time_color_mc">#ADADAD</color>
+
 
     <!-- Jupuk Libs -->
     <color name="jupuk_primary">#009688</color>

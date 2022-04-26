@@ -24,6 +24,7 @@ import rx.schedulers.Schedulers
 import java.io.File
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import androidx.core.util.Pair as APair
 
@@ -201,8 +202,42 @@ class ChatRoomPresenter(
             ?.onErrorReturn { null }!!
     }
 
+    fun loadOlderCommentByReply(qiscusComment: QMessage, targetComment: QMessage) {
+        loadOlderComment(qiscusComment)
+            ?.delay(1, TimeUnit.SECONDS)
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe({
+                view?.onLoadMoreComments(it)
+
+                if (!it.contains(targetComment)) {
+                    loadOlderCommentByReply(it[it.size - 1], targetComment)
+                } else {
+                    view?.onLoadReply(targetComment)
+                    view?.dismissLoading()
+                }
+            }, { throwable ->
+                throwable.printStackTrace()
+                view?.showError("message not found")
+                view?.dismissLoading()
+            })
+    }
+
     fun loadOlderCommentThan(qiscusComment: QMessage) {
         view?.showLoading()
+        loadOlderComment(qiscusComment)
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe({
+                view?.onLoadMoreComments(it)
+                view?.dismissLoading()
+            }, { throwable ->
+                throwable.printStackTrace()
+                view?.dismissLoading()
+            })
+    }
+
+    private fun loadOlderComment(qiscusComment: QMessage): Observable<List<QMessage>>? =
         MultichannelConst.qiscusCore()?.dataStore
             ?.getObservableOlderCommentsThan(qiscusComment, room.id, 40)
             ?.flatMap { Observable.from(it) }
@@ -229,16 +264,6 @@ class ChatRoomPresenter(
                             comments1
                         }
             }
-            ?.subscribeOn(Schedulers.newThread())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe({
-                view?.onLoadMoreComments(it)
-                view?.dismissLoading()
-            }, { throwable ->
-                throwable.printStackTrace()
-                view?.dismissLoading()
-            })
-    }
 
     fun sendFile(file: File) {
         sendFile(file, null)
@@ -625,5 +650,7 @@ class ChatRoomPresenter(
         fun openWebview(url: String)
 
         fun onSessionalChange(isSessional: Boolean)
+
+        fun onLoadReply(targetComment: QMessage)
     }
 }
