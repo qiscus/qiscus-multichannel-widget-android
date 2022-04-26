@@ -61,8 +61,6 @@ class ChatRoomPresenter(
     }
 
     fun sendComment(message: QMessage) {
-//        view.onSendingComment(qiscusComment)
-
         if (message.type == QMessage.Type.TEXT && message.text.trim().isEmpty()) {
             return
         }
@@ -75,6 +73,7 @@ class ChatRoomPresenter(
             name = qAccount.name
         }
 
+        view?.onSendingComment(message)
         val subscription = MultichannelConst.qiscusCore()?.api?.sendMessage(message)
             ?.doOnSubscribe { MultichannelConst.qiscusCore()?.dataStore?.addOrUpdate(message) }
             ?.doOnNext { this.commentSuccess(it) }
@@ -265,11 +264,7 @@ class ChatRoomPresenter(
                         }
             }
 
-    fun sendFile(file: File) {
-        sendFile(file, null)
-    }
-
-    fun sendFile(file: File, caption: String?) {
+    fun sendFile(file: File, caption: String) {
         var compressedFile = file
         if (QiscusFileUtil.isImage(file.path) && !file.name.endsWith(".gif")) {
             try {
@@ -305,7 +300,6 @@ class ChatRoomPresenter(
             QMessage.generateFileAttachmentMessage(room.id, file.path, caption, file.name)
         qiscusComment.extras = json
         qiscusComment.isDownloading = true
-
 
         val qAccount: QAccount = MultichannelConst.qiscusCore()?.qiscusAccount!!
         val qUser = QUser()

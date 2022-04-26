@@ -816,7 +816,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         } else if (requestCode == JupukConst.REQUEST_CODE_DOC) {
             val paths = data?.getStringArrayListExtra(JupukConst.KEY_SELECTED_DOCS)
             if (paths != null && paths.isNotEmpty()) {
-                presenter.sendFile(File(paths[0]))
+                presenter.sendFile(File(paths[0]), "")
             }
             setChatNoEmpty(true)
         }
