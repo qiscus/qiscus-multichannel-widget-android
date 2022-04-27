@@ -109,7 +109,6 @@ class ReplyVH(
                             .placeholder(R.drawable.qiscus_image_placeholder)
                             .error(R.drawable.qiscus_image_placeholder)
                             .skipMemoryCache(false)
-                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     )
                     .into(itemView.img_replied_image)
             }
