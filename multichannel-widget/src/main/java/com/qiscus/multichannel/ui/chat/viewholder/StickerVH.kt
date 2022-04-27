@@ -29,7 +29,6 @@ class StickerVH(
             .apply(
                 RequestOptions()
                     .skipMemoryCache(false)
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .placeholder(R.drawable.qiscus_image_placeholder)
                     .error(R.drawable.qiscus_image_placeholder)
             )
