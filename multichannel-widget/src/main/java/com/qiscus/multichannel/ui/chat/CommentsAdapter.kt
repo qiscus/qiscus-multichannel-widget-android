@@ -1,5 +1,6 @@
 package com.qiscus.multichannel.ui.chat
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -270,8 +271,9 @@ class CommentsAdapter(
         notifyItemChanged(lastPosition)
     }
 
-    override fun remove(comment: QMessage) {
-        data.remove(comment)
+    @SuppressLint("NotifyDataSetChanged")
+    override fun remove(item: QMessage) {
+        data.remove(item)
         notifyDataSetChanged()
     }
 
@@ -301,22 +303,20 @@ class CommentsAdapter(
         for (i in size - 1 downTo 0) {
             if (data.get(i).isSelected) {
                 data.get(i).isSelected = false
+                notifyItemChanged(i)
             }
         }
-        notifyDataSetChanged()
     }
 
     fun updateLastDeliveredComment(lastDeliveredCommentId: Long) {
         this.lastDeliveredCommentId = lastDeliveredCommentId
         updateCommentState()
-        notifyDataSetChanged()
     }
 
     fun updateLastReadComment(lastReadCommentId: Long) {
         this.lastReadCommentId = lastReadCommentId
         this.lastDeliveredCommentId = lastReadCommentId
         updateCommentState()
-        notifyDataSetChanged()
     }
 
     private fun updateCommentState() {
@@ -328,11 +328,13 @@ class CommentsAdapter(
                         break
                     }
                     data.get(i).status = QMessage.STATE_READ
+                    notifyItemChanged(i)
                 } else if (data.get(i).id <= lastDeliveredCommentId) {
                     if (data.get(i).status >= QMessage.STATE_DELIVERED) {
                         break
                     }
                     data.get(i).status = QMessage.STATE_DELIVERED
+                    notifyItemChanged(i)
                 }
             }
         }
@@ -368,6 +370,24 @@ class CommentsAdapter(
         return data[data.size() - 1]
     }
 
+    override fun onInserted(position: Int, count: Int) {
+        notifyItemRangeInserted(position, count)
+    }
+
+    override fun onRemoved(position: Int, count: Int) {
+        notifyItemRangeRemoved(position, count)
+        notifyItemRangeChanged(position, data.size())
+    }
+
+    override fun onChanged(position: Int, count: Int) {
+        notifyItemRangeChanged(position, count)
+    }
+
+    override fun onMoved(fromPosition: Int, toPosition: Int) {
+        notifyItemMoved(fromPosition, toPosition)
+        notifyItemChanged(toPosition)
+    }
+
     interface ItemViewListener {
         fun onSendComment(comment: QMessage)
 
@@ -378,7 +398,6 @@ class CommentsAdapter(
         fun onItemReplyClick(view: View, comment: QMessage)
 
         fun stopAnotherAudio(comment: QMessage)
-
     }
 
     companion object {

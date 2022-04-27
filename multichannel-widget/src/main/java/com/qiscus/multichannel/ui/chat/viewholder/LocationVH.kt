@@ -73,7 +73,6 @@ class LocationVH(
                     RequestOptions()
                         .skipMemoryCache(false)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                        .dontAnimate()
                         .transform(
                             CenterCrop(),
                             RoundedCorners(ResourceManager.DIMEN_ROUNDED_IMAGE)

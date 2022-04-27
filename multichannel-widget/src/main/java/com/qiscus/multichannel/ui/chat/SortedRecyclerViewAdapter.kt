@@ -52,7 +52,7 @@ abstract class SortedRecyclerViewAdapter<Item, VH : RecyclerView.ViewHolder> :
 
     protected abstract fun compare(item1: Item, item2: Item): Int
 
-    protected fun onChanged(position: Int, count: Int) {
+    protected open fun onChanged(position: Int, count: Int) {
 
     }
 
@@ -64,15 +64,15 @@ abstract class SortedRecyclerViewAdapter<Item, VH : RecyclerView.ViewHolder> :
         return item1 == item2
     }
 
-    protected fun onInserted(position: Int, count: Int) {
+    protected open fun onInserted(position: Int, count: Int) {
 
     }
 
-    protected fun onRemoved(position: Int, count: Int) {
+    protected open fun onRemoved(position: Int, count: Int) {
 
     }
 
-    protected fun onMoved(fromPosition: Int, toPosition: Int) {
+    protected open fun onMoved(fromPosition: Int, toPosition: Int) {
 
     }
 

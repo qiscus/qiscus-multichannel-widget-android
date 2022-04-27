@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.util.PatternsCompat
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -103,27 +104,27 @@ open class BaseImageVideoViewHolder(
 
     }
 
-//    private fun downloadFile(qiscusComment: QMessage, fileName: String, URLImage: String) {
-//        Const.qiscusCore()?.api
-//            ?.downloadFile(URLImage, fileName) {
-//                // here you can get the progress total downloaded
-//            }
-//            ?.doOnNext { file ->
-//                // here we update the local path of file
-//                QiscusCore.getDataStore()
-//                    .addOrUpdateLocalPath(qiscusComment.roomId, qiscusComment.id, file.absolutePath)
-//
-//                QiscusImageUtil.addImageToGallery(file)
-//
-//            }
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe({
-//                itemView.context.showToast("success save image to gallery")
-//            }, {
-//                //on error
-//            })
-//    }
+/*    private fun downloadFile(qiscusComment: QMessage, fileName: String, URLImage: String) {
+        Const.qiscusCore()?.api
+            ?.downloadFile(URLImage, fileName) {
+                // here you can get the progress total downloaded
+            }
+            ?.doOnNext { file ->
+                // here we update the local path of file
+                QiscusCore.getDataStore()
+                    .addOrUpdateLocalPath(qiscusComment.roomId, qiscusComment.id, file.absolutePath)
+
+                QiscusImageUtil.addImageToGallery(file)
+
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                itemView.context.showToast("success save image to gallery")
+            }, {
+                //on error
+            })
+    }*/
 
     private fun showSendingImage(url: String) {
         val localPath = File(url)
@@ -134,13 +135,14 @@ open class BaseImageVideoViewHolder(
         val localPath = MultichannelConst.qiscusCore()?.dataStore?.getLocalPath(comment.id)
         localPath?.let { showLocalImage(it) } ?: Nirmana.getInstance().get()
             .load(url)
+            .thumbnail(0.5f)
             .apply(
                 RequestOptions()
+                    .skipMemoryCache(false)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .placeholder(R.drawable.qiscus_image_placeholder)
                     .error(R.drawable.qiscus_image_placeholder)
-                    .dontAnimate()
                     .transform(CenterCrop(), RoundedCorners(ResourceManager.DIMEN_ROUNDED_IMAGE))
-
             )
             .into(thumbnail)
     }
@@ -148,17 +150,19 @@ open class BaseImageVideoViewHolder(
     private fun showLocalImage(localPath: File) {
         Nirmana.getInstance().get()
             .load(localPath)
+            .thumbnail(0.5f)
             .apply(
                 RequestOptions()
+                    .skipMemoryCache(false)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .placeholder(R.drawable.qiscus_image_placeholder)
                     .error(R.drawable.qiscus_image_placeholder)
-                    .dontAnimate()
                     .transform(CenterCrop(), RoundedCorners(ResourceManager.DIMEN_ROUNDED_IMAGE))
             )
             .into(thumbnail)
     }
 
-    fun shareImage(fileImage: File) {
+    /*fun shareImage(fileImage: File) {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "image/jpg"
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
@@ -173,7 +177,7 @@ open class BaseImageVideoViewHolder(
                 )
             )
         }
-    }
+    }*/
 
     @SuppressLint("DefaultLocale", "RestrictedApi")
     private fun setUpLinks() {

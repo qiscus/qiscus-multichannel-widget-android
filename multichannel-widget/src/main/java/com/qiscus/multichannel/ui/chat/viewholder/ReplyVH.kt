@@ -12,6 +12,7 @@ import android.text.style.ClickableSpan
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.util.PatternsCompat
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.multichannel.QiscusMultichannelWidgetColor
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
@@ -102,11 +103,13 @@ class ReplyVH(
 
                 Nirmana.getInstance().get()
                     .load(origin?.attachmentUri)
+                    .thumbnail(0.1f)
                     .apply(
                         RequestOptions()
                             .placeholder(R.drawable.qiscus_image_placeholder)
                             .error(R.drawable.qiscus_image_placeholder)
-                            .dontAnimate()
+                            .skipMemoryCache(false)
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     )
                     .into(itemView.img_replied_image)
             }

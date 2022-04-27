@@ -65,11 +65,11 @@ class CardVH(
 
         Nirmana.getInstance().get()
             .load(data.getString("image"))
+            .thumbnail(0.3f)
             .apply(
                 RequestOptions()
                     .placeholder(R.drawable.qiscus_image_placeholder)
                     .error(R.drawable.qiscus_image_placeholder)
-                    .dontAnimate()
                     .centerCrop()
                     .transform(CenterCrop(), RoundedCorners(ResourceManager.DIMEN_ROUNDED_IMAGE))
             )

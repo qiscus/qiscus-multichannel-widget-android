@@ -643,7 +643,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun onSendingComment(comment: QMessage) {
         commentsAdapter.addOrUpdate(comment)
-        rvMessage.smoothScrollToPosition(0)
+        rvMessage.scrollToPosition(0)
     }
 
     override fun updateLastDeliveredComment(lastDeliveredCommentId: Long) {
