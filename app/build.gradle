@@ -51,7 +51,7 @@ dependencies {
 
     //implementation 2 library, 1 from multichannel-widget & 1 from androidx.multidex
     implementation project(":multichannel-widget") //from local
-//    com.qiscus.multichannel:multichannel-widget:2.0.0 //from artifactory
+//    implementation 'com.qiscus.multichannel:multichannel-widget:2.0.5' //from artifactory
     implementation 'androidx.multidex:multidex:2.0.1'
 
 }
