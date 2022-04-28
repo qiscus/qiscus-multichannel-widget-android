@@ -6,7 +6,7 @@
 * Target sdk 31
 * compailer Java 11
 * Kotlin v1.3.50
-* build gradle 4.0.1
+* build gradle 7.1.2
 
 ## Screenshot
 ![ss login](https://user-images.githubusercontent.com/56247115/121902988-092eb380-cd52-11eb-8cd0-fd5f68ba2a41.png) ![ss chat](https://user-images.githubusercontent.com/56247115/121903017-12b81b80-cd52-11eb-87bc-b39c5501f745.png)
