@@ -15,15 +15,13 @@ class EventVH(
     color: QiscusMultichannelWidgetColor
 ) : BaseViewHolder(itemView, config, color) {
 
+    private val strokeSize = ResourceManager.getDimen(itemView.resources.displayMetrics, 1).toInt()
     private val tvEvent: TextView? = itemView.findViewById(R.id.tvEvent)
 
     init {
         tvEvent?.let {
-            it.background = ResourceManager.getTintDrawable(
-                ContextCompat.getDrawable(
-                    itemView.context,
-                    R.drawable.rounded_date
-                ), color.getTimeBackgroundColor()
+            it.background = ResourceManager.getBgEventDrawable(
+                strokeSize, color.getSystemEventTextColor()
             )
             it.setTextColor(color.getSystemEventTextColor())
         }

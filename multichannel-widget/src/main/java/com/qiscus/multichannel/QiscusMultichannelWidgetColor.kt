@@ -110,7 +110,7 @@ class QiscusMultichannelWidgetColor {
     fun getNavigationTitleColor() = getColor(this.navigationTitle, R.color.qiscus_title_mc)
 
     @ColorInt
-    fun getSystemEventTextColor() = getColor(this.systemEventText, R.color.qiscus_white_mc)
+    fun getSystemEventTextColor() = getColor(this.systemEventText, R.color.qiscus_black_mc)
 
     @ColorInt
     fun getLeftBubbleColor() = getColor(this.leftBubble, R.color.qiscus_left_bubble_mc)

@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_chat_message"
         android:layout_marginBottom="@dimen/margin_chat_message"
+        android:textColor="@color/qiscus_white_mc"
         android:paddingLeft="@dimen/margin_normal"
         android:paddingTop="10dp"
         android:paddingRight="@dimen/margin_normal"

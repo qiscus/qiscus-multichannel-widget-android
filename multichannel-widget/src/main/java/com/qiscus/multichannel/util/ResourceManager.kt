@@ -3,6 +3,7 @@ package com.qiscus.multichannel.util
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.util.DisplayMetrics
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -58,6 +59,13 @@ object ResourceManager {
         val wrappedDrawable = DrawableCompat.wrap(drawable!!)
         DrawableCompat.setTint(wrappedDrawable, color)
         return wrappedDrawable
+    }
+
+    fun getBgEventDrawable(size: Int, @ColorInt color: Int): Drawable {
+        val drawable = GradientDrawable()
+        drawable.setStroke(size, color)
+        drawable.cornerRadius = DIMEN_ROUNDED_IMAGE.toFloat()
+        return drawable
     }
 
 }
