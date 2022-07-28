@@ -68,12 +68,12 @@ class PNUtil {
             pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 PendingIntent.getBroadcast(
                     context, QiscusNumberUtil.convertToInt(qiscusComment.chatRoomId),
-                    openIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+                    openIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
             } else {
                 PendingIntent.getBroadcast(
                     context, QiscusNumberUtil.convertToInt(qiscusComment.chatRoomId),
-                    openIntent, PendingIntent.FLAG_CANCEL_CURRENT
+                    openIntent, PendingIntent.FLAG_UPDATE_CURRENT
                 )
             }
 
