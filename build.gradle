@@ -17,6 +17,7 @@ buildscript {
         // in the individual module build.gradle files
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.24.18"
         classpath 'com.google.gms:google-services:4.3.10'
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.4.0.2513"
 
     }
 }
