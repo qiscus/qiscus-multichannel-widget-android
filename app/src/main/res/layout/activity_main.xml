@@ -118,6 +118,38 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/sendMessage"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:background="@drawable/bt_qiscus_radius_sdk"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_send_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="5dp"
+                    android:text="SEND MESSAGE"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_send_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="7dp"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@color/colorWhite"
+                    android:indeterminateTintMode="src_atop"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

@@ -10,6 +10,7 @@ import com.qiscus.multichannel.data.model.user.UserProperties
 import com.qiscus.sdk.chat.core.QiscusCore
 import com.qiscus.sdk.chat.core.data.model.QAccount
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
+import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.data.model.QiscusNonce
 import org.json.JSONObject
 
@@ -79,6 +80,15 @@ interface MultichanelChatWidget {
     fun openChatRoomById(
         context: Context,
         roomId: Long,
+        clearTaskActivity: Boolean,
+        onError: (Throwable) -> Unit
+    )
+
+    fun openChatRoomById(
+        context: Context,
+        roomId: Long,
+        qMessage: QMessage?,
+        isAutoSendMessage: Boolean,
         clearTaskActivity: Boolean,
         onError: (Throwable) -> Unit
     )

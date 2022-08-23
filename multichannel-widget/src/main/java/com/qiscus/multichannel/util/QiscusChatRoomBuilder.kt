@@ -7,6 +7,7 @@ import com.qiscus.multichannel.data.local.QiscusChatLocal
 import com.qiscus.multichannel.ui.chat.ChatRoomActivity
 import com.qiscus.multichannel.ui.loading.LoadingActivity
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
+import com.qiscus.sdk.chat.core.data.model.QMessage
 
 /**
  * Created on : 05/08/19
@@ -23,6 +24,9 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
     private var isSessional: Boolean = false
     private var showLoading: Boolean = false
     private var channelId: Int = 0
+    // initiate with sending message
+    private var isAutomatic: Boolean = false
+    private var qMessage: QMessage? = null
 
     /**
      * update config
@@ -60,6 +64,27 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
         this.isSessional = isSessional
     }
 
+    fun automaticSendMessage(qMessage: QMessage) = apply {
+        setAutoSendMessage(qMessage, true)
+    }
+
+    fun automaticSendMessage(textMessage: String) = apply {
+        setAutoSendMessage(
+            QMessage.generateMessage(-1L, textMessage), true
+        )
+    }
+
+    fun manualSendMessage(textMessage: String) = apply {
+        setAutoSendMessage(
+            QMessage.generateMessage(-1L, textMessage), false
+        )
+    }
+
+    private fun setAutoSendMessage(qMessage: QMessage, isAutomatic: Boolean) = apply {
+        this.qMessage = qMessage
+        this.isAutomatic = isAutomatic
+    }
+
     /**
      * open chat
      */
@@ -89,7 +114,9 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
                     user.userId,
                     user.avatar,
                     null,
-                    userProp
+                    userProp,
+                    qMessage,
+                    isAutomatic
                 )
             } else {
                 initiateCallback?.onProgress()
@@ -111,19 +138,28 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
 
     private fun loadChatRoom(context: Context, initiateCallback: InitiateCallback?) {
         multichannelWidget.openChatRoomById(QiscusChatLocal.getRoomId(), {
+            val qiscusMessage: QMessage? = getQMessage(it.id)
+
             if (initiateCallback != null) {
-                initiateCallback.onSuccess(it)
+                initiateCallback.onSuccess(it, qiscusMessage, isAutomatic)
             } else {
-                ChatRoomActivity.generateIntent(context, it, false)
+                ChatRoomActivity.generateIntent(context, it, qiscusMessage, isAutomatic, false)
             }
         }, {
             initiateCallback?.onError(it)
         })
     }
 
+    private fun getQMessage(roomId: Long): QMessage? {
+        return if (qMessage != null) {
+            qMessage!!.chatRoomId = roomId
+            qMessage
+        } else null
+    }
+
     interface InitiateCallback {
         fun onProgress()
-        fun onSuccess(qChatRoom: QChatRoom)
+        fun onSuccess(qChatRoom: QChatRoom, qMessage: QMessage?, isAutomatic: Boolean)
         fun onError(throwable: Throwable)
     }
 

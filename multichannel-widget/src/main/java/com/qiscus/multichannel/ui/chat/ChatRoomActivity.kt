@@ -11,7 +11,6 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.request.RequestOptions
@@ -54,16 +53,22 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
     private var handler = Handler(Looper.getMainLooper())
 
     companion object {
-        val CHATROOM_KEY = "chatroom_key"
+        const val CHATROOM_KEY = "chatroom_key"
+        const val MESSAGE_KEY = "message_key"
+        const val AUTO_MESSAGE_KEY = "auto_message_key"
 
         fun generateIntent(
             context: Context,
             qiscusChatRoom: QChatRoom,
+            qiscusMessage: QMessage?,
+            isAutoSendMessage: Boolean,
             clearTaskActivity: Boolean
         ) {
             val intent = Intent(context, ChatRoomActivity::class.java)
             if (clearTaskActivity) intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra(CHATROOM_KEY, qiscusChatRoom)
+            intent.putExtra(MESSAGE_KEY, qiscusMessage)
+            intent.putExtra(AUTO_MESSAGE_KEY, isAutoSendMessage)
             context.startActivity(intent)
         }
     }
@@ -75,6 +80,8 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         initColor()
 
         val room = intent.getParcelableExtra<QChatRoom>(CHATROOM_KEY)
+        val qMessage = intent.getParcelableExtra<QMessage>(MESSAGE_KEY)
+        val isAutoSendMessage = intent.getBooleanExtra(AUTO_MESSAGE_KEY, false)
 
         if (room == null) {
             finish()
@@ -96,7 +103,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         supportFragmentManager.beginTransaction()
             .replace(
                 R.id.fragmentContainer,
-                ChatRoomFragment.newInstance(qiscusChatRoom),
+                ChatRoomFragment.newInstance(qiscusChatRoom, qMessage, isAutoSendMessage),
                 ChatRoomFragment::class.java.name
             )
             .commit()

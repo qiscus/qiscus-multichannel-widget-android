@@ -14,6 +14,7 @@ import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.QiscusCore
 import com.qiscus.sdk.chat.core.data.model.QAccount
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
+import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.data.model.QiscusNonce
 import org.json.JSONObject
 import rx.android.schedulers.AndroidSchedulers
@@ -308,12 +309,23 @@ class QiscusMultichannelWidget private constructor(
         clearTaskActivity: Boolean,
         onError: (Throwable) -> Unit
     ) {
+        openChatRoomById(context, roomId, null, false, clearTaskActivity, onError)
+    }
+
+    override fun openChatRoomById(
+        context: Context,
+        roomId: Long,
+        qMessage: QMessage?,
+        isAutoSendMessage: Boolean,
+        clearTaskActivity: Boolean,
+        onError: (Throwable) -> Unit
+    ) {
         if (!hasSetupUser()) {
             onError(Throwable("Please set user first"))
         }
 
         openChatRoomById(roomId, {
-            ChatRoomActivity.generateIntent(context, it, clearTaskActivity)
+            ChatRoomActivity.generateIntent(context, it, qMessage, isAutoSendMessage, clearTaskActivity)
         }, {
             onError(it)
         })

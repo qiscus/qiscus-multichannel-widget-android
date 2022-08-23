@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.*
-import android.content.res.ColorStateList
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
@@ -36,6 +34,9 @@ import com.qiscus.jupuk.JupukConst
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.data.local.QiscusChatLocal
+import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.AUTO_MESSAGE_KEY
+import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.MESSAGE_KEY
+import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.CHATROOM_KEY
 import com.qiscus.multichannel.ui.chat.image.ImageMessageActivity
 import com.qiscus.multichannel.ui.chat.image.ImageMessageActivity.Companion.CAPTION_COMMENT_IMAGE
 import com.qiscus.multichannel.ui.chat.image.ImageMessageActivity.Companion.DATA
@@ -51,7 +52,6 @@ import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_chat_room_mc.*
 import kotlinx.android.synthetic.main.message_layout_reply.*
 import org.json.JSONObject
-import rx.functions.Action1
 import rx.functions.Action2
 import java.io.File
 import java.io.IOException
@@ -83,12 +83,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     private var isTyping = false
 
     companion object {
-        const val CHATROOM_KEY = "chatroom_key"
 
-        fun newInstance(qiscusChatRoom: QChatRoom): ChatRoomFragment {
+        fun newInstance(qiscusChatRoom: QChatRoom, autoQiscusMessage: QMessage?,
+                        isAutoSendMessage: Boolean): ChatRoomFragment {
             val chatRoomFragment = ChatRoomFragment()
             val bundle = Bundle()
             bundle.putParcelable(CHATROOM_KEY, qiscusChatRoom)
+            bundle.putParcelable(MESSAGE_KEY, autoQiscusMessage)
+            bundle.putBoolean(AUTO_MESSAGE_KEY, isAutoSendMessage)
             chatRoomFragment.arguments = bundle
             return chatRoomFragment
         }
@@ -109,8 +111,12 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         initColor()
         initRecyclerMessage()
 
+        var autoQiscusMessage: QMessage? = null
+        var isAutoSendMessage = false
         arguments?.let {
             qiscusChatRoom = it.getParcelable(CHATROOM_KEY)
+            autoQiscusMessage = it.getParcelable(MESSAGE_KEY)
+            isAutoSendMessage = it.getBoolean(AUTO_MESSAGE_KEY)
         }
 
         if (qiscusChatRoom == null) {
@@ -151,6 +157,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
         if (Build.VERSION.SDK_INT <= 28) {
             requestFilePermission()
+        }
+
+        autoQiscusMessage?.let {
+            if (isAutoSendMessage) {
+                presenter.sendComment(it)
+            } else {
+                etMessage.setText(it.text)
+            }
         }
     }
 
