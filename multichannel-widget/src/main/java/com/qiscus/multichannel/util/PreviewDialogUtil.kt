@@ -57,7 +57,7 @@ class PreviewDialogUtil {
             if (qMessage.type == QMessage.Type.VIDEO) {
                 exoPlayer = SimpleExoPlayer.Builder(context).build()
 
-                exoPlayer.addListener(object : Player.EventListener {
+                exoPlayer.addListener(object : Player.Listener {
                     override fun onPlaybackStateChanged(state: Int) {
                         super.onPlaybackStateChanged(state)
                         if (state == Player.STATE_READY) {
