@@ -103,6 +103,27 @@ qiscusMultichannelWidget.initiateChat()
 
 `startChat (Context)` : method to initiate chat and open Multichannel Widget Chat Room Activity
 
+## Auto send message and Manual Send Message when open Chat
+
+```
+// 1
+qiscusMultichannelWidget.initiateChat()
+      .automaticSendMessage("testing automatic")
+     
+        
+//2
+val messageModel = QMessage()
+qMessage.text = "testing automatic"
+        
+qiscusMultichannelWidget.initiateChat()
+      .automaticSendMessage(qMessage)
+        
+        
+//3
+qiscusMultichannelWidget.initiateChat()
+      .manualSendMessage("testing manual")
+```
+
 ### Clear User
 
 Use this function to clear the logged-in users.
