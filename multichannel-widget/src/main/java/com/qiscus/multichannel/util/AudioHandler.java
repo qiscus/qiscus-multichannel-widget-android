@@ -83,7 +83,7 @@ public class AudioHandler implements MediaPlayer.OnPreparedListener, MediaPlayer
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.prepare();
         } catch (IOException e) {
-            e.printStackTrace();
+
         }
     }
 
@@ -149,7 +149,7 @@ public class AudioHandler implements MediaPlayer.OnPreparedListener, MediaPlayer
                 mediaPlayer.release();
             }
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+
         }
     }
 
@@ -233,7 +233,7 @@ public class AudioHandler implements MediaPlayer.OnPreparedListener, MediaPlayer
             context.unregisterReceiver(broadcastReceiver);
             abandonAudioFocus();
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
     }
 
@@ -281,8 +281,8 @@ public class AudioHandler implements MediaPlayer.OnPreparedListener, MediaPlayer
                 try {
                     if (isListened) onPlayingAudio(mediaPlayer.getCurrentPosition());
                     Thread.sleep(200);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (InterruptedException e) {
+
                 }
             }
         }

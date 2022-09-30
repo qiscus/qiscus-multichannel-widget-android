@@ -417,7 +417,7 @@ public class QiscusTouchImageView extends AppCompatImageView {
             setScaleType(scaleType);
         }
         resetZoom();
-        scaleImage(scale, viewWidth / 2, viewHeight / 2, true);
+        scaleImage(scale, viewWidth / 2f, viewHeight / 2f, true);
         matrix.getValues(m);
         m[Matrix.MTRANS_X] = -((focusX * getImageWidth()) - (viewWidth * 0.5f));
         m[Matrix.MTRANS_Y] = -((focusY * getImageHeight()) - (viewHeight * 0.5f));
@@ -454,7 +454,7 @@ public class QiscusTouchImageView extends AppCompatImageView {
         int drawableWidth = drawable.getIntrinsicWidth();
         int drawableHeight = drawable.getIntrinsicHeight();
 
-        PointF point = transformCoordTouchToBitmap(viewWidth / 2, viewHeight / 2, true);
+        PointF point = transformCoordTouchToBitmap(viewWidth / 2f, viewHeight / 2f, true);
         point.x /= drawableWidth;
         point.y /= drawableHeight;
         return point;
