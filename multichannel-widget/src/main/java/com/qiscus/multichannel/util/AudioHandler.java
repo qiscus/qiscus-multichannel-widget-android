@@ -282,7 +282,7 @@ public class AudioHandler implements MediaPlayer.OnPreparedListener, MediaPlayer
                     if (isListened) onPlayingAudio(mediaPlayer.getCurrentPosition());
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
-
+                    //ignored
                 }
             }
         }

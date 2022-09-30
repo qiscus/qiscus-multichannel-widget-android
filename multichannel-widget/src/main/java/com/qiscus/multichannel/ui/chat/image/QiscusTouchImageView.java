@@ -1064,7 +1064,7 @@ public class QiscusTouchImageView extends AppCompatImageView {
 
             if (animateToZoomBoundary) {
                 DoubleTapZoom doubleTap = new DoubleTapZoom(targetZoom,
-                        viewWidth / 2, viewHeight / 2, true);
+                        viewWidth / 2f, viewHeight / 2f, true);
                 compatPostOnAnimation(doubleTap);
             }
         }
@@ -1105,7 +1105,7 @@ public class QiscusTouchImageView extends AppCompatImageView {
             // Used for translating image during scaling
             //
             startTouch = transformCoordBitmapToTouch(bitmapX, bitmapY);
-            endTouch = new PointF(viewWidth / 2, viewHeight / 2);
+            endTouch = new PointF(viewWidth / 2f, viewHeight / 2f);
         }
 
         @Override
