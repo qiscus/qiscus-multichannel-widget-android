@@ -1,12 +1,16 @@
 package com.qiscus.multichannel.ui.chat
 
+import android.app.AlarmManager
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -108,6 +112,8 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             )
             .commit()
 
+        setAlarmManager()
+        
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
@@ -277,6 +283,31 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             }
             QiscusMqttStatusEvent.DISCONNECTED -> {
                 Log.i("test_mqtt:", "disconnected")
+            }
+        }
+    }
+
+    private fun setAlarmManager() {
+        val alarmMgr = this.getSystemService(ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+            if (!alarmMgr.canScheduleExactAlarms()) {
+                val alertBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+                    .setCancelable(true)
+                    .setTitle("Permission necessary")
+                    .setMessage("Schedule Exact Alarm permission is necessary for realtime")
+                    .setPositiveButton(android.R.string.yes) { dialog, which ->
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            val intent = Intent(
+                                Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                                Uri.parse("package:" + this.packageName)
+                            )
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            this.applicationContext.startActivity(intent)
+                        }
+                    }
+                val alert: AlertDialog = alertBuilder.create()
+                alert.show()
             }
         }
     }
