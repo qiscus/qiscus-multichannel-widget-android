@@ -21,7 +21,6 @@ class QiscusAudioRecorder {
     private var recording = false
 
     @Throws(IOException::class)
-
     fun startRecording(context: Context) {
         val timeStamp =
             SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
@@ -41,13 +40,13 @@ class QiscusAudioRecorder {
             this.fileName = fileName
             recording = true
             recorder = MediaRecorder()
-            recorder?.let { recorder ->
-                recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
-                recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-                recorder.setOutputFile(fileName)
-                recorder.prepare()
-                recorder.start()
+            recorder!!.let {
+                it.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                it.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                it.setAudioSource(MediaRecorder.AudioSource.MIC)
+                it.setOutputFile(fileName)
+                it.prepare()
+                it.start()
             }
         }
     }
@@ -67,7 +66,7 @@ class QiscusAudioRecorder {
                 }
                 recorder = null
             } catch (e: Exception) {
-                e.printStackTrace()
+                // ignored
             }
         }
     }

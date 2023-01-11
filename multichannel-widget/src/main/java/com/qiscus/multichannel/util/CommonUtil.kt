@@ -18,7 +18,7 @@ fun Context.showToast(message: String) {
 }
 
 fun getAuthority(): String {
-    return MultichannelConst.qiscusCore()?.apps?.packageName!!
+    return MultichannelConst.qiscusCore()!!.apps.packageName
 }
 
 fun EditText.afterTextChangedDelayed(
@@ -26,7 +26,7 @@ fun EditText.afterTextChangedDelayed(
     afterTextChanged: (String) -> Unit
 ) {
     this.addTextChangedListener(object : TextWatcher {
-        var timer: CountDownTimer? = null
+        private var timer: CountDownTimer? = null
 
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             beforeTextChanged()

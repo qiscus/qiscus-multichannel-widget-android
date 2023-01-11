@@ -1,9 +1,7 @@
 package com.qiscus.multichannel.ui.chat.viewholder
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
@@ -12,9 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.core.util.PatternsCompat
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -25,7 +21,6 @@ import com.qiscus.multichannel.ui.chat.CommentsAdapter
 import com.qiscus.multichannel.ui.webView.WebViewHelper
 import com.qiscus.multichannel.util.MultichannelConst
 import com.qiscus.multichannel.util.ResourceManager
-import com.qiscus.multichannel.util.getAuthority
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import org.json.JSONObject

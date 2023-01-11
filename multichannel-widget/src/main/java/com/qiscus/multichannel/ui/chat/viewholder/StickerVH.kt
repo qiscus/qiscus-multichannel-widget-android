@@ -1,7 +1,6 @@
 package com.qiscus.multichannel.ui.chat.viewholder
 
 import android.view.View
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.multichannel.QiscusMultichannelWidgetColor
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig

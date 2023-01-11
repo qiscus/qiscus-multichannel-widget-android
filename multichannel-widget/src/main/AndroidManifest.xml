@@ -3,20 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.qiscus.multichannel">
 
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <queries>
+
         <!-- Browser -->
         <intent>
             <action android:name="android.media.browse.MediaBrowserService" />
         </intent>
-
         <intent>
             <action android:name="android.intent.action.VIEW" />
+
             <data android:scheme="https" />
         </intent>
 
@@ -33,49 +28,28 @@
 
     <application>
         <activity
-            android:name="com.qiscus.multichannel.ui.loading.LoadingActivity"
+            android:name=".ui.loading.LoadingActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name="com.qiscus.multichannel.ui.chat.image.ImageMessageActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:name=".ui.chat.image.ImageMessageActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name="com.qiscus.multichannel.ui.chat.ChatRoomActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="com.qiscus.example.mybb" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="com.qiscus.example.mybb"
-                    android:scheme="https" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="com.qiscus.example.mybb" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="link.qiscus.chat"
-                    android:scheme="http" />
-            </intent-filter>
-        </activity>
+            android:name=".ui.chat.ChatRoomActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name="com.qiscus.multichannel.ui.webView.WebViewActivity"
+            android:name=".ui.webView.WebViewActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <receiver
-            android:name="com.qiscus.multichannel.util.NotificationClickReceiver"
+            android:name=".util.NotificationClickReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.qiscus.OPEN_COMMENT_PN" />
             </intent-filter>
         </receiver>
+        <activity
+            android:name=".ui.test.BlankForTestActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
 </manifest>

@@ -54,7 +54,7 @@ interface MultichanelChatWidget {
         userId: String,
         name: String,
         avatar: String,
-        userProperties: Map<String, String>? = null
+        userProperties: Map<String, String>?
     )
 
     fun loginMultiChannel(

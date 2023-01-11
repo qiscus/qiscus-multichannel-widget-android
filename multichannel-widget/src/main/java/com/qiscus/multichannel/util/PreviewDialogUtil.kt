@@ -29,82 +29,85 @@ import org.json.JSONObject
 
 class PreviewDialogUtil {
 
-    companion object {
-        fun dialogViewImage(
-            context: Context,
-            qMessage: QMessage
-        ) {
-            val mDialog =
-                LayoutInflater.from(context).inflate(R.layout.image_dialog_view_mc, null)
+    private var mDialog: View? = null
 
-            var exoPlayer: SimpleExoPlayer? = null
-            val imageView = mDialog.findViewById<ImageView>(R.id.ivDialogView)
-            val videoView = mDialog.findViewById<PlayerView>(R.id.exoplayerView)
-            val ibDialogView = mDialog.findViewById<ImageButton>(R.id.ibDialogView)
-            val tvSender = mDialog.findViewById<TextView>(R.id.tvSender)
-            val tvDescription = mDialog.findViewById<TextView>(R.id.tvDescription)
-            val tvDate = mDialog.findViewById<TextView>(R.id.tvDate)
+    fun dialogViewImage(
+        context: Context,
+        qMessage: QMessage
+    ) {
+        mDialog =
+            LayoutInflater.from(context).inflate(R.layout.image_dialog_view_mc, null)
 
-            tvSender.text = qMessage.sender.name
-            tvDate.text = QiscusDateUtil.toFullDateFormat(qMessage.timestamp)
-            if (qMessage.type != QMessage.Type.TEXT) {
-                val content = JSONObject(qMessage.payload)
-                tvDescription.text = content.optString("caption")
-            } else {
-                tvDescription.text = ""
-            }
+        var exoPlayer: SimpleExoPlayer? = null
+        val imageView = mDialog!!.findViewById<ImageView>(R.id.ivDialogView)
+        val videoView = mDialog!!.findViewById<PlayerView>(R.id.exoplayerView)
+        val ibDialogView = mDialog!!.findViewById<ImageButton>(R.id.ibDialogView)
+        val tvSender = mDialog!!.findViewById<TextView>(R.id.tvSender)
+        val tvDescription = mDialog!!.findViewById<TextView>(R.id.tvDescription)
+        val tvDate = mDialog!!.findViewById<TextView>(R.id.tvDate)
 
+        tvSender.text = qMessage.sender.name
+        tvDate.text = QiscusDateUtil.toFullDateFormat(qMessage.timestamp)
+        if (qMessage.type != QMessage.Type.TEXT) {
+            val content = JSONObject(qMessage.payload)
+            tvDescription.text = content.optString("caption")
+        } else {
+            tvDescription.text = ""
+        }
+
+        if (qMessage.type == QMessage.Type.VIDEO) {
+            exoPlayer = SimpleExoPlayer.Builder(context).build()
+
+            exoPlayer.addListener(object : Player.Listener {
+                override fun onPlaybackStateChanged(state: Int) {
+                    super.onPlaybackStateChanged(state)
+                    if (state == Player.STATE_READY) {
+                        imageView.visibility = View.GONE
+                        videoView.visibility = View.VISIBLE
+                    }
+                }
+            })
+
+            exoPlayer.setMediaSource(createMediaSource(context, qMessage.attachmentUri))
+            exoPlayer.prepare()
+
+            videoView.player = exoPlayer
+            exoPlayer.playWhenReady = true
+        } else if (qMessage.type == QMessage.Type.IMAGE) {
+            Nirmana.getInstance().get()
+                .load(qMessage.attachmentUri.toString())
+                .fitCenter()
+                .into(imageView)
+            imageView.visibility = View.VISIBLE
+            videoView.visibility = View.GONE
+        }
+        val dialogBuilder = AlertDialog.Builder(context, R.style.CustomeDialogFull)
+            .setView(mDialog)
+        val dialog = dialogBuilder.show()
+
+        ibDialogView.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setOnDismissListener {
             if (qMessage.type == QMessage.Type.VIDEO) {
-                exoPlayer = SimpleExoPlayer.Builder(context).build()
-
-                exoPlayer.addListener(object : Player.Listener {
-                    override fun onPlaybackStateChanged(state: Int) {
-                        super.onPlaybackStateChanged(state)
-                        if (state == Player.STATE_READY) {
-                            imageView.visibility = View.GONE
-                            videoView.visibility = View.VISIBLE
-                        }
-                    }
-                })
-
-                exoPlayer.setMediaSource(createMediaSource(context, qMessage.attachmentUri))
-                exoPlayer.prepare()
-
-                videoView.player = exoPlayer
-                exoPlayer.playWhenReady = true
-            } else {
-                Nirmana.getInstance().get()
-                    .load(qMessage.attachmentUri.toString())
-                    .fitCenter()
-                    .into(imageView)
-                imageView.visibility = View.VISIBLE
-                videoView.visibility = View.GONE
-            }
-            val dialogBuilder = AlertDialog.Builder(context, R.style.CustomeDialogFull)
-                .setView(mDialog)
-            val dialog = dialogBuilder.show()
-
-            ibDialogView.setOnClickListener {
-                dialog.dismiss()
-            }
-
-            dialog.setOnDismissListener {
-                if (qMessage.type == QMessage.Type.VIDEO) {
-                    exoPlayer?.let {
-                        it.stop()
-                        it.release()
-                    }
+                exoPlayer!!.let {
+                    it.stop()
+                    it.release()
                 }
             }
         }
+    }
 
-        fun createMediaSource(
-            context: Context,
-            uri: Uri
-        ): MediaSource {
-            val factory: DataSource.Factory = DefaultDataSourceFactory(context, Util.getUserAgent(context, context.getString(R.string.app_name)))
+    fun createMediaSource(
+        context: Context,
+        uri: Uri
+    ): MediaSource {
+        val factory: DataSource.Factory = DefaultDataSourceFactory(
+            context,
+            Util.getUserAgent(context, context.getString(R.string.app_name))
+        )
 
-            return ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri))
-        }
+        return ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri))
     }
 }

@@ -33,11 +33,10 @@ class WebViewActivity : AppCompatActivity() {
             tv_title.text = view.title
             tv_url.text = view.url
             if (url.startsWith("intent://") && url.contains("scheme=http")) {
-                var bkpUrl: String? = null
                 val regexBkp: Pattern = Pattern.compile("intent://(.*?)#")
                 val regexMatcherBkp: Matcher = regexBkp.matcher(url)
                 if (regexMatcherBkp.find()) {
-                    bkpUrl = regexMatcherBkp.group(1)
+                    val bkpUrl = regexMatcherBkp.group(1)
                     val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://$bkpUrl"))
                     startActivity(myIntent)
                     finish()

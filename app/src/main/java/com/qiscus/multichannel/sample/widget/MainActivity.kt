@@ -1,6 +1,5 @@
 package com.qiscus.multichannel.sample.widget
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log

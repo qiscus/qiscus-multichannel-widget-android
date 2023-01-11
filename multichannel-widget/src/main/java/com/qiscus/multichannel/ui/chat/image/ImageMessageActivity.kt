@@ -37,6 +37,7 @@ import com.qiscus.jupuk.JupukConst
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.data.model.ImageToSend
+import com.qiscus.multichannel.ui.chat.image.ImagePagerAdapter
 import com.qiscus.multichannel.util.*
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.data.model.QChatRoom

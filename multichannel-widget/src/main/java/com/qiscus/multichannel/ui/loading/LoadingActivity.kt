@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Message
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.qiscus.multichannel.QiscusMultichannelWidget
@@ -106,7 +105,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
 
     override fun onSuccess(room: QChatRoom) {
         ChatRoomActivity.generateIntent(
-            this, room, getQMessage(room.id), isAutoSendMEssage, false
+            this, room, getQMessage(room.id), isAutoSendMEssage, isTest = false, clearTaskActivity = false
         )
         finish()
     }

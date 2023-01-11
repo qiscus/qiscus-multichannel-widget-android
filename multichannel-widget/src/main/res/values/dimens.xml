@@ -25,4 +25,5 @@
     <dimen name="margin_chat_from">10dp</dimen>
     <dimen name="margin_time_message">-82dp</dimen>
     <dimen name="appbar_size">58dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

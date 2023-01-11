@@ -4,7 +4,6 @@ import com.qiscus.multichannel.data.local.QiscusChatLocal
 import com.qiscus.multichannel.data.model.user.UserProperties
 import com.qiscus.multichannel.util.MultichanelChatWidget
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
-import com.qiscus.sdk.chat.core.data.model.QMessage
 
 /**
  * Created on : 04/03/20

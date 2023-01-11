@@ -2,7 +2,6 @@ package com.qiscus.multichannel.ui.chat.viewholder
 
 import android.view.View
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import com.qiscus.multichannel.QiscusMultichannelWidgetColor
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.R

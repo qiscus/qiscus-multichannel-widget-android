@@ -36,7 +36,7 @@ internal object MultichannelConst {
             try {
                 throw Exception("QiscusCore null")
             } catch (e: Exception) {
-                e.printStackTrace()
+               // ignore
             }
             null
         }

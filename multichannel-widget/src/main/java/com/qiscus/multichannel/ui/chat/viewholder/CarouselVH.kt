@@ -1,9 +1,6 @@
 package com.qiscus.multichannel.ui.chat.viewholder
 
-import android.content.res.ColorStateList
-import android.os.Build
 import android.view.View
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,14 +9,9 @@ import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.ui.chat.CarouselAdapter
 import com.qiscus.multichannel.ui.chat.CommentsAdapter
-import com.qiscus.multichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import kotlinx.android.synthetic.main.item_carousel_mc.view.*
 import org.json.JSONObject
-import android.graphics.drawable.GradientDrawable
-
-
-
 
 
 /**

@@ -127,7 +127,7 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
                     "{}",
                     userProp,
                     {
-                        loadChatRoom(context, initiateCallback)
+                        loadChatRoom(context, false, initiateCallback)
                     },
                     { throwable ->
                         initiateCallback?.onError(throwable)
@@ -136,14 +136,14 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
         }
     }
 
-    private fun loadChatRoom(context: Context, initiateCallback: InitiateCallback?) {
+    private fun loadChatRoom(context: Context, isTest: Boolean, initiateCallback: InitiateCallback?) {
         multichannelWidget.openChatRoomById(QiscusChatLocal.getRoomId(), {
             val qiscusMessage: QMessage? = getQMessage(it.id)
 
             if (initiateCallback != null) {
                 initiateCallback.onSuccess(it, qiscusMessage, isAutomatic)
             } else {
-                ChatRoomActivity.generateIntent(context, it, qiscusMessage, isAutomatic, false)
+                ChatRoomActivity.generateIntent(context, it, qiscusMessage, isAutomatic, isTest, false)
             }
         }, {
             initiateCallback?.onError(it)

@@ -10,7 +10,7 @@ import com.qiscus.multichannel.util.MultichannelNotificationListener
  * Author     : Taufik Budi S
  * GitHub     : https://github.com/tfkbudi
  */
-class QiscusMultichannelWidgetConfig {
+open class QiscusMultichannelWidgetConfig {
 
     private var notificationIcon: Int = R.drawable.ic_notification
     private var enableLog: Boolean = false

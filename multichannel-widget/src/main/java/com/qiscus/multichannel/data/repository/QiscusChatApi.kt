@@ -1,7 +1,7 @@
 package com.qiscus.multichannel.data.repository
 
 import com.qiscus.multichannel.data.model.DataInitialChat
-import com.qiscus.multichannel.data.repository.response.ResponseInitiateChat
+import com.qiscus.multichannel.data.model.response.ResponseInitiateChat
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call

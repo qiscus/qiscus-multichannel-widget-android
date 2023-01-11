@@ -53,9 +53,9 @@ object ResourceManager {
         dimen * displayMetrics.density
 
     fun getColor(@ColorRes color: Int?, @ColorRes id: Int): Int =
-        ContextCompat.getColor(MultichannelConst.qiscusCore()?.apps!!, color ?: id)
+        ContextCompat.getColor(MultichannelConst.qiscusCore()!!.apps, color ?: id)
 
-    fun getTintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? {
+    fun getTintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable {
         val wrappedDrawable = DrawableCompat.wrap(drawable!!)
         DrawableCompat.setTint(wrappedDrawable, color)
         return wrappedDrawable

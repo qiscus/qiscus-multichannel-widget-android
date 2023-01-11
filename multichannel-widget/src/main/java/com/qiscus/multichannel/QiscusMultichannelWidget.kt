@@ -325,7 +325,7 @@ class QiscusMultichannelWidget private constructor(
         }
 
         openChatRoomById(roomId, {
-            ChatRoomActivity.generateIntent(context, it, qMessage, isAutoSendMessage, clearTaskActivity)
+            ChatRoomActivity.generateIntent(context, it, qMessage, isAutoSendMessage, false, clearTaskActivity)
         }, {
             onError(it)
         })
@@ -373,14 +373,15 @@ class QiscusMultichannelWidget private constructor(
     ): Boolean {
         MultichannelConst.setAllQiscusCore(qiscusCores)
         try {
-            val msg = JSONObject(remoteMessage.data["payload"]).get("room_options").toString()
-            if (JSONObject(msg).get("app_code") == getAppId()) {
-                MultichannelConst.qiscusCore()?.firebaseMessagingUtil?.handleMessageReceived(
-                    remoteMessage
-                )
-                return true
+            remoteMessage.data["payload"]?.let {
+                val msg = JSONObject(it).get("room_options").toString()
+                if (JSONObject(msg).get("app_code") == getAppId()) {
+                    MultichannelConst.qiscusCore()?.firebaseMessagingUtil?.handleMessageReceived(
+                        remoteMessage
+                    )
+                    return true
+                }
             }
-
         } catch (e: Exception) {
             return false
         }

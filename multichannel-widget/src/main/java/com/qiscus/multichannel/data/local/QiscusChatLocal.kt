@@ -14,7 +14,7 @@ import org.json.JSONObject
  */
 object QiscusChatLocal {
 
-    private var sharedPreferences: SharedPreferences = MultichannelConst.qiscusCore()?.apps!!
+    private var sharedPreferences: SharedPreferences = MultichannelConst.qiscusCore()!!.apps
         .getSharedPreferences("qiscus_multichannel_chat", Context.MODE_PRIVATE)
 
     fun getPref(): SharedPreferences {
@@ -61,8 +61,8 @@ object QiscusChatLocal {
         getEditor().putString("qm_user_id", userId).apply()
     }
 
-    fun getUserId(): String {
-        return getPref().getString("qm_user_id","") ?: ""
+    fun getUserId(): String? {
+        return getPref().getString("qm_user_id","")
     }
 
     fun saveAvatar(avatar: String?) {
@@ -70,7 +70,7 @@ object QiscusChatLocal {
     }
 
     fun getAvatar(): String? {
-        return getPref().getString("qm_avatar","") ?: null
+        return getPref().getString("qm_avatar","")
     }
 
     fun clearPreferences() {

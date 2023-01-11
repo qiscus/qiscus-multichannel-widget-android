@@ -60,10 +60,11 @@ object DateUtil {
         val dayText = day.format(date)
         val month = month1.format(date)
         var monthText = ""
+
         if (month == "01") {
             monthText = "Januari"
         } else if (month == "02") {
-            monthText = "Febuari"
+            monthText = "Februari"
         } else if (month == "03") {
             monthText = "Maret"
         } else if (month == "04") {
@@ -73,7 +74,7 @@ object DateUtil {
         } else if (month == "06") {
             monthText = "Juni"
         } else if (month == "07") {
-            monthText = "July"
+            monthText = "Juli"
         } else if (month == "08") {
             monthText = "Agustus"
         } else if (month == "09") {
@@ -82,11 +83,10 @@ object DateUtil {
             monthText = "Oktober"
         } else if (month == "11") {
             monthText = "November"
-        } else if (month == "12") {
+        } else {
             monthText = "Desember"
         }
         val yearsText = years.format(date)
-        val time = getTimeStringFromDate(date)
         return "$dayText $monthText $yearsText"
     }
 

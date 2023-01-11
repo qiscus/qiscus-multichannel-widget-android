@@ -84,7 +84,6 @@ class PNUtil {
                 .setContentIntent(pendingIntent)
                 .setContentText(getContent(context, qiscusComment))
                 .setTicker(getContent(context, qiscusComment))
-                //@TODO Change background image
                 .setSmallIcon(QiscusMultichannelWidget.instance.getConfig().getNotificationIcon())
                 .setColor(ContextCompat.getColor(context, R.color.qiscus_notification_mc))
                 .setGroup("CHAT_NOTIF_" + qiscusComment.chatRoomId)

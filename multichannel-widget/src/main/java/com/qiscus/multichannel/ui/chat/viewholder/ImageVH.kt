@@ -23,7 +23,7 @@ open class ImageVH(
     override fun bind(comment: QMessage) {
         super.bind(comment)
         thumbnail.setOnClickListener {
-            PreviewDialogUtil.dialogViewImage(itemView.context, comment)
+            PreviewDialogUtil().dialogViewImage(itemView.context, comment)
         }
 
         thumbnail.setOnLongClickListener {
