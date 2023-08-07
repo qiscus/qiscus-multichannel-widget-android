@@ -11,7 +11,7 @@
         android:layout_height="60dp">
 
         <ImageButton
-            android:id="@+id/btn_action_delete"
+            android:id="@+id/btnActionDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -24,7 +24,7 @@
             tools:ignore="VectorDrawableCompat" />
 
         <ImageButton
-            android:id="@+id/btn_action_copy"
+            android:id="@+id/btnActionCopy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -37,7 +37,7 @@
             tools:ignore="VectorDrawableCompat" />
 
         <ImageButton
-            android:id="@+id/btn_action_reply"
+            android:id="@+id/btnActionReply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -50,7 +50,7 @@
             tools:ignore="VectorDrawableCompat" />
 
         <ImageButton
-            android:id="@+id/btn_action_reply_cancel"
+            android:id="@+id/btnActionReplyCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"

@@ -83,7 +83,7 @@ abstract class SortedRecyclerViewAdapter<Item, VH : RecyclerView.ViewHolder> :
 
         val size = data.size() - 1
         for (i in size downTo 0) {
-            if (data.get(i)!!.equals(item)) {
+            if (data.get(i)!! == item) {
                 return i
             }
         }

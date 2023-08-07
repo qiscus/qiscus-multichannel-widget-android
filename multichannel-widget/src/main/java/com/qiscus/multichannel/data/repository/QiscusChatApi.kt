@@ -8,6 +8,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import rx.Observable
 
 object QiscusChatApi {
     fun create(isEnableLog: Boolean): Api {
@@ -34,6 +35,8 @@ object QiscusChatApi {
         @GET("{appCode}/get_session")
         fun sessionalCheck(@Path("appCode") appCode: String?): Call<ResponseInitiateChat>
 
+        /*@GET("api/v1/qiscus/room/{room_id}/user_info")
+        fun getUserInfo(@Path("room_id") roomId: Long?): Observable<UserInfo?>?*/
     }
 }
 

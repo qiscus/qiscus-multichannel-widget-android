@@ -28,7 +28,7 @@ object QiscusPermissionsUtil {
 
     fun hasPermissions(context: Context, perms: Array<String>): Boolean {
         // Always return true for SDK < M, let the system deal with the permissions
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (BuildVersionProviderUtil.get().isUnder(Build.VERSION_CODES.M)) {
             Log.w(TAG, "hasPermissions: API version < M, returning true by default")
             return true
         }
@@ -81,8 +81,8 @@ object QiscusPermissionsUtil {
                 .setMessage(rationale)
                 .setPositiveButton(
                     positiveButton
-                ) { dialog1, which -> executePermissionsRequest(obj, perms, requestCode) }
-                .setNegativeButton(negativeButton) { dialog12, which ->
+                ) { _, _ -> executePermissionsRequest(obj, perms, requestCode) }
+                .setNegativeButton(negativeButton) { _, _ ->
                     // act as if the permissions were denied
                     callbacks.onPermissionsDenied(requestCode, Arrays.asList(*perms))
                 }.create()
@@ -144,7 +144,7 @@ object QiscusPermissionsUtil {
 
                 val dialog = AlertDialog.Builder(activity)
                     .setMessage(rationale)
-                    .setPositiveButton(positiveButton) { dialog1, which ->
+                    .setPositiveButton(positiveButton) { _, _ ->
                         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                         val uri = Uri.fromParts("package", activity.packageName, null)
                         intent.data = uri
@@ -231,7 +231,7 @@ object QiscusPermissionsUtil {
         val isActivity = obj is Activity
         val isSupportFragment = obj is Fragment
         val isAppFragment = obj is android.app.Fragment
-        val isMinSdkM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+        val isMinSdkM = BuildVersionProviderUtil.get().isSamesOrAbove(Build.VERSION_CODES.M)
 
         if (!(isSupportFragment || isActivity || isAppFragment && isMinSdkM)) {
             if (isAppFragment) {

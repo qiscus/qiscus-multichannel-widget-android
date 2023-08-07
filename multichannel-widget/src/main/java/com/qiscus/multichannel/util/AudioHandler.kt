@@ -20,14 +20,14 @@ import java.util.concurrent.atomic.AtomicBoolean
  * Author     : mmnuradityo
  * GitHub     : https://github.com/mmnuradityo
  */
-class AudioHandler(private val context: Context) : OnPreparedListener, OnCompletionListener,
+open class AudioHandler(private val context: Context) : OnPreparedListener, OnCompletionListener,
     OnSeekCompleteListener {
 
     private val observer: MediaObserver
     private val audioManager: AudioManager
     private val broadcastReceiver: BroadcastReceiver
-    private var mediaPlayer: MediaPlayer?
-    private var playerState = STATE_STOP
+    private var mediaPlayer: MediaPlayer? = null
+    private var playerState: Int = STATE_STOP
     private var focusRequest: AudioFocusRequest? = null
     private var audioId: Long = 0
     private var isListened = true
@@ -44,10 +44,12 @@ class AudioHandler(private val context: Context) : OnPreparedListener, OnComplet
         this.resumePosition = resumePosition
         playerState = STATE_PLAY
         try {
-            mediaPlayer!!.reset()
-            mediaPlayer!!.setDataSource(mediaPath)
-            mediaPlayer!!.setOnPreparedListener(this)
-            mediaPlayer!!.prepare()
+            mediaPlayer?.let {
+                it.reset()
+                it.setOnPreparedListener(this)
+                it.setDataSource(mediaPath)
+                it.prepare()
+            }
         } catch (e: IOException) {
             // ignored
         }
@@ -218,9 +220,9 @@ class AudioHandler(private val context: Context) : OnPreparedListener, OnComplet
     }
 
     companion object {
-        const val STATE_STOP = 0
-        const val STATE_PAUSE = 1
-        const val STATE_PLAY = 2
+        const val STATE_STOP: Int = 0
+        const val STATE_PAUSE: Int = 1
+        const val STATE_PLAY: Int = 2
     }
 
     init {

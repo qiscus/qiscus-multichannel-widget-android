@@ -15,10 +15,10 @@ class EventVH(
 ) : BaseViewHolder(itemView, config, color) {
 
     private val strokeSize = ResourceManager.getDimen(itemView.resources.displayMetrics, 1).toInt()
-    private val tvEvent: TextView? = itemView.findViewById(R.id.tvEvent)
+    private val tvEvent: TextView = itemView.findViewById(R.id.tvEvent)
 
     init {
-        tvEvent?.let {
+        tvEvent.let {
             it.background = ResourceManager.getBgEventDrawable(
                 strokeSize, color.getSystemEventTextColor()
             )
@@ -28,7 +28,7 @@ class EventVH(
 
     override fun bind(comment: QMessage) {
         super.bind(comment)
-        tvEvent?.text = comment.text
+        tvEvent.text = comment.text
 
         if (!config.isShowSystemMessage()) hidenUI()
     }

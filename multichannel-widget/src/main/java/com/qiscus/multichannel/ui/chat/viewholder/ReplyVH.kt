@@ -3,47 +3,51 @@ package com.qiscus.multichannel.ui.chat.viewholder
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
-import android.text.Spannable
 import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ClickableSpan
 import android.view.View
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
-import androidx.core.util.PatternsCompat
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.multichannel.QiscusMultichannelWidgetColor
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.ui.chat.CommentsAdapter
-import com.qiscus.multichannel.ui.webView.WebViewHelper
-import com.qiscus.multichannel.util.MultichannelConst
-import com.qiscus.multichannel.util.MultichannelQMessageUtils
-import com.qiscus.multichannel.util.ResourceManager
+import com.qiscus.multichannel.util.*
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.data.model.QMessage
-import kotlinx.android.synthetic.main.item_my_reply_mc.view.*
 import org.json.JSONObject
-import java.util.regex.Matcher
 
 /**
  * Created on : 28/08/19
  * Author     : Taufik Budi S
  * GitHub     : https://github.com/tfkbudi
  */
+@SuppressLint("NewApi")
 class ReplyVH(
     itemView: View,
     config: QiscusMultichannelWidgetConfig,
     color: QiscusMultichannelWidgetColor,
     private val listener: CommentsAdapter.ItemViewListener?,
     private val viewType: Int
-) : BaseViewHolder(itemView, config, color) {
+) : BaseViewHolder(itemView, config, color), SpannableUtils.ClickSpan.OnSpanListener {
 
     private var origin: QMessage? = null
-    private val qiscusAccount = MultichannelConst.qiscusCore()?.qiscusAccount!!
+    private val qiscusAccount = MultichannelConst.qiscusCore()!!.qiscusAccount
+    private val containerReply = itemView.findViewById<LinearLayoutCompat>(R.id.container_reply)
+    private val tvChat = itemView.findViewById<TextView>(R.id.tv_chat)
+    private val tvRepliedUsername = itemView.findViewById<TextView>(R.id.tv_replied_username)
+    private val tvRepliedMessage = itemView.findViewById<TextView>(R.id.tv_replied_message)
+    private val ivPlay = itemView.findViewById<ImageView>(R.id.iv_play)
+    private val imgRepliedImage = itemView.findViewById<ImageView>(R.id.img_replied_image)
+    private val vsReply = itemView.findViewById<RelativeLayout>(R.id.vs_reply)
+    private val spannableUtils: SpannableUtils
 
     init {
+        spannableUtils = SpannableUtils(itemView.context, this)
         val backgroundColor: Int
         val colorText: Int
 
@@ -55,18 +59,18 @@ class ReplyVH(
             colorText = color.getLeftBubbleTextColor()
         }
 
-        itemView.container_reply.background = ResourceManager.getTintDrawable(
+        containerReply.background = ResourceManager.getTintDrawable(
             ContextCompat.getDrawable(
                 itemView.context,
                 R.drawable.qiscus_rounded_chat_bg_mc
             ), backgroundColor
         )
-        itemView.tv_chat.setTextColor(colorText)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            itemView.iv_play.imageTintList = ColorStateList.valueOf(color.getNavigationColor())
+        tvChat.setTextColor(colorText)
+        if (BuildVersionProviderUtil.get().isSamesOrAbove(Build.VERSION_CODES.LOLLIPOP)) {
+            ivPlay.imageTintList = ColorStateList.valueOf(color.getNavigationColor())
         }
 
-        itemView.vs_reply.setOnClickListener { v ->
+        vsReply.setOnClickListener { v ->
             origin?.let {
                 listener?.onItemReplyClick(v, it)
             }
@@ -80,23 +84,23 @@ class ReplyVH(
         super.bind(comment)
         origin = comment.replyTo
 
-        itemView.tv_replied_username?.text =
+        tvRepliedUsername.text =
             if (qiscusAccount.id == origin?.sender?.id) itemView.context.getString(R.string.qiscus_you_mc) else origin?.sender?.name
 
-        itemView.tv_chat.text = comment.text
+        tvChat.text = comment.text
 
-        setUpLinks()
+        spannableUtils.setUpLinks(comment.text.lowercase())
 
         when (origin?.type) {
             QMessage.Type.IMAGE, QMessage.Type.VIDEO -> {
                 val obj = JSONObject(origin!!.payload)
-                itemView.img_replied_image.visibility = View.VISIBLE
+                imgRepliedImage.visibility = View.VISIBLE
 
-                itemView.iv_play.visibility =
+                ivPlay.visibility =
                     if (origin?.type == QMessage.Type.IMAGE) View.GONE else View.VISIBLE
 
-                itemView.tv_replied_message.text =
-                    if (obj.getString("caption") == "" ) {
+                tvRepliedMessage.text =
+                    if (obj.getString("caption") == "") {
                         if (origin?.type == QMessage.Type.IMAGE) "Image" else "Video"
                     } else obj.getString("caption")
 
@@ -109,15 +113,15 @@ class ReplyVH(
                             .error(R.drawable.qiscus_image_placeholder)
                             .skipMemoryCache(false)
                     )
-                    .into(itemView.img_replied_image)
+                    .into(imgRepliedImage)
             }
             QMessage.Type.FILE -> {
-                itemView.img_replied_image.visibility = View.VISIBLE
-                itemView.iv_play.visibility = View.GONE
+                imgRepliedImage.visibility = View.VISIBLE
+                ivPlay.visibility = View.GONE
 
-                itemView.tv_replied_message?.text =  MultichannelQMessageUtils.getFileName(origin?.text)
+                tvRepliedMessage.text = MultichannelQMessageUtils.getFileName(origin?.text)
 
-                itemView.img_replied_image.setImageDrawable(
+                imgRepliedImage.setImageDrawable(
                     ResourceManager.getTintDrawable(
                         ContextCompat.getDrawable(
                             itemView.context,
@@ -129,16 +133,20 @@ class ReplyVH(
                 )
             }
             else -> {
-                itemView.iv_play.visibility = View.GONE
-                itemView.img_replied_image.visibility = View.GONE
-                itemView.tv_replied_message.text = origin?.text
+                ivPlay.visibility = View.GONE
+                imgRepliedImage.visibility = View.GONE
+                tvRepliedMessage.text = origin?.text
             }
         }
     }
 
-    @SuppressLint("DefaultLocale", "RestrictedApi")
+    override fun onSpanResult(spanText: SpannableString) {
+        tvChat.text = spanText
+    }
+
+    /*@SuppressLint("DefaultLocale", "RestrictedApi")
     private fun setUpLinks() {
-        val text = itemView.tv_chat.text.toString().toLowerCase()
+        val text = tvChat.text.toString().toLowerCase()
         val matcher: Matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(text)
         while (matcher.find()) {
             val start: Int = matcher.start()
@@ -159,7 +167,7 @@ class ReplyVH(
     }
 
     private fun clickify(start: Int, end: Int, listener: ClickSpan.OnClickListener) {
-        val text: CharSequence = itemView.tv_chat.text.toString()
+        val text: CharSequence = tvChat.text.toString()
         val span = ClickSpan(listener)
         if (start == -1) {
             return
@@ -169,7 +177,7 @@ class ReplyVH(
         } else {
             val s: SpannableString = SpannableString.valueOf(text)
             s.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            itemView.tv_chat.text = s
+            tvChat.text = s
         }
     }
 
@@ -184,5 +192,5 @@ class ReplyVH(
             listener?.onClick()
         }
 
-    }
+    }*/
 }

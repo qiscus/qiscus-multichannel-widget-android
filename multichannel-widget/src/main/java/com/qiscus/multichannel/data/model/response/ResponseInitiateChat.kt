@@ -31,6 +31,9 @@ data class ResponseInitiateChat(
             @field:SerializedName("room_id")
             val roomId: String? = null,
 
+            @field:SerializedName("session_id")
+            val sessionId: String? = null,
+
             @field:SerializedName("room_badge")
             val roomBadge: String? = null,
 

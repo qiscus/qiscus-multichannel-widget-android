@@ -1,4 +1,4 @@
-package com.qiscus.multichannel.ui.webView
+package com.qiscus.multichannel.ui.webview
 
 import android.content.Context
 import android.content.Intent

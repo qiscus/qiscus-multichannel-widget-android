@@ -1,24 +1,17 @@
 package com.qiscus.multichannel.ui.chat.viewholder
 
-import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
-import android.net.Uri
-import android.text.Spannable
 import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.util.PatternsCompat
 import com.qiscus.multichannel.QiscusMultichannelWidgetColor
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.ui.chat.CommentsAdapter
-import com.qiscus.multichannel.ui.webView.WebViewHelper
 import com.qiscus.multichannel.util.ResourceManager
+import com.qiscus.multichannel.util.SpannableUtils
 import com.qiscus.sdk.chat.core.data.model.QMessage
-import java.util.regex.Matcher
 
 
 /**
@@ -31,11 +24,13 @@ class TextVH(
     config: QiscusMultichannelWidgetConfig,
     color: QiscusMultichannelWidgetColor,
     private val viewType: Int
-) : BaseViewHolder(itemView, config, color) {
+) : BaseViewHolder(itemView, config, color), SpannableUtils.ClickSpan.OnSpanListener {
 
     private val message: TextView = itemView.findViewById(R.id.tv_chat)
+    private val spanUtils: SpannableUtils
 
     init {
+        spanUtils = SpannableUtils(itemView.context, this)
         val backgroundColor: Int
         val colorText: Int
 
@@ -62,56 +57,11 @@ class TextVH(
     override fun bind(comment: QMessage) {
         super.bind(comment)
         message.text = comment.text
-        setUpLinks()
+        spanUtils.setUpLinks(message.text.toString())
     }
 
-    @SuppressLint("DefaultLocale", "RestrictedApi")
-    private fun setUpLinks() {
-        val text = message.text.toString()
-        val matcher: Matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(text)
-        while (matcher.find()) {
-            val start: Int = matcher.start()
-            if (start > 0 && text[start - 1] == '@') {
-                continue
-            }
-            val end: Int = matcher.end()
-            clickify(start, end, object : ClickSpan.OnClickListener {
-                override fun onClick() {
-                    var url = text.substring(start, end)
-                    if (!url.startsWith("http")) {
-                        url = "http://$url"
-                    }
-                    WebViewHelper.launchUrl(itemView.context, Uri.parse(url))
-                }
-            })
-        }
+    override fun onSpanResult(spanText: SpannableString) {
+        message.text = spanText
     }
 
-    private fun clickify(start: Int, end: Int, listener: ClickSpan.OnClickListener) {
-        val text: CharSequence = message.text.toString()
-        val span = ClickSpan(listener)
-        if (start == -1) {
-            return
-        }
-        if (text is Spannable) {
-            text.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        } else {
-            val s: SpannableString = SpannableString.valueOf(text)
-            s.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            message.text = s
-        }
-    }
-
-    private class ClickSpan(private val listener: OnClickListener?) :
-        ClickableSpan() {
-
-        interface OnClickListener {
-            fun onClick()
-        }
-
-        override fun onClick(widget: View) {
-            listener?.onClick()
-        }
-
-    }
 }

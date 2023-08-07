@@ -1,5 +1,6 @@
 package com.qiscus.multichannel.util
 
+import com.qiscus.multichannel.data.repository.ChatroomRepository
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import org.json.JSONObject
 
@@ -8,7 +9,7 @@ import org.json.JSONObject
  * Author     : Taufik Budi S
  * Github     : https://github.com/tfkbudi
  */
-class EventUtil {
+class EventUtil  {
 
     companion object {
         fun isChatEvent(comment: QMessage): Boolean {

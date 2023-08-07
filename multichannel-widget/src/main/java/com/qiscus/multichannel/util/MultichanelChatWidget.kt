@@ -2,6 +2,7 @@ package com.qiscus.multichannel.util
 
 import android.content.Context
 import com.google.firebase.messaging.RemoteMessage
+import com.qiscus.multichannel.QWidgetComponent
 import com.qiscus.multichannel.QiscusMultichannelWidgetColor
 import com.qiscus.multichannel.QiscusMultichannelWidgetComponent
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
@@ -22,7 +23,7 @@ import org.json.JSONObject
  */
 interface MultichanelChatWidget {
 
-    fun getComponent(): QiscusMultichannelWidgetComponent
+    fun getComponent(): QWidgetComponent
 
     fun getConfig(): QiscusMultichannelWidgetConfig
 
@@ -62,6 +63,7 @@ interface MultichanelChatWidget {
         userId: String?,
         avatar: String?,
         extras: String?,
+        sessionId: String?,
         userProperties: List<UserProperties>?,
         onSuccess: (QAccount) -> Unit,
         onError: (Throwable) -> Unit

@@ -3,12 +3,13 @@ package com.qiscus.multichannel.data.repository
 import com.qiscus.multichannel.data.model.DataInitialChat
 import com.qiscus.multichannel.data.model.response.ResponseInitiateChat
 import com.qiscus.multichannel.data.model.user.UserProperties
+import com.qiscus.multichannel.data.repository.impl.QiscusChatRepositoryImpl
 import okhttp3.Request
 import okhttp3.ResponseBody
 import org.junit.jupiter.api.*
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.mock
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,8 +23,8 @@ internal class QiscusChatRepositoryTest {
     @BeforeAll
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        api = mock(QiscusChatApi.Api::class.java)
-        repository = QiscusChatRepository(api!!)
+        api = mock()
+        repository = QiscusChatRepositoryImpl(api!!)
     }
 
     @AfterAll
@@ -136,7 +137,7 @@ internal class QiscusChatRepositoryTest {
         override fun execute(): Response<T> {
             return if (isSuccess && isExecute) Response.success(data)
             else if (!isSuccess && isExecute) Response.success(null)
-            else Response.error(500, mock(ResponseBody::class.java))
+            else Response.error(500, mock())
         }
 
         override fun enqueue(callback: Callback<T>) {
@@ -156,7 +157,7 @@ internal class QiscusChatRepositoryTest {
         }
 
         override fun request(): Request {
-            return mock(Request::class.java)
+            return mock()
         }
 
     }

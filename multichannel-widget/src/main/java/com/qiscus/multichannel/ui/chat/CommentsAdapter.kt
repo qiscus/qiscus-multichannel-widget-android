@@ -41,8 +41,8 @@ class CommentsAdapter(
             return 0
         } else if (item2.id == -1L && item1.id == -1L) { //Not completed comments
             return item2.timestamp.compareTo(item1.timestamp)
-        } else if (item2.id != -1L && item1.id != -1L) { //Completed comments
-            return MultichannelConst.qiscusCore()?.androidUtil?.compare(item2.id, item1.id)!!
+        } else if (item2.id > -1L && item1.id > -1L) { //Completed comments
+            return item2.id.compareTo(item1.id)
         } else if (item2.id == -1L) {
             return 1
         } else if (item1.id == -1L) {
@@ -52,7 +52,7 @@ class CommentsAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val me = MultichannelConst.qiscusCore()?.qiscusAccount?.id
+        val me = MultichannelConst.qiscusCore()!!.qiscusAccount.id
         val comment = data.get(position)
         when (comment.type) {
             QMessage.Type.TEXT -> {
@@ -238,7 +238,7 @@ class CommentsAdapter(
     }
 
     override fun addOrUpdate(items: List<QMessage>) {
-        val lastPosition = data.size() - 1;
+        val lastPosition = data.size() - 1
         var index: Int
         var comment: QMessage
 
@@ -257,15 +257,15 @@ class CommentsAdapter(
         notifyItemChanged(lastPosition)
     }
 
-    override fun addOrUpdate(comment: QMessage) {
-        val lastPosition = data.size() - 1;
-        val index = findPosition(comment)
+    override fun addOrUpdate(item: QMessage) {
+        val lastPosition = data.size() - 1
+        val index = findPosition(item)
 
         if (index == -1) {
-            data.add(comment)
+            data.add(item)
             notifyItemInserted(data.size() - 1)
         } else {
-            data.updateItemAt(index, comment)
+            data.updateItemAt(index, item)
             notifyItemChanged(index)
         }
         notifyItemChanged(lastPosition)
@@ -401,27 +401,27 @@ class CommentsAdapter(
     }
 
     companion object {
-        val TYPE_NOT_SUPPORT = 0
-        val TYPE_MY_TEXT = 1
-        val TYPE_OPPONENT_TEXT = 2
-        val TYPE_MY_IMAGE = 3
-        val TYPE_OPPONENT_IMAGE = 4
-        val TYPE_MY_VIDEO = 5
-        val TYPE_OPPONENT_VIDEO = 6
-        val TYPE_MY_FILE = 7
-        val TYPE_OPPONENT_FILE = 8
-        val TYPE_MY_REPLY = 9
-        val TYPE_OPPONENT_REPLY = 10
-        val TYPE_EVENT = 11
-        val TYPE_CARD = 12
-        val TYPE_CAROUSEL = 13
-        val TYPE_BUTTON = 14
-        val TYPE_MY_STICKER = 15
-        val TYPE_OPPONENT_STICKER = 16
-        val TYPE_MY_LOCATION = 17
-        val TYPE_OPPONENT_LOCATION = 18
-        val TYPE_MY_AUDIO = 19
-        val TYPE_OPPONENT_AUDIO = 20
+        const val TYPE_NOT_SUPPORT = 0
+        const val TYPE_MY_TEXT = 1
+        const val TYPE_OPPONENT_TEXT = 2
+        const val TYPE_MY_IMAGE = 3
+        const val TYPE_OPPONENT_IMAGE = 4
+        const val TYPE_MY_VIDEO = 5
+        const val TYPE_OPPONENT_VIDEO = 6
+        const val TYPE_MY_FILE = 7
+        const val TYPE_OPPONENT_FILE = 8
+        const val TYPE_MY_REPLY = 9
+        const val TYPE_OPPONENT_REPLY = 10
+        const val TYPE_EVENT = 11
+        const val TYPE_CARD = 12
+        const val TYPE_CAROUSEL = 13
+        const val TYPE_BUTTON = 14
+        const val TYPE_MY_STICKER = 15
+        const val TYPE_OPPONENT_STICKER = 16
+        const val TYPE_MY_LOCATION = 17
+        const val TYPE_OPPONENT_LOCATION = 18
+        const val TYPE_MY_AUDIO = 19
+        const val TYPE_OPPONENT_AUDIO = 20
     }
 
 }

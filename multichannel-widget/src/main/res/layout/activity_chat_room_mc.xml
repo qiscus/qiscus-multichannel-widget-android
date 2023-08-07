@@ -59,7 +59,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_title_file"
+                android:id="@+id/tvTitleFile"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -88,7 +88,7 @@
 
     <include
         android:visibility="invisible"
-        android:id="@+id/toolbar_selected_comment"
+        android:id="@+id/toolbarSelectedComment"
         layout="@layout/toolbar_menu_selected_comment_mc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

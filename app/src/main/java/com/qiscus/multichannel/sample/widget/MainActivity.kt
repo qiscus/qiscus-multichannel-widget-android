@@ -10,26 +10,28 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.sample.R
+import com.qiscus.multichannel.sample.databinding.ActivityMainBinding
 import com.qiscus.multichannel.sample.widget.service.FirebaseServices
 import com.qiscus.multichannel.util.QiscusChatRoomBuilder
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import com.qiscus.sdk.chat.core.data.model.QMessage
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
     private val qiscusMultichannelWidget = SampleApp.instance.qiscusMultichannelWidget
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // always call when active app
         if (qiscusMultichannelWidget.hasSetupUser()) {
             FirebaseServices().getCurrentDeviceToken()
         }
 
-        login.setOnClickListener {
+        binding.login.setOnClickListener {
             validateAndSetUser(object : OnValidSetUser {
                 override fun call() {
                     initChat(0)
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             setButton()
         }
 
-        sendMessage.setOnClickListener {
+        binding.sendMessage.setOnClickListener {
             validateAndSetUser(object : OnValidSetUser {
                 override fun call() {
                     seProgressSendMessage(true)
@@ -59,8 +61,8 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Logout Success", Toast.LENGTH_LONG).show()
 
         } else {
-            val username = etDisplayName.text.toString()
-            val email = etUserEmail.text.toString()
+            val username = binding.etDisplayName.text.toString()
+            val email = binding.etUserEmail.text.toString()
             val avatarUrl =
                 "https://vignette.wikia.nocookie.net/fatal-fiction-fanon/images/9/9f/Doraemon.png/revision/latest?cb=20170922055255"
 
@@ -84,8 +86,8 @@ class MainActivity : AppCompatActivity() {
             .startChat(this, object : QiscusChatRoomBuilder.InitiateCallback {
                 override fun onProgress() {
                     Log.i("InitiateCallback", "onProgress: ")
-                    login.isEnabled = false
-                    login.background = ContextCompat.getDrawable(
+                    binding.login.isEnabled = false
+                    binding.login.background = ContextCompat.getDrawable(
                         this@MainActivity,
                         R.drawable.bt_qiscus_radius_disable
                     )
@@ -104,8 +106,8 @@ class MainActivity : AppCompatActivity() {
                     ) { throwable ->
                         throwable.printStackTrace()
                     }
-                    login.isEnabled = true
-                    login.background = ContextCompat.getDrawable(
+                    binding.login.isEnabled = true
+                    binding.login.background = ContextCompat.getDrawable(
                         this@MainActivity,
                         R.drawable.bt_qiscus_radius_sdk
                     )
@@ -113,8 +115,8 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onError(throwable: Throwable) {
                     Log.e("InitiateCallback", "onError: ${throwable.message}")
-                    login.isEnabled = true
-                    login.background = ContextCompat.getDrawable(
+                    binding.login.isEnabled = true
+                    binding.login.background = ContextCompat.getDrawable(
                         this@MainActivity,
                         R.drawable.bt_qiscus_radius_sdk
                     )
@@ -155,13 +157,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setButton() {
-        tv_start.text = if (qiscusMultichannelWidget.isLoggedIn()) "LOGOUT" else "START"
-        tv_send_message.text = if (qiscusMultichannelWidget.isLoggedIn()) "LOGOUT" else "SEND MESSAGE"
+        binding.tvStart.text = if (qiscusMultichannelWidget.isLoggedIn()) "LOGOUT" else "START"
+        binding.tvSendMessage.text = if (qiscusMultichannelWidget.isLoggedIn()) "LOGOUT" else "SEND MESSAGE"
     }
 
     private fun seProgressSendMessage(isActive: Boolean) {
-        progress_bar_send_message.visibility = if (isActive) View.VISIBLE else View.GONE
-        tv_send_message.visibility =if (isActive) View.GONE else View.VISIBLE
+        binding.progressBarSendMessage.visibility = if (isActive) View.VISIBLE else View.GONE
+        binding.tvSendMessage.visibility =if (isActive) View.GONE else View.VISIBLE
     }
 
     override fun onResume() {

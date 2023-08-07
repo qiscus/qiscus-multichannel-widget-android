@@ -37,9 +37,10 @@ class StickerVH(
 
     private fun setStickerAttachment(message: String): String {
         val fileNameEndIndex = message.lastIndexOf("[/sticker]")
-        val fileNameBeginIndex = message.indexOf("]") + 1
+        val fileNameBeginIndex = message.indexOf("[sticker]")
+
         return if (fileNameBeginIndex > -1 && fileNameEndIndex > -1) message.substring(
-            fileNameBeginIndex,
+            fileNameBeginIndex + 1,
             fileNameEndIndex
         ).trim() else ""
     }

@@ -16,9 +16,10 @@ import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.ui.chat.CommentsAdapter
 import com.qiscus.multichannel.ui.view.QiscusProgressView
-import com.qiscus.multichannel.ui.webView.WebViewHelper
+import com.qiscus.multichannel.ui.webview.WebViewHelper
 import com.qiscus.multichannel.util.MultichannelConst
 import com.qiscus.multichannel.util.ResourceManager
+import com.qiscus.multichannel.util.SpannableUtils
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import org.json.JSONObject
 import java.util.regex.Matcher
@@ -34,40 +35,42 @@ class FileVH(
     color: QiscusMultichannelWidgetColor,
     viewType: Int
 ) : BaseViewHolder(itemView, config, color), QMessage.ProgressListener,
-    QMessage.DownloadingListener {
+    QMessage.DownloadingListener, SpannableUtils.ClickSpan.OnSpanListener {
 
-    private val containerMessage: View? = itemView.findViewById(R.id.background)
-    private val ivAttachment: ImageView? = itemView.findViewById(R.id.iv_icon_file)
-    private val tvTitle: TextView? = itemView.findViewById(R.id.tv_title_file)
-    private val extention: TextView? = itemView.findViewById(R.id.tv_extension_file)
-    private val ivDownloadIcon: ImageView? = itemView.findViewById(R.id.btn_download_or_upload)
-    private val progressView: QiscusProgressView? =
-        itemView.findViewById<View>(R.id.pb_file) as QiscusProgressView?
+    private val containerMessage: View = itemView.findViewById(R.id.background)
+    private val ivAttachment: ImageView = itemView.findViewById(R.id.iv_icon_file)
+    private val tvTitle: TextView = itemView.findViewById(R.id.tv_title_file)
+    private val extention: TextView = itemView.findViewById(R.id.tv_extension_file)
+    private val ivDownloadIcon: ImageView = itemView.findViewById(R.id.btn_download_or_upload)
+    private val progressView: QiscusProgressView =
+        itemView.findViewById<View>(R.id.pb_file) as QiscusProgressView
     lateinit var qiscusComment: QMessage
+    private val spannableUtils: SpannableUtils
 
     init {
+        spannableUtils = SpannableUtils(itemView.context, this)
         val backgroundColor: Int
         val iconColor: Int
 
         if (viewType == CommentsAdapter.TYPE_OPPONENT_FILE) {
             backgroundColor = color.getLeftBubbleColor()
             iconColor = color.getNavigationColor()
-            tvTitle?.setTextColor(color.getLeftBubbleTextColor())
-            extention?.setTextColor(color.getLeftBubbleTextColor())
+            tvTitle.setTextColor(color.getLeftBubbleTextColor())
+            extention.setTextColor(color.getLeftBubbleTextColor())
         } else {
             backgroundColor = color.getRightBubbleColor()
             iconColor = color.getRightBubbleTextColor()
-            tvTitle?.setTextColor(color.getRightBubbleTextColor())
-            extention?.setTextColor(color.getRightBubbleTextColor())
+            tvTitle.setTextColor(color.getRightBubbleTextColor())
+            extention.setTextColor(color.getRightBubbleTextColor())
         }
 
-        containerMessage?.background = ResourceManager.getTintDrawable(
+        containerMessage.background = ResourceManager.getTintDrawable(
             ContextCompat.getDrawable(
                 itemView.context,
                 R.drawable.qiscus_rounded_chat_bg_mc
             ), backgroundColor
         )
-        ivAttachment?.setImageDrawable(
+        ivAttachment.setImageDrawable(
             ResourceManager.getTintDrawable(
                 ContextCompat.getDrawable(
                     itemView.context,
@@ -75,7 +78,7 @@ class FileVH(
                 ), iconColor
             )
         )
-        ivDownloadIcon?.setImageDrawable(
+        ivDownloadIcon.setImageDrawable(
             ResourceManager.getTintDrawable(
                 ContextCompat.getDrawable(
                     itemView.context,
@@ -94,48 +97,50 @@ class FileVH(
         comment.setProgressListener(this)
         comment.setDownloadingListener(this)
         setUpDownloadIcon(comment)
-        setUpLinks()
+
+        spannableUtils.setUpLinks(
+            extention.text.toString().lowercase()
+        )
+
         try {
             val content = JSONObject(comment.payload)
             val title = content.getString("file_name")
             val url = content.getString("url")
             val tipe = url.split(".")
-            tvTitle?.text = title.toString()
-            extention?.text = "${tipe[tipe.size - 1].toUpperCase()} File"
+            tvTitle.text = title.toString()
+            extention.text = "${tipe[tipe.size - 1].uppercase()} File"
         } catch (ex: Exception) {
-            ex.printStackTrace()
+            // ignored
         }
 
-        ivDownloadIcon?.visibility =
-            if (MultichannelConst.qiscusCore()?.dataStore?.getLocalPath(comment.id) != null) View.GONE else View.VISIBLE
+        ivDownloadIcon.visibility =
+            if (MultichannelConst.qiscusCore()!!.dataStore.getLocalPath(comment.id) != null) View.GONE else View.VISIBLE
 
     }
 
-    override fun onProgress(qiscusComment: QMessage?, percentage: Int) {
-        ivDownloadIcon?.visibility = View.GONE
-        progressView?.setVisibility(View.GONE)
+    override fun onProgress(qiscusComment: QMessage, percentage: Int) {
+        ivDownloadIcon.visibility = View.GONE
+        progressView.setVisibility(View.GONE)
 
-        if (qiscusComment == this.qiscusComment && progressView != null) {
+        if (qiscusComment == this.qiscusComment) {
             progressView.setProgress(percentage)
         }
     }
 
-    override fun onDownloading(qiscusComment: QMessage?, downloading: Boolean) {
-        ivDownloadIcon?.visibility = View.GONE
-        if (qiscusComment == this.qiscusComment && progressView != null) {
+    override fun onDownloading(qiscusComment: QMessage, downloading: Boolean) {
+        ivDownloadIcon.visibility = View.GONE
+        if (qiscusComment == this.qiscusComment) {
             progressView.setVisibility(if (downloading) View.VISIBLE else View.GONE)
         }
     }
 
     private fun setUpDownloadIcon(qiscusComment: QMessage) {
-        ivDownloadIcon?.let {
-            it.rotation = if (qiscusComment.status <= QMessage.STATE_SENDING) 180F else 0F
-        }
+        ivDownloadIcon.rotation = if (qiscusComment.status <= QMessage.STATE_SENDING) 180F else 0F
     }
 
-    @SuppressLint("DefaultLocale", "RestrictedApi")
+    /*@SuppressLint("DefaultLocale", "RestrictedApi")
     private fun setUpLinks() {
-        val text = extention?.text.toString().toLowerCase()
+        val text = extention.text.toString().toLowerCase()
         val matcher: Matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(text)
         while (matcher.find()) {
             val start: Int = matcher.start()
@@ -166,7 +171,7 @@ class FileVH(
         } else {
             val s: SpannableString = SpannableString.valueOf(text)
             s.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            extention?.text = s
+            extention.text = s
         }
     }
 
@@ -181,5 +186,9 @@ class FileVH(
             listener?.onClick()
         }
 
+    }*/
+
+    override fun onSpanResult(spanText: SpannableString) {
+        extention.text = spanText
     }
 }

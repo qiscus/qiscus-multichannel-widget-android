@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.webView.WebViewActivity">
+    tools:context=".ui.webview.WebViewActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -29,7 +29,7 @@
             app:titleTextColor="@color/colorAccent">
 
             <TextView
-                android:id="@+id/tv_url"
+                android:id="@+id/tvUrl"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -47,7 +47,7 @@
                 tools:text="http://google.com 1234567890123456789123456789" />
 
             <ImageButton
-                android:id="@+id/btn_back"
+                android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -62,7 +62,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_title"
+                android:id="@+id/tvTitle"
                 android:layout_width="0dp"
                 android:layout_height="26dp"
                 android:layout_marginStart="16dp"

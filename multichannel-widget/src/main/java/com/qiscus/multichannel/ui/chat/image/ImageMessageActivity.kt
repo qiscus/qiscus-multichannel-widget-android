@@ -37,17 +37,12 @@ import com.qiscus.jupuk.JupukConst
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.data.model.ImageToSend
+import com.qiscus.multichannel.databinding.ActivityImageMessageBinding
 import com.qiscus.multichannel.ui.chat.image.ImagePagerAdapter
 import com.qiscus.multichannel.util.*
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import com.qiscus.sdk.chat.core.util.QiscusFileUtil
-import kotlinx.android.synthetic.main.activity_chat_room_mc.*
-import kotlinx.android.synthetic.main.activity_image_message.*
-import kotlinx.android.synthetic.main.activity_image_message.btnSend
-import kotlinx.android.synthetic.main.activity_image_message.toolbar
-import kotlinx.android.synthetic.main.fragment_chat_room_mc.*
-import kotlinx.android.synthetic.main.toolbar_menu_selected_comment_mc.*
 import rx.Subscription
 import java.io.File
 import java.io.IOException
@@ -64,6 +59,7 @@ class ImageMessageActivity : AppCompatActivity(),
     ImagePagerAdapter.ImagePagerListener, ImagePreviewAdapter.ImagePreviewListener,
     QiscusPermissionsUtil.PermissionCallbacks {
 
+    private lateinit var binding: ActivityImageMessageBinding
     private val dataList: MutableList<ImageToSend> = ArrayList()
     private var chatRoom: QChatRoom? = null
     private var pagerAdapter: ImagePagerAdapter? = null
@@ -76,7 +72,8 @@ class ImageMessageActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_image_message)
+        binding = ActivityImageMessageBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         window.setBackgroundDrawable(null)
         initComponent()
         initColor()
@@ -89,10 +86,10 @@ class ImageMessageActivity : AppCompatActivity(),
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = color.getStatusBarColor()
         }
-        toolbar.setBackgroundColor(color.getNavigationColor())
-        toolbar.setTitleTextColor(color.getNavigationTitleColor())
-        toolbar.setSubtitleTextColor(color.getNavigationTitleColor())
-        toolbar.navigationIcon = ResourceManager.getTintDrawable(
+        binding.toolbar.setBackgroundColor(color.getNavigationColor())
+        binding.toolbar.setTitleTextColor(color.getNavigationTitleColor())
+        binding.toolbar.setSubtitleTextColor(color.getNavigationTitleColor())
+        binding.toolbar.navigationIcon = ResourceManager.getTintDrawable(
             ContextCompat.getDrawable(this, R.drawable.ic_back_white),
             color.getNavigationTitleColor()
         )
@@ -105,7 +102,7 @@ class ImageMessageActivity : AppCompatActivity(),
             windowManager.defaultDisplay.getMetrics(displayMetrics)
         }
 
-        fieldMessage.background = GradientDrawable().apply {
+        binding.fieldMessage.background = GradientDrawable().apply {
             setColor(ContextCompat.getColor(this@ImageMessageActivity, R.color.qiscus_white_mc))
             shape = GradientDrawable.RECTANGLE
             cornerRadius = ResourceManager.getDimen(displayMetrics!!, 8)
@@ -115,13 +112,13 @@ class ImageMessageActivity : AppCompatActivity(),
             )
         }
 
-        messageBox.setBackgroundColor(color.getSendContainerBackgroundColor())
-        btnSend.setColorFilter(color.getSendContainerColor())
-        rvImagePrev.setBackgroundColor(color.getSendContainerBackgroundColor())
+        binding.messageBox.setBackgroundColor(color.getSendContainerBackgroundColor())
+        binding.btnSend.setColorFilter(color.getSendContainerColor())
+        binding.rvImagePrev.setBackgroundColor(color.getSendContainerBackgroundColor())
     }
 
     private fun initView() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar!!.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_toolbar_avatar))
         avatarTarget = object : CustomTarget<Drawable>() {
 
@@ -173,8 +170,8 @@ class ImageMessageActivity : AppCompatActivity(),
     }
 
     private fun listener() {
-        fieldMessage.addTextChangedListener(ImageTextWatcher())
-        btnSend.setOnClickListener {
+        binding.fieldMessage.addTextChangedListener(ImageTextWatcher())
+        binding.btnSend.setOnClickListener {
             val intent = Intent()
             val imagePaths = ArrayList<String>()
             val captions = ArrayList<String>()
@@ -189,7 +186,7 @@ class ImageMessageActivity : AppCompatActivity(),
             setResult(RESULT_OK, intent)
             finish()
         }
-        imageContainer.addOnPageChangeListener(object : OnPageChangeListener {
+        binding.imageContainer.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrolled(
                 position: Int,
                 positionOffset: Float,
@@ -199,9 +196,9 @@ class ImageMessageActivity : AppCompatActivity(),
 
             override fun onPageSelected(position: Int) {
                 currentPosition = position
-                fieldMessage.setText(dataList[position].caption)
+                binding.fieldMessage.setText(dataList[position].caption)
                 adapter?.clearSelected(position)
-                rvImagePrev.smoothScrollToPosition(position)
+                binding.rvImagePrev.smoothScrollToPosition(position)
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
@@ -221,7 +218,7 @@ class ImageMessageActivity : AppCompatActivity(),
         setRoomData()
         if (pagerAdapter == null) {
             pagerAdapter = ImagePagerAdapter(this, this, dataList, displayMetrics!!.widthPixels)
-            imageContainer.adapter = pagerAdapter
+            binding.imageContainer.adapter = pagerAdapter
         }
         var type: String? = ""
         try {
@@ -233,21 +230,21 @@ class ImageMessageActivity : AppCompatActivity(),
         }
         if (type != null && type.contains("image") && adapter == null) {
             adapter = ImagePreviewAdapter(this, this, dataList, displayMetrics!!.widthPixels, color)
-            rvImagePrev.also {
+            binding.rvImagePrev.also {
                 it.setHasFixedSize(true)
                 it.itemAnimator = null
                 it.animation = null
                 it.adapter = adapter
             }
         } else if (adapter == null) {
-            rvImagePrev.visibility = View.GONE
+            binding.rvImagePrev.visibility = View.GONE
         }
     }
 
     override fun onItemClick(position: Int) {
         if (adapter == null) {
             adapter = ImagePreviewAdapter(this, this, dataList, displayMetrics!!.widthPixels, color)
-            rvImagePrev.also {
+            binding.rvImagePrev.also {
                 it.setHasFixedSize(true)
                 it.itemAnimator = null
                 it.animation = null
@@ -255,13 +252,14 @@ class ImageMessageActivity : AppCompatActivity(),
             }
         }
         adapter!!.clearOtherSelected(position)
-        rvImagePrev.scrollToPosition(position)
+        binding.rvImagePrev.scrollToPosition(position)
     }
 
     override fun onImagePreviewClick(position: Int) {
-        imageContainer.currentItem = position
+        binding.imageContainer.currentItem = position
     }
 
+    @SuppressLint("InflateParams")
     override fun onAddImage() {
         val dialogView = layoutInflater.inflate(R.layout.bottom_sheet_attachment_mc, null)
         val dialog = BottomSheetDialog(this, R.style.AppBottomSheetDialogTheme)
@@ -278,9 +276,7 @@ class ImageMessageActivity : AppCompatActivity(),
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
-            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {/*ignored*/}
         })
 
         dialogView.background = ResourceManager.getTintDrawable(
@@ -386,6 +382,7 @@ class ImageMessageActivity : AppCompatActivity(),
         startActivityForResult(intent, MultichannelConst.IMAGE_GALLERY_REQUEST)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onItemDelete(position: Int) {
         dataList.removeAt(position)
         if (dataList[dataList.size - 1].path != getString(R.string.add_image)) {
@@ -394,7 +391,7 @@ class ImageMessageActivity : AppCompatActivity(),
         if (dataList.size > 1) {
             adapter?.let {
                 it.notifyDataSetChanged()
-                imageContainer.adapter = pagerAdapter
+                binding.imageContainer.adapter = pagerAdapter
                 if (it.selectedPosition == position && position > 0) {
                     scrollToPositon(position - 1)
                 } else if (it.selectedPosition == position && position == 0) {
@@ -411,8 +408,8 @@ class ImageMessageActivity : AppCompatActivity(),
 
     private fun scrollToPositon(position: Int) {
         adapter!!.clearSelected(position)
-        rvImagePrev.scrollToPosition(position)
-        imageContainer.currentItem = position
+        binding.rvImagePrev.scrollToPosition(position)
+        binding.imageContainer.currentItem = position
     }
 
     private fun requestCameraPermission() {
@@ -446,6 +443,7 @@ class ImageMessageActivity : AppCompatActivity(),
         }
     }
 
+    @Deprecated("Deprecated in Java")
     @SuppressLint("RestrictedApi")
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -522,8 +520,8 @@ class ImageMessageActivity : AppCompatActivity(),
         }
         adapter!!.notifyDataSetChanged()
         pagerAdapter!!.notifyDataSetChanged()
-        rvImagePrev.scrollToPosition(dataList.size - 1)
-        imageContainer.currentItem = dataList.size - 1
+        binding.rvImagePrev.scrollToPosition(dataList.size - 1)
+        binding.imageContainer.currentItem = dataList.size - 1
     }
 
     override fun onDestroy() {
@@ -568,7 +566,7 @@ class ImageMessageActivity : AppCompatActivity(),
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         override fun afterTextChanged(s: Editable) {
-            dataList[imageContainer.currentItem].caption = s.toString()
+            dataList[binding.imageContainer.currentItem].caption = s.toString()
         }
     }
 

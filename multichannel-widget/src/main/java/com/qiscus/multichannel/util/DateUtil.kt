@@ -33,7 +33,7 @@ object DateUtil {
 
                 getTimeStringFromDate(utcDate)
 
-            } else if (todayCalendar.get(Calendar.DATE) - localCalendar.get(Calendar.DATE) == 1) {
+            } else if (compareToYesterday(todayCalendar, localCalendar)) {
                 "Yesterday"
             } else {
                 getDateStringFromDate(utcDate)
@@ -41,6 +41,10 @@ object DateUtil {
         } else {
             return null
         }
+    }
+
+    private fun compareToYesterday(todayCalendar: Calendar, localCalendar: Calendar): Boolean {
+        return todayCalendar.time.after(localCalendar.time)
     }
 
     fun getTimeStringFromDate(date: Date): String {
@@ -55,38 +59,26 @@ object DateUtil {
 
     fun getDateStringFromDateTimeline(date: Date): String {
         val day = SimpleDateFormat("dd", Locale.US)
-        val month1 = SimpleDateFormat("MM", Locale.US)
+        val month = SimpleDateFormat("MM", Locale.US)
         val years = SimpleDateFormat("yyyy", Locale.US)
-        val dayText = day.format(date)
-        val month = month1.format(date)
-        var monthText = ""
 
-        if (month == "01") {
-            monthText = "Januari"
-        } else if (month == "02") {
-            monthText = "Februari"
-        } else if (month == "03") {
-            monthText = "Maret"
-        } else if (month == "04") {
-            monthText = "April"
-        } else if (month == "05") {
-            monthText = "Mei"
-        } else if (month == "06") {
-            monthText = "Juni"
-        } else if (month == "07") {
-            monthText = "Juli"
-        } else if (month == "08") {
-            monthText = "Agustus"
-        } else if (month == "09") {
-            monthText = "September"
-        } else if (month == "10") {
-            monthText = "Oktober"
-        } else if (month == "11") {
-            monthText = "November"
-        } else {
-            monthText = "Desember"
+        val dayText = day.format(date)
+        val monthText =  when (month.format(date)) {
+            "01" -> "Januari"
+            "02" -> "Februari"
+            "03" -> "Maret"
+            "04" -> "April"
+            "05" -> "Mei"
+            "06" -> "Juni"
+            "07" -> "Juli"
+            "08" -> "Agustus"
+            "09" -> "September"
+            "10" -> "Oktober"
+            "11" -> "November"
+            else -> "Desember"
         }
         val yearsText = years.format(date)
+
         return "$dayText $monthText $yearsText"
     }
 

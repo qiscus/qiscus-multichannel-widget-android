@@ -35,7 +35,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_display_name"
+                android:id="@+id/tvDisplayName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="DISPLAY NAME" />
@@ -89,7 +89,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_start"
+                    android:id="@+id/tvStart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -99,7 +99,7 @@
                     android:textSize="18sp" />
 
                 <ProgressBar
-                    android:id="@+id/progress_bar"
+                    android:id="@+id/progressBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="7dp"
@@ -129,7 +129,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_send_message"
+                    android:id="@+id/tvSendMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -139,7 +139,7 @@
                     android:textSize="18sp" />
 
                 <ProgressBar
-                    android:id="@+id/progress_bar_send_message"
+                    android:id="@+id/progressBarSendMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="7dp"

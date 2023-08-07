@@ -13,6 +13,8 @@ ext {
             '**/R.class',
             '**/R$*.class',
             '**/BuildConfig.*',
+            '**/view/**',
+            '**/webView/**',
             '**/model/**',
             '**/PNUtil.kt'
     ]

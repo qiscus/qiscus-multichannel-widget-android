@@ -57,14 +57,16 @@ class LocationVH(
         super.bind(comment)
         tvLocationName.text = comment.location.name
         tvLocationAddress.text = comment.location.address
-        renderImage(comment.location.thumbnailUrl)
+        comment.location.thumbnailUrl?.let {
+            renderImage(it)
+        }
         mapImageView.setOnClickListener {
             openMap(comment.location)
         }
     }
 
-    private fun renderImage(url: String?) {
-        if (url != null && url.isNotEmpty()) {
+    private fun renderImage(url: String) {
+        if (url.isNotEmpty()) {
             Nirmana.getInstance().get()
                 .asBitmap()
                 .thumbnail(0.4f)

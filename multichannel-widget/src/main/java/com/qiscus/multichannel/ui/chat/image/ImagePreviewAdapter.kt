@@ -68,7 +68,7 @@ class ImagePreviewAdapter(
         fun onItemDelete(position: Int)
     }
 
-    class Holder(val view: View, private val color: QiscusMultichannelWidgetColor) :
+    class Holder(val view: View, color: QiscusMultichannelWidgetColor) :
         RecyclerView.ViewHolder(view) {
 
         private var backgroundImage: View = view.findViewById(R.id.backgroundImage)

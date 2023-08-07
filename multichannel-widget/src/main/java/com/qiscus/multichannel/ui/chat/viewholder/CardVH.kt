@@ -1,18 +1,12 @@
 package com.qiscus.multichannel.ui.chat.viewholder
 
-import android.annotation.SuppressLint
-import android.net.Uri
-import android.text.Spannable
 import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ClickableSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
-import androidx.core.util.PatternsCompat
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -20,14 +14,11 @@ import com.qiscus.multichannel.QiscusMultichannelWidgetColor
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.ui.chat.CommentsAdapter
-import com.qiscus.multichannel.ui.webView.WebViewHelper
 import com.qiscus.multichannel.util.ResourceManager
+import com.qiscus.multichannel.util.SpannableUtils
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.data.model.QMessage
-import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
-import java.util.regex.Matcher
 
 
 /**
@@ -42,8 +33,9 @@ class CardVH(
     config: QiscusMultichannelWidgetConfig,
     color: QiscusMultichannelWidgetColor,
     private val listener: CommentsAdapter.ItemViewListener?
-) : BaseViewHolder(itemView, config, color), ChatButtonView.ChatButtonClickListener {
+) : BaseViewHolder(itemView, config, color), ChatButtonView.ChatButtonClickListener, SpannableUtils.ClickSpan.OnSpanListener {
 
+    private val spanleUtils: SpannableUtils
     private var chatRoomId: Long = 0
     private var description: TextView = itemView.findViewById(R.id.description)
     private var title: TextView = itemView.findViewById(R.id.title)
@@ -52,6 +44,7 @@ class CardVH(
     private var buttonsContainer: ViewGroup = itemView.findViewById(R.id.buttonsContainer)
 
     init {
+        spanleUtils = SpannableUtils(itemView.context, this)
         description.setTextColor(color.getLeftBubbleTextColor())
         title.setTextColor(color.getLeftBubbleTextColor())
     }
@@ -75,8 +68,20 @@ class CardVH(
             )
             .into(thumbnail)
 
-        setUpLinks()
-        setUpButtons(data.getJSONArray("buttons"))
+        spanleUtils.setUpLinks(description.text.toString())
+
+        ChatButtonView.setUpButtons(
+            buttonsContainer,
+            data.getJSONArray("buttons"),
+            LinearLayoutCompat.LayoutParams(
+                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+            )
+        ) {
+            ChatButtonView(itemView.context, color, it)
+                .setChatButtonClickListener(this)
+                .build()
+        }
 
         containerBackground.background = ResourceManager.getTintDrawable(
             ContextCompat.getDrawable(
@@ -90,7 +95,7 @@ class CardVH(
         listener?.onSendComment(comment)
     }
 
-    @SuppressLint("DefaultLocale", "RestrictedApi")
+    /*@SuppressLint("DefaultLocale", "RestrictedApi")
     private fun setUpLinks() {
         val text = description.text.toString().toLowerCase()
         val matcher: Matcher = PatternsCompat.AUTOLINK_WEB_URL.matcher(text)
@@ -160,26 +165,16 @@ class CardVH(
             listener?.onClick()
         }
 
+    }*/
+
+    override fun onChatButtonClick(jsonButton: JSONObject) {
+        ChatButtonView.handleButtonClick(itemView.context, chatRoomId, jsonButton) {
+           sendComment(it)
+        }
     }
 
-    override fun onChatButtonClick(jsonButton: JSONObject?) {
-        jsonButton?.let {
-            when (it.getString("type")) {
-                "link" -> WebViewHelper.launchUrl(
-                    itemView.context,
-                    Uri.parse(JSONObject(jsonButton.get("payload").toString()).getString("url"))
-                )
-                "postback" -> {
-                    val postBackMessage = QMessage.generatePostBackMessage(
-                        this.chatRoomId,
-                        it.getString("postback_text"),
-                        JSONObject(jsonButton.get("payload").toString())
-                    )
-                    sendComment(postBackMessage)
-                }
-            }
-
-        }
+    override fun onSpanResult(spanText: SpannableString) {
+        description.text = spanText
     }
 
 }

@@ -27,6 +27,7 @@ class LoadingPresenter(private val multichannelWidget: MultichanelChatWidget) {
         userId: String?,
         avatar: String?,
         extras: String?,
+        sessionId: String?,
         userProp: List<UserProperties>?
     ) {
         if (!QiscusChatLocal.getHasMigration()) {
@@ -39,6 +40,7 @@ class LoadingPresenter(private val multichannelWidget: MultichanelChatWidget) {
             userId,
             avatar,
             extras,
+            sessionId,
             userProp,
             {
                 openRoomById()

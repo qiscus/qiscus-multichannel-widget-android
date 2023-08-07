@@ -7,14 +7,13 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.qiscus.multichannel.QiscusMultichannelWidget
-import com.qiscus.multichannel.R
 import com.qiscus.multichannel.data.model.user.UserProperties
+import com.qiscus.multichannel.databinding.ActivityLoadingBinding
 import com.qiscus.multichannel.ui.chat.ChatRoomActivity
 import com.qiscus.multichannel.util.MultichanelChatWidget
 import com.qiscus.multichannel.util.showToast
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import com.qiscus.sdk.chat.core.data.model.QMessage
-import kotlinx.android.synthetic.main.activity_loading.*
 import org.json.JSONObject
 
 /**
@@ -25,6 +24,7 @@ import org.json.JSONObject
 
 class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
 
+    private lateinit var binding: ActivityLoadingBinding
     private lateinit var presenter: LoadingPresenter
     private var username: String? = null
     private var userId: String? = null
@@ -44,9 +44,11 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
         private const val PARAM_MESSAGE = "message"
         private const val PARAM_AUTO_SEND_MESSAGE = "auto_send_message"
 
-        fun generateIntent(context: Context, username: String?, userId: String?, avatar: String?,
-                           extras: JSONObject?, userProp: List<UserProperties>,
-                           qMessage: QMessage? = null, isAutomatic: Boolean = false) {
+        fun generateIntent(
+            context: Context, username: String?, userId: String?, avatar: String?,
+            extras: JSONObject?, userProp: List<UserProperties>,
+            qMessage: QMessage? = null, isAutomatic: Boolean = false
+        ) {
             val intent = Intent(context, LoadingActivity::class.java)
             intent.putExtra(PARAM_USERNAME, username)
             intent.putExtra(PARAM_USERID, userId)
@@ -61,7 +63,8 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_loading)
+        binding = ActivityLoadingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initColor()
         presenter = LoadingPresenter(qiscusMultichannelWidget)
 
@@ -82,8 +85,12 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
             window.statusBarColor = qiscusMultichannelWidget.getColor().getStatusBarColor()
         }
 
-        container.setBackgroundColor(qiscusMultichannelWidget.getColor().getNavigationColor())
-        textLoading.setTextColor(qiscusMultichannelWidget.getColor().getNavigationTitleColor())
+        binding.container.setBackgroundColor(
+            qiscusMultichannelWidget.getColor().getNavigationColor()
+        )
+        binding.textLoading.setTextColor(
+            qiscusMultichannelWidget.getColor().getNavigationTitleColor()
+        )
     }
 
     override fun onResume() {
@@ -105,7 +112,12 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
 
     override fun onSuccess(room: QChatRoom) {
         ChatRoomActivity.generateIntent(
-            this, room, getQMessage(room.id), isAutoSendMEssage, isTest = false, clearTaskActivity = false
+            this,
+            room,
+            getQMessage(room.id),
+            isAutoSendMEssage,
+            isTest = false,
+            clearTaskActivity = false
         )
         finish()
     }

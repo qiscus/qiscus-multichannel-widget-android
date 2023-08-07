@@ -10,13 +10,33 @@ import com.qiscus.multichannel.data.model.user.UserProperties
  * GitHub     : https://github.com/arioki
  */
 data class DataInitialChat(
-    @SerializedName("app_id") val appId: String?,
-    @SerializedName("user_id") val userId: String?,
-    @SerializedName("name") val name: String?,
-    @SerializedName("avatar") val avatar: String? = "",
-    @SerializedName("nonce") val nonce: String?,
-    @SerializedName("origin") val origin: String? = "",
-    @SerializedName("extras") val extras: String? = null,
-    @SerializedName("user_properties") val userProp: List<UserProperties>?,
-    @SerializedName("channel_id") val channelId: Int?
+    @field:SerializedName("app_id")
+    val appId: String?,
+
+    @field:SerializedName("user_id")
+    val userId: String?,
+
+    @field:SerializedName("name")
+    val name: String?,
+
+    @field:SerializedName("avatar")
+    val avatar: String? = "",
+
+    @field:SerializedName("nonce")
+    val nonce: String?,
+
+    @field:SerializedName("origin")
+    val origin: String? = "",
+
+    @field:SerializedName("extras")
+    val extras: String? = null,
+
+    @field:SerializedName("user_properties")
+    val userProp: List<UserProperties>?,
+
+    @field:SerializedName("channel_id")
+    val channelId: Int?,
+
+    @field:SerializedName("session_id")
+    val sessionId: String?
 )

@@ -33,9 +33,9 @@ internal class DateUtilTest {
         val cal = Calendar.getInstance().apply {
             add(Calendar.DATE, -1)
         }
-        assertEquals(
-            DateUtil.getLastMessageTimestamp(cal.time), "Yesterday"
-        )
+        val time = DateUtil.getLastMessageTimestamp(cal.time)
+
+        assertEquals(time, "Yesterday")
 
         val fullCal = Calendar.getInstance().apply {
             add(Calendar.DATE, -2)
@@ -91,4 +91,5 @@ internal class DateUtilTest {
         }
 
     }
+
 }

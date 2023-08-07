@@ -44,11 +44,11 @@ class AudioVH(
     QMessage.DownloadingListener {
 
     private val retriever: MediaMetadataRetriever = MediaMetadataRetriever()
-    private val playButton: AppCompatImageView? = itemView.findViewById(R.id.iv_play)
-    private val seekBar: AppCompatSeekBar? = itemView.findViewById(R.id.seekbar)
-    private val durationView: AppCompatTextView? = itemView.findViewById(R.id.tv_duration)
-    private val progressView: QiscusProgressView? =
-        itemView.findViewById<View>(R.id.progress) as QiscusProgressView?
+    private val playButton: AppCompatImageView = itemView.findViewById(R.id.iv_play)
+    private val seekBar: AppCompatSeekBar = itemView.findViewById(R.id.seekbar)
+    private val durationView: AppCompatTextView = itemView.findViewById(R.id.tv_duration)
+    private val progressView: QiscusProgressView =
+        itemView.findViewById<View>(R.id.progress) as QiscusProgressView
 
     private var qiscusComment: QMessage? = null
     private var isLocal = false
@@ -81,10 +81,12 @@ class AudioVH(
                     R.drawable.qiscus_rounded_chat_bg_mc
                 ), backgroundColor
             )
-        playButton?.setColorFilter(colorIcon)
-        durationView?.setTextColor(colorText)
+        playButton.setColorFilter(colorIcon)
+        durationView.setTextColor(colorText)
 
-        seekBar?.apply {
+        seekBar.apply {
+            if (progressDrawable == null) return@apply
+
             val layerDrawable: LayerDrawable = progressDrawable as LayerDrawable
             val progress = layerDrawable.findDrawableByLayerId(android.R.id.progress) as Drawable
             val secondary =
@@ -102,12 +104,12 @@ class AudioVH(
             thumb.colorFilter = PorterDuffColorFilter(colorIcon, PorterDuff.Mode.SRC_ATOP)
         }
 
-        playButton?.setOnClickListener {
+        playButton.setOnClickListener {
             qiscusComment?.let {
                 if (!it.isDownloading && isLocal) {
                     playAudio(
                         it,
-                        MultichannelConst.qiscusCore()?.dataStore?.getLocalPath(it.id)?.absolutePath.toString()
+                        MultichannelConst.qiscusCore()!!.dataStore.getLocalPath(it.id).absolutePath
                     )
                 } else {
                     itemView.callOnClick()
@@ -116,23 +118,25 @@ class AudioVH(
 
         }
 
-        seekBar?.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+        seekBar.setOnSeekBarChangeListener(onSeekBarChangeListener(qiscusComment))
+    }
 
-            override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {}
+    private fun onSeekBarChangeListener(qiscusComment: QMessage?) = object : OnSeekBarChangeListener {
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-                isSeekBarTouch = true
+        override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) { }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar) {
+            isSeekBarTouch = true
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar) {
+            qiscusComment?.let {
+                isSeekBarTouch = false
+                currentPosition = seekBar.progress
+                setTimeRemaining((duration - seekBar.progress).toLong())
+                audioHandler.seekToPosition(it.id, seekBar.progress)
             }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                qiscusComment?.id?.let {
-                    isSeekBarTouch = false
-                    currentPosition = seekBar.progress
-                    setTimeRemaining((duration - seekBar.progress).toLong())
-                    audioHandler.seekToPosition(it, seekBar.progress)
-                }
-            }
-        })
+        }
     }
 
     override fun getChatFrom(): Drawable? =
@@ -148,10 +152,11 @@ class AudioVH(
             audioHandler.pauseMedia()
             onPauseAudio()
         } else {
-            val file = MultichannelConst.qiscusCore()?.dataStore?.getLocalPath(comment.id)
+            val file = MultichannelConst.qiscusCore()!!.dataStore.getLocalPath(comment.id)
             isLocal = file != null
-            getDuration(if (isLocal) file?.absolutePath.toString() else "",
-                Action { setDurationView() })
+            getDuration(
+                if (isLocal) file.absolutePath.toString() else ""
+            ) { setDurationView() }
             initView(comment)
         }
     }
@@ -165,7 +170,7 @@ class AudioVH(
     }
 
     private fun setDurationView() {
-        seekBar!!.max = duration
+        seekBar.max = duration
         seekBar.progress = currentPosition
         setTimeRemaining(duration.toLong())
     }
@@ -185,7 +190,7 @@ class AudioVH(
     }
 
     private fun setUpPlayButton() {
-        playButton?.setImageResource(
+        playButton.setImageResource(
             if (!isLocal) R.drawable.ic_qiscus_download_file
             else if (playerState == AudioHandler.STATE_PLAY) R.drawable.ic_qiscus_pause_audio
             else R.drawable.ic_qiscus_play_audio
@@ -193,19 +198,19 @@ class AudioVH(
     }
 
     private fun setTimeRemaining(duration: Long) {
-        durationView?.text = DateUtils.formatElapsedTime(duration / 1000)
+        durationView.text = DateUtils.formatElapsedTime(duration / 1000)
     }
 
     private fun onPlayingAudio(currentPosition: Int) {
         this.currentPosition = currentPosition
         setTimeRemaining((duration - currentPosition).toLong())
         setUpPlayButton()
-        if (!isSeekBarTouch) seekBar!!.progress = currentPosition
+        if (!isSeekBarTouch) seekBar.progress = currentPosition
     }
 
     fun onPauseAudio() {
         isSeekBarTouch = false
-        playButton!!.setImageResource(R.drawable.ic_qiscus_play_audio)
+        playButton.setImageResource(R.drawable.ic_qiscus_play_audio)
         playerState = AudioHandler.STATE_PAUSE
     }
 
@@ -271,33 +276,36 @@ class AudioVH(
     }
 
     fun onProgress(total: Long) {
-        QiscusAndroidUtil.runOnUIThread { progressView?.setProgress(total.toInt()) }
+        QiscusAndroidUtil.runOnUIThread { progressView.setProgress(total.toInt()) }
     }
 
     override fun onProgress(qiscusComment: QMessage, percentage: Int) {
-        if (qiscusComment == this.qiscusComment && progressView != null) {
+        if (qiscusComment == this.qiscusComment) {
             onProgress(percentage.toLong())
         }
     }
 
     override fun onDownloading(comment: QMessage, isDownloading: Boolean) {
         if (this.qiscusComment == comment) {
-            progressView?.let {
-                it.setProgress(comment.progress)
-                if (isDownloading) {
-                    it.setVisibility(View.VISIBLE)
-                    playButton?.visibility = View.INVISIBLE
-                } else if (comment.progress == 100) {
-                    it.setVisibility(View.GONE)
-                    playButton?.visibility = View.VISIBLE
-                    playButton?.setImageResource(R.drawable.ic_qiscus_play_audio)
+            progressView.setProgress(comment.progress)
+            if (isDownloading) {
+                progressView.setVisibility(View.VISIBLE)
+                playButton.visibility = View.INVISIBLE
 
-                    val file = MultichannelConst.qiscusCore()?.dataStore?.getLocalPath(comment.id)
-                    isLocal = file != null
-                    getDuration(if (isLocal) file?.absolutePath.toString() else "",
-                        Action { setDurationView() })
+            } else if (comment.progress == 100) {
+                progressView.setVisibility(View.GONE)
+                playButton.visibility = View.VISIBLE
+                playButton.setImageResource(R.drawable.ic_qiscus_play_audio)
+
+                val file = MultichannelConst.qiscusCore()!!.dataStore.getLocalPath(comment.id)
+                isLocal = file != null
+                getDuration(
+                    if (isLocal) file.absolutePath.toString() else "",
+                ) {
+                    setDurationView()
                 }
             }
+
         }
     }
 

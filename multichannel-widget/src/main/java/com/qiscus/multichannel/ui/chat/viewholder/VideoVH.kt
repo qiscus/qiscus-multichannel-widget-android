@@ -22,10 +22,10 @@ class VideoVH(
     viewType: Int
 ) : BaseImageVideoViewHolder(itemView, config, color, viewType) {
 
-    private val ivPlay: ImageView? = itemView.findViewById(R.id.ivPlay)
+    private val ivPlay: ImageView = itemView.findViewById(R.id.ivPlay)
 
     init {
-        ivPlay?.setImageDrawable(
+        ivPlay.setImageDrawable(
             ResourceManager.getTintDrawable(
                 ContextCompat.getDrawable(
                     itemView.context,

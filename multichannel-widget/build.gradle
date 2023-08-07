@@ -1,28 +1,32 @@
-apply plugin: 'com.android.library'
-
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id('com.android.library')
+    id('kotlin-android')
+    id('kotlin-parcelize')
+    id('org.jetbrains.kotlin.android')
+}
 
 apply from: 'publish.gradle'
 
-apply from: "../sonarqube.gradle"
+apply from: rootProject.file('sonarqube.gradle')
 
-apply from: "../jacoco.gradle"
+apply from: rootProject.file('jacoco.gradle')
 
-apply from: "../testdependencies.gradle"
+apply from: rootProject.file('testdependencies.gradle')
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 34
 //    buildToolsVersion "31.0.0"
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 32
+        targetSdkVersion 34
         multiDexEnabled true
         // test
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArgument("runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder")
+        testInstrumentationRunnerArgument "runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder"
         testInstrumentationRunnerArgument 'size', 'Large'
+    }
+    sourceSets.forEach {
+        it.java.srcDir("src/${it.name}/java")
     }
 
     buildTypes {
@@ -45,13 +49,14 @@ android {
     }
 
     packagingOptions {
-        exclude 'META-INF/rxjava.properties'
+        exclude('META-INF/rxjava.properties')
     }
 
     testOptions {
+//        execution 'ANDROIDX_TEST_ORCHESTRATOR'
         unitTests {
-            includeAndroidResources = true
-            returnDefaultValues = true
+            includeAndroidResources true
+            returnDefaultValues true
         }
         unitTests.all {
             useJUnitPlatform()
@@ -70,10 +75,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.core:core-ktx:1.0.2'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.multidex:multidex:2.0.1'
 
     //compressor
@@ -90,12 +95,14 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.7.21'
+
     // test
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.7.21'
+    implementation 'androidx.core:core-ktx:+'
     testImplementation testDependencies
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    androidTestImplementation androidTestDependencies
+    testImplementation 'junit:junit:4.12'
     testRuntimeOnly runtimeTestDependencies
+    androidTestImplementation androidTestDependencies
     androidTestRuntimeOnly runtimeAndroidTestDependencies
 }
 

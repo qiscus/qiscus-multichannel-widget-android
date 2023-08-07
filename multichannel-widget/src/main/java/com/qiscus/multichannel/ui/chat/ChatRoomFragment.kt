@@ -19,14 +19,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.qiscus.jupuk.JupukBuilder
@@ -34,25 +32,24 @@ import com.qiscus.jupuk.JupukConst
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.data.local.QiscusChatLocal
+import com.qiscus.multichannel.databinding.FragmentChatRoomMcBinding
 import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.AUTO_MESSAGE_KEY
-import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.MESSAGE_KEY
 import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.CHATROOM_KEY
+import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.MESSAGE_KEY
 import com.qiscus.multichannel.ui.chat.image.ImageMessageActivity
 import com.qiscus.multichannel.ui.chat.image.ImageMessageActivity.Companion.CAPTION_COMMENT_IMAGE
 import com.qiscus.multichannel.ui.chat.image.ImageMessageActivity.Companion.DATA
 import com.qiscus.multichannel.ui.loading.LoadingActivity
 import com.qiscus.multichannel.ui.view.QiscusChatScrollListener
-import com.qiscus.multichannel.ui.webView.WebViewHelper
+import com.qiscus.multichannel.ui.webview.WebViewHelper
 import com.qiscus.multichannel.util.*
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.util.QiscusFileUtil
-import kotlinx.android.synthetic.*
-import kotlinx.android.synthetic.main.fragment_chat_room_mc.*
-import kotlinx.android.synthetic.main.message_layout_reply.*
+import com.qiscus.sdk.chat.core.util.QiscusTextUtil
+import id.zelory.compressor.Compressor
 import org.json.JSONObject
-import rx.functions.Action2
 import java.io.File
 import java.io.IOException
 import java.lang.reflect.Field
@@ -67,6 +64,7 @@ import java.util.*
 class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     ChatRoomPresenter.ChatRoomView, QiscusPermissionsUtil.PermissionCallbacks {
 
+    private lateinit var binding: FragmentChatRoomMcBinding
     private val qiscusMultichannelWidget: MultichanelChatWidget = QiscusMultichannelWidget.instance
     private var isChatNoEmpty: Boolean = false
     protected val SEND_PICTURE_CONFIRMATION_REQUEST = 4
@@ -79,13 +77,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     private var commentSelectedListener: CommentSelectedListener? = null
     private var userTypingListener: OnUserTypingListener? = null
     private var selectedComment: QMessage? = null
-    private lateinit var rvMessage: RecyclerView
     private var isTyping = false
 
     companion object {
 
-        fun newInstance(qiscusChatRoom: QChatRoom, autoQiscusMessage: QMessage?,
-                        isAutoSendMessage: Boolean): ChatRoomFragment {
+        fun newInstance(
+            qiscusChatRoom: QChatRoom, autoQiscusMessage: QMessage?,
+            isAutoSendMessage: Boolean
+        ): ChatRoomFragment {
             val chatRoomFragment = ChatRoomFragment()
             val bundle = Bundle()
             bundle.putParcelable(CHATROOM_KEY, qiscusChatRoom)
@@ -100,10 +99,9 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_chat_room_mc, container, false)
-        rvMessage = view.findViewById(R.id.rvMessage) as RecyclerView
-        return view
+    ): View {
+        binding = FragmentChatRoomMcBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -123,8 +121,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             throw RuntimeException("please provide qiscus chat room")
         }
 
-        btnSend.setOnClickListener { sendingComment() }
-        btn_new_room.setOnClickListener {
+        binding.btnSend.setOnClickListener { sendingComment() }
+        binding.btnNewRoom.setOnClickListener {
             val account = MultichannelConst.qiscusCore()?.qiscusAccount!!
             QiscusChatLocal.setRoomId(0)
             LoadingActivity.generateIntent(
@@ -137,19 +135,24 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             )
             activity?.finish()
         }
-        btnCancelReply.setOnClickListener { rootViewSender.visibility = View.GONE }
+        binding.rootViewSender.btnCancelReply.setOnClickListener {
+            binding.rootViewSender.root.visibility = View.GONE
+        }
         qiscusChatRoom?.let {
             presenter =
-                ChatRoomPresenter(it, qiscusMultichannelWidget.getComponent().qiscusChatRepository)
+                ChatRoomPresenter(
+                    it,
+                    qiscusMultichannelWidget.getComponent().getQiscusChatRepository()
+                )
             presenter.attachView(this)
             presenter.loadComments(20)
             showNewChatButton(it.extras.getBoolean("is_resolved"))
         }
 
-        btnAttachmentCamera.setOnClickListener { showImageDialog() }
-        btnAttachmentDoc.setOnClickListener { openFile() }
+        binding.btnAttachmentCamera.setOnClickListener { showImageDialog() }
+        binding.btnAttachmentDoc.setOnClickListener { openFile() }
 
-        etMessage.afterTextChangedDelayed({
+        binding.etMessage.afterTextChangedDelayed({
             notifyServerTyping(true)
         }, {
             notifyServerTyping(false)
@@ -163,14 +166,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             if (isAutoSendMessage) {
                 presenter.sendComment(it)
             } else {
-                etMessage.setText(it.text)
+                binding.etMessage.setText(it.text)
             }
         }
     }
 
     private fun initColor() = with(qiscusMultichannelWidget.getColor()) {
         context?.let {
-            etMessage.background = GradientDrawable().apply {
+            binding.etMessage.background = GradientDrawable().apply {
                 setColor(ContextCompat.getColor(it, R.color.qiscus_white_mc))
                 shape = GradientDrawable.RECTANGLE
                 cornerRadius = ResourceManager.getDimen((it as ChatRoomActivity).displayMetrics, 8)
@@ -179,28 +182,29 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                     getFieldChatBorderColor()
                 )
             }
-            btn_new_room.background = ResourceManager.getTintDrawable(
+            binding.btnNewRoom.background = ResourceManager.getTintDrawable(
                 ContextCompat.getDrawable(it, R.drawable.qiscus_button_bg),
                 getNavigationColor()
             )
 
-            messageInputPanel.setBackgroundColor(getSendContainerBackgroundColor())
-            btn_new_room.setTextColor(getNavigationTitleColor())
-            btnAttachmentCamera.setColorFilter(getSendContainerColor())
-            btnAttachmentDoc.setColorFilter(getSendContainerColor())
-            btnSend.setColorFilter(getSendContainerColor())
-            rootViewSender.setBackgroundColor(getBaseColor())
-            originSender.setTextColor(getNavigationColor())
-            btnCancelReply.setColorFilter(getSendContainerColor())
+            binding.messageInputPanel.setBackgroundColor(getSendContainerBackgroundColor())
+            binding.btnNewRoom.setTextColor(getNavigationTitleColor())
+            binding.btnAttachmentCamera.setColorFilter(getSendContainerColor())
+            binding.btnAttachmentDoc.setColorFilter(getSendContainerColor())
+            binding.btnSend.setColorFilter(getSendContainerColor())
+            binding.rootViewSender.root.setBackgroundColor(getBaseColor())
+            binding.rootViewSender.originSender.setTextColor(getNavigationColor())
+            binding.rootViewSender.btnCancelReply.setColorFilter(getSendContainerColor())
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                progressBar.indeterminateDrawable.colorFilter =
+                binding.progressBar.indeterminateDrawable.colorFilter =
                     BlendModeColorFilter(
                         getNavigationColor(), BlendMode.SRC_IN
                     )
             } else {
-                progressBar.indeterminateDrawable.setColorFilter(
-                    getNavigationColor(), PorterDuff.Mode.SRC_IN);
+                binding.progressBar.indeterminateDrawable.setColorFilter(
+                    getNavigationColor(), PorterDuff.Mode.SRC_IN
+                )
             }
 
         }
@@ -244,10 +248,10 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     private fun initRecyclerMessage() {
         val layoutManager = LinearLayoutManager(ctx)
         layoutManager.reverseLayout = true
-        rvMessage.layoutManager = layoutManager
-        rvMessage.itemAnimator = null
-        rvMessage.setHasFixedSize(true)
-        rvMessage.addOnScrollListener(QiscusChatScrollListener(layoutManager, this))
+        binding.rvMessage.layoutManager = layoutManager
+        binding.rvMessage.itemAnimator = null
+        binding.rvMessage.setHasFixedSize(true)
+        binding.rvMessage.addOnScrollListener(QiscusChatScrollListener(layoutManager, this))
 
         audioHandler = AudioHandler(ctx)
         commentsAdapter = CommentsAdapter(
@@ -256,7 +260,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             qiscusMultichannelWidget.getColor(),
             audioHandler
         )
-        rvMessage.adapter = commentsAdapter
+        binding.rvMessage.adapter = commentsAdapter
 
         commentsAdapter.setOnItemClickListener(object : CommentsAdapter.ItemViewListener {
 
@@ -290,9 +294,9 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun onLoadReply(comment: QMessage) {
         commentsAdapter.goToComment(comment.id,
-            Action2 { _, position ->
-                rvMessage.scrollToPosition(position)
-                rvMessage.postDelayed( {
+            { _, position ->
+                binding.rvMessage.scrollToPosition(position)
+                binding.rvMessage.postDelayed({
                     commentsAdapter.clearSelected(position)
                 }, 2000)
             })
@@ -302,20 +306,20 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         if (isChatNoEmpty) return
 
         if (isNoEmpty) {
-            containerBackground.setBackgroundColor(
+            binding.containerBackground.setBackgroundColor(
                 qiscusMultichannelWidget.getColor().getBaseColor()
             )
-            tvEmpty.visibility = View.GONE
+            binding.tvEmpty.visibility = View.GONE
         } else if (context != null) {
-            containerBackground.setBackgroundColor(
+            binding.containerBackground.setBackgroundColor(
                 qiscusMultichannelWidget.getColor().getEmptyBacgroundColor()
             )
-            tvEmpty.setTextColor(qiscusMultichannelWidget.getColor().getEmptyTextColor())
-            tvEmpty.text = HtmlCompat.fromHtml(
+            binding.tvEmpty.setTextColor(qiscusMultichannelWidget.getColor().getEmptyTextColor())
+            binding.tvEmpty.text = HtmlCompat.fromHtml(
                 context!!.getString(R.string.qiscus_empyText),
                 HtmlCompat.FROM_HTML_MODE_LEGACY
             )
-            tvEmpty.visibility = View.VISIBLE
+            binding.tvEmpty.visibility = View.VISIBLE
         }
 
         this.isChatNoEmpty = isNoEmpty
@@ -331,7 +335,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             QMessage.Type.FILE -> {
                 downloadFile(comment)
             }
-            else -> {
+            else -> { /*ignored*/
             }
         }
     }
@@ -344,18 +348,18 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     private fun sendingComment() {
-        if (!TextUtils.isEmpty(etMessage.text)) {
-            if (rootViewSender.isVisible) {
+        if (!TextUtils.isEmpty(binding.etMessage.text)) {
+            if (binding.rootViewSender.root.isVisible) {
                 selectedComment?.let {
-                    presenter.sendReplyComment(etMessage.text.toString(), it)
+                    presenter.sendReplyComment(binding.etMessage.text.toString(), it)
                 }
-                rootViewSender.visibility = View.GONE
+                binding.rootViewSender.root.visibility = View.GONE
                 selectedComment = null
             } else {
-                sendComment(etMessage.text.toString())
+                sendComment(binding.etMessage.text.toString())
             }
 
-            etMessage.setText("")
+            binding.etMessage.setText("")
         }
         setChatNoEmpty(true)
     }
@@ -421,8 +425,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
      * */
     private fun pickImageUsingJupuk() {
         JupukBuilder().setMaxCount(30)
-                .enableVideoPicker(true)
-                .pickPhoto(this)
+            .enableVideoPicker(true)
+            .pickPhoto(this)
     }
 
     private fun openGallery() {
@@ -485,31 +489,31 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         val obj = JSONObject(origin.payload)
         val me = MultichannelConst.qiscusCore()?.qiscusAccount?.id
 
-        originSender.text =
+        binding.rootViewSender.originSender.text =
             if (origin.isMyComment(me)) ctx.getText(R.string.qiscus_you_mc)
             else origin.sender.name
 
         when (origin.type) {
-            QMessage.Type.IMAGE,  QMessage.Type.VIDEO -> {
-                originImage.visibility = View.VISIBLE
+            QMessage.Type.IMAGE, QMessage.Type.VIDEO -> {
+                binding.rootViewSender.originImage.visibility = View.VISIBLE
 
                 Nirmana.getInstance().get()
                     .load(origin.attachmentUri)
-                    .into(originImage)
+                    .into(binding.rootViewSender.originImage)
 
                 val caption: String? = obj.getString("caption")
-                originContent.text = MultichannelQMessageUtils.getFileName(
+                binding.rootViewSender.originContent.text = MultichannelQMessageUtils.getFileName(
                     if (caption != null && caption == "") origin.text
                     else caption
                 )
             }
             QMessage.Type.FILE -> {
-                originContent.text = origin.attachmentName
-                originImage.visibility = View.GONE
+                binding.rootViewSender.originContent.text = origin.attachmentName
+                binding.rootViewSender.originImage.visibility = View.GONE
             }
             else -> {
-                originImage.visibility = View.GONE
-                originContent.text = origin.text
+                binding.rootViewSender.originImage.visibility = View.GONE
+                binding.rootViewSender.originContent.text = origin.text
             }
         }
     }
@@ -549,7 +553,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     fun replyComment() {
         clearSelectedComment()
         selectedComment = commentsAdapter.getSelectedComment()
-        rootViewSender.visibility = if (selectedComment == null) View.GONE else View.VISIBLE
+        binding.rootViewSender.root.visibility =
+            if (selectedComment == null) View.GONE else View.VISIBLE
         selectedComment?.let { bindReplyView(it) }
     }
 
@@ -601,16 +606,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         loadMoreComments()
     }
 
-    override fun onMiddleOffListMessage() {
-
+    override fun onMiddleOffListMessage() { /*ignored*/
     }
 
-    override fun onBottomOffListMessage() {
-
+    override fun onBottomOffListMessage() {/*ignored*/
     }
 
     private fun loadMoreComments() {
-        if (progressBar.visibility == View.GONE && commentsAdapter.itemCount > 0) {
+        if (binding.progressBar.visibility == View.GONE && commentsAdapter.itemCount > 0) {
             val comment = commentsAdapter.data.get(commentsAdapter.itemCount - 1)
             if (comment.id == -1L || comment.previousMessageId > 0) {
                 presenter.loadOlderCommentThan(comment)
@@ -638,17 +641,17 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun onNewComment(comment: QMessage) {
         commentsAdapter.addOrUpdate(comment)
-        if ((rvMessage.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() <= 2) {
-            rvMessage.smoothScrollToPosition(0)
+        if ((binding.rvMessage.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition() <= 2) {
+            binding.rvMessage.smoothScrollToPosition(0)
         }
     }
 
     override fun showLoading() {
-        progressBar.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.VISIBLE
     }
 
     override fun dismissLoading() {
-        progressBar.visibility = View.GONE
+        binding.progressBar.visibility = View.GONE
     }
 
     override fun onCommentDeleted(comment: QMessage) {
@@ -657,7 +660,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun onSendingComment(comment: QMessage) {
         commentsAdapter.addOrUpdate(comment)
-        rvMessage.scrollToPosition(0)
+        binding.rvMessage.scrollToPosition(0)
     }
 
     override fun updateLastDeliveredComment(lastDeliveredCommentId: Long) {
@@ -702,11 +705,11 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun showNewChatButton(it: Boolean) {
         if (it && qiscusMultichannelWidget.getConfig().isSessional()) {
-            newChatPanel.visibility = View.VISIBLE
-            messageInputPanel.visibility = View.GONE
+            binding.newChatPanel.visibility = View.VISIBLE
+            binding.messageInputPanel.visibility = View.GONE
         } else {
-            newChatPanel.visibility = View.GONE
-            messageInputPanel.visibility = View.VISIBLE
+            binding.newChatPanel.visibility = View.GONE
+            binding.messageInputPanel.visibility = View.VISIBLE
         }
     }
 
@@ -716,8 +719,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         activity?.finish()
     }
 
-    override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
-
+    override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {/*ignored*/
     }
 
     private fun notifyLatestRead() {
@@ -760,7 +762,10 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                 val paths = it.getStringArrayListExtra(DATA)
                 val captions = it.getStringArrayListExtra(CAPTION_COMMENT_IMAGE)
                 for (i in paths!!.indices) {
-                    presenter.sendFile(File(Uri.parse(paths[i]).path), captions!![i])
+                    sendFile(
+                        File(Uri.parse(paths[i]).path.toString()),
+                        captions!![i]
+                    )
                 }
             }
 
@@ -830,11 +835,30 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         } else if (requestCode == JupukConst.REQUEST_CODE_DOC) {
             val paths = data?.getStringArrayListExtra(JupukConst.KEY_SELECTED_DOCS)
             if (paths != null && paths.isNotEmpty()) {
-                presenter.sendFile(File(paths[0]), "")
+                sendFile(File(paths[0]), "")
             }
             setChatNoEmpty(true)
         }
 
+    }
+
+    private fun sendFile(file: File, caption: String) {
+        val compressedFile = if (QiscusFileUtil.isImage(file.path) && !file.name.endsWith(".gif")) {
+            try {
+                Compressor(MultichannelConst.qiscusCore()!!.apps).compressToFile(file)
+            } catch (e: NullPointerException) {
+                showError(QiscusTextUtil.getString(R.string.qiscus_corrupted_file_mc))
+                return
+            } catch (e: IOException) {
+                showError(QiscusTextUtil.getString(R.string.qiscus_corrupted_file_mc))
+                return
+            }
+
+        } else {
+            QiscusFileUtil.saveFile(file)
+        }
+
+        presenter.sendFile(compressedFile, caption, JSONObject())
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
@@ -846,8 +870,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
-        @NonNull permissions: Array<String>,
-        @NonNull grantResults: IntArray
+        permissions: Array<String>,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         QiscusPermissionsUtil.onRequestPermissionsResult(
@@ -858,6 +882,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         )
     }
 
+    @SuppressLint("InflateParams")
     private fun showImageDialog() {
         val dialogView = layoutInflater.inflate(R.layout.bottom_sheet_attachment_mc, null)
         val dialog = BottomSheetDialog(ctx, R.style.AppBottomSheetDialogTheme)
@@ -874,8 +899,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {/*ignored*/
             }
         })
 
@@ -929,8 +953,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         super.onDestroy()
         MultichannelConst.qiscusCore()?.cacheManager?.setLastChatActivity(false, 0)
         presenter.detachView()
-        rvMessage.adapter = null
-        clearFindViewByIdCache()
+        binding.rvMessage.adapter = null
+//        clearFindViewByIdCache()
     }
 
 

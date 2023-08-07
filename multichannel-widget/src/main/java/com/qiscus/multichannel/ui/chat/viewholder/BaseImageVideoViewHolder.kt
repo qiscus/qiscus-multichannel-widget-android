@@ -18,7 +18,7 @@ import com.qiscus.multichannel.QiscusMultichannelWidgetColor
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.ui.chat.CommentsAdapter
-import com.qiscus.multichannel.ui.webView.WebViewHelper
+import com.qiscus.multichannel.ui.webview.WebViewHelper
 import com.qiscus.multichannel.util.MultichannelConst
 import com.qiscus.multichannel.util.ResourceManager
 import com.qiscus.nirmana.Nirmana

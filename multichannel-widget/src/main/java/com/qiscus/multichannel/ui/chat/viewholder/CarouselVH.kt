@@ -1,6 +1,7 @@
 package com.qiscus.multichannel.ui.chat.viewholder
 
 import android.view.View
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -9,8 +10,8 @@ import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.ui.chat.CarouselAdapter
 import com.qiscus.multichannel.ui.chat.CommentsAdapter
+import com.qiscus.multichannel.ui.view.DotIndicatorView
 import com.qiscus.sdk.chat.core.data.model.QMessage
-import kotlinx.android.synthetic.main.item_carousel_mc.view.*
 import org.json.JSONObject
 
 
@@ -29,35 +30,46 @@ class CarouselVH(
 ) : BaseViewHolder(itemView, config, color) {
 
     private var onScrollIsReady = false
+    private val containerCarousel: CardView
+    private val dotIndicator: DotIndicatorView
+    private val rvCarousel: RecyclerView
 
     init {
-        itemView.container_carousel.setCardBackgroundColor(
+        containerCarousel = itemView.findViewById(R.id.container_carousel)
+        dotIndicator = itemView.findViewById(R.id.dot_indicator)
+        rvCarousel = itemView.findViewById(R.id.rv_carousel)
+
+        containerCarousel.setCardBackgroundColor(
             ContextCompat.getColor(
                 itemView.context,
                 R.color.qiscus_white_mc
             )
         )
 
-        itemView.dot_indicator.apply {
+        dotIndicator.apply {
             setSpacing(4)
             setSize(8)
             setSelectedColor(color.getNavigationColor())
             setUnselectedColor(color.getLeftBubbleColor())
         }
 
-        itemView.rv_carousel.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (onScrollIsReady) {
-                    itemView.dot_indicator.setPosition(
-                        finPosition(recyclerView.layoutManager as LinearLayoutManager)
-                    )
-                }
-            }
-        })
+        rvCarousel.addOnScrollListener(
+            onScrollListener(onScrollIsReady)
+        )
 
     }
 
-    private fun finPosition(manager: LinearLayoutManager): Int {
+    private fun onScrollListener(onScrollIsReady: Boolean) = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            if (onScrollIsReady) {
+                dotIndicator.setPosition(
+                    findPosition(recyclerView.layoutManager as LinearLayoutManager)
+                )
+            }
+        }
+    }
+
+    private fun findPosition(manager: LinearLayoutManager): Int {
         return if (manager.findFirstCompletelyVisibleItemPosition() == 0) 0
         else manager.findLastCompletelyVisibleItemPosition()
     }
@@ -66,8 +78,8 @@ class CarouselVH(
         super.bind(comment)
         JSONObject(comment.payload).getJSONArray("cards").let {
             val adapter = CarouselAdapter(config, color, it, comment, listener)
-            itemView.rv_carousel.adapter = adapter
-            itemView.dot_indicator.createDotIndicator(adapter.itemCount)
+            rvCarousel.adapter = adapter
+            dotIndicator.createDotIndicator(adapter.itemCount)
         }
 
         onScrollIsReady = true
