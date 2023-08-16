@@ -15,6 +15,7 @@ import com.qiscus.multichannel.sample.widget.service.FirebaseServices
 import com.qiscus.multichannel.util.QiscusChatRoomBuilder
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import com.qiscus.sdk.chat.core.data.model.QMessage
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
@@ -67,11 +68,18 @@ class MainActivity : AppCompatActivity() {
                 "https://vignette.wikia.nocookie.net/fatal-fiction-fanon/images/9/9f/Doraemon.png/revision/latest?cb=20170922055255"
 
             if (isValidEmail(email)) {
-                val userProperties = mapOf(
-                    "city" to "jogja",
-                    "job" to "developer"
-                ) // userProperties are additional details of the user(optional)
-                qiscusMultichannelWidget.setUser(email, username, avatarUrl, userProperties)
+                qiscusMultichannelWidget.setUser(
+                    userId = email,
+                    name = username,
+                    avatar = avatarUrl,
+                    // userProperties are additional details of the user(optional)
+                    userProperties = mapOf(
+                        "city" to "jogja",
+                        "job" to "developer"
+                    ),
+                    // extras custom data(optional)
+                    extras = JSONObject("{\"user_lastname\": \"red\" }")
+                )
 
                 onValid.call()
             } else {
@@ -82,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initChat(channelId: Int) {
         configureInitiateChat(channelId)
-            .showLoadingWhenInitiate(true)
+            .showLoadingWhenInitiate(true) // if showLoadingWhenInitiate is true it doesn't trigger the callback
             .startChat(this, object : QiscusChatRoomBuilder.InitiateCallback {
                 override fun onProgress() {
                     Log.i("InitiateCallback", "onProgress: ")
@@ -99,13 +107,22 @@ class MainActivity : AppCompatActivity() {
                     isAutomatic: Boolean
                 ) {
                     Log.i("InitiateCallback", "onSuccess: ")
-                    qiscusMultichannelWidget.openChatRoomById(
+
+                     /**
+                      * replace openChatRoomById to openChatRoom
+                      * only call openChatRoom after initiateChat
+                     * */
+
+                    qiscusMultichannelWidget.openChatRoom(
                         this@MainActivity,
-                        qChatRoom.id,
+                        qChatRoom,
+                        qMessage,
+                        isAutomatic,
                         true
-                    ) { throwable ->
-                        throwable.printStackTrace()
+                    ) {
+                        Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_LONG).show()
                     }
+
                     binding.login.isEnabled = true
                     binding.login.background = ContextCompat.getDrawable(
                         this@MainActivity,

@@ -21,7 +21,8 @@ object QiscusChatApi {
 
         val retrofit: Retrofit = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://qismo.qiscus.com/")
+//            .baseUrl("https://qismo.qiscus.com/")
+            .baseUrl("https://qismo-stag.qiscus.com/")
             .client(client.build())
             .build()
         return retrofit.create(Api::class.java)

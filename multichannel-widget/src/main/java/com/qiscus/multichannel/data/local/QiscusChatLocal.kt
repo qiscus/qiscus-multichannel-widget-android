@@ -57,6 +57,14 @@ object QiscusChatLocal {
         return Gson().fromJson(param, Array<UserProperties>::class.java).toList()
     }
 
+    fun saveUsername(username: String?) {
+        getEditor().putString("qm_username", username).apply()
+    }
+
+    fun getUsername(): String? {
+        return getPref().getString("qm_username","")
+    }
+
     fun saveUserId(userId: String?) {
         getEditor().putString("qm_user_id", userId).apply()
     }

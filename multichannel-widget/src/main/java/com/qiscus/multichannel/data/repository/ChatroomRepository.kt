@@ -11,11 +11,25 @@ import org.json.JSONObject
  * GitHub     : https://github.com/tfkbudi
  */
 interface ChatroomRepository {
-    fun sendMessage(roomId: Long, message: QMessage, onSuccess: (QMessage) -> Unit, onError: (Throwable) -> Unit)
+    fun sendMessage(
+        roomId: Long,
+        message: QMessage,
+        onSuccess: (QMessage) -> Unit,
+        onError: (Throwable) -> Unit
+    )
 
     fun publishCustomEvent(roomId: Long, data: JSONObject)
 
     fun subscribeCustomEvent(roomId: Long)
 
-    fun loginMultichannel(userId: String?, avatar: String?, extras: String?, userProp: List<UserProperties>?, onSuccess: (QiscusNonce) -> Unit, onError: (Throwable) -> Unit)
+    fun getJwtNonce(
+        name: String?,
+        userId: String?,
+        avatar: String?,
+        sessionId: String?,
+        extras: String?,
+        userProp: List<UserProperties>?,
+        onSuccess: (QiscusNonce) -> Unit,
+        onError: (Throwable) -> Unit
+    )
 }

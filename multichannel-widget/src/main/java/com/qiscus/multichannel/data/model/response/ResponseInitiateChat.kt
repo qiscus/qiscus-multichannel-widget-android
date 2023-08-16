@@ -22,6 +22,9 @@ data class ResponseInitiateChat(
         @field:SerializedName("sdk_user")
         val sdkUser: Any? = null,
 
+        @field:SerializedName("is_secure")
+        val isSecure: Boolean? = null,
+
         @field:SerializedName("identity_token")
         val identityToken: String? = null
     ) {

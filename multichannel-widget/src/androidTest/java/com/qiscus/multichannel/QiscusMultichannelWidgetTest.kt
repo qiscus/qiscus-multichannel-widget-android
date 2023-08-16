@@ -479,7 +479,7 @@ internal class QiscusMultichannelWidgetTest : InstrumentationBaseTest() {
     private fun loginMultiChannelNonce(chatroomRepository: ChatroomRepository, isSuccess: Boolean) {
         val onSuccessNonce = argumentCaptor<(QiscusNonce) -> Unit>()
 
-        verify(chatroomRepository).loginMultichannel(
+        verify(chatroomRepository).getJwtNonce(
             ArgumentMatchers.eq("userId"), ArgumentMatchers.eq("avatar"), ArgumentMatchers.eq("{}"),
             ArgumentMatchers.eq(ArrayList()), onSuccessNonce.capture(), onError.capture()
         )
@@ -597,7 +597,7 @@ internal class QiscusMultichannelWidgetTest : InstrumentationBaseTest() {
 
     @Test
     fun testSetUser() {
-        widget?.setUser("userId", "userName", "avatar", HashMap())
+        widget?.setUser("userId", "userName", "avatar",  userProperties = HashMap())
     }
 
     @Test
@@ -616,7 +616,7 @@ internal class QiscusMultichannelWidgetTest : InstrumentationBaseTest() {
 
     @Test
     fun setUserCheck() {
-        widget?.setUser("userId", "userName", "avatar")
+        widget?.setUser("userId", "userName", "avatar",null)
 
         val userProperties = mapOf(
             "city" to "jogja",

@@ -32,6 +32,7 @@ import com.qiscus.jupuk.JupukConst
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.data.local.QiscusChatLocal
+import com.qiscus.multichannel.data.local.QiscusSessionLocal
 import com.qiscus.multichannel.databinding.FragmentChatRoomMcBinding
 import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.AUTO_MESSAGE_KEY
 import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.CHATROOM_KEY
@@ -130,6 +131,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                 account.name,
                 QiscusChatLocal.getUserId(),
                 QiscusChatLocal.getAvatar(),
+                QiscusSessionLocal.getSessionId(QiscusChatLocal.getUserId()),
                 QiscusChatLocal.getExtras(),
                 QiscusChatLocal.getUserProps()
             )

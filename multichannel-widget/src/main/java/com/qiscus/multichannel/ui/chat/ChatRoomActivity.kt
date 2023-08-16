@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.R
+import com.qiscus.multichannel.data.local.QiscusSessionLocal
 import com.qiscus.multichannel.databinding.ActivityChatRoomMcBinding
 import com.qiscus.multichannel.util.MultichanelChatWidget
 import com.qiscus.multichannel.util.MultichannelConst
@@ -83,6 +84,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         binding = ActivityChatRoomMcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        QiscusSessionLocal.removeInitiate()
         ResourceManager.setUp(this, qiscusMultichannelWidget.getColor())
         initColor()
 

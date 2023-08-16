@@ -30,15 +30,17 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
     private var userId: String? = null
     private var extras: String? = null
     private var avatar: String? = null
+    private var sessionId: String? = null
     private var userProp: ArrayList<UserProperties>? = null
     private var autoSendMessage: QMessage? = null
     private var isAutoSendMEssage: Boolean = false
-    private val qiscusMultichannelWidget: MultichanelChatWidget = QiscusMultichannelWidget.instance
+    private val qiscusMultichannelWidget = QiscusMultichannelWidget.instance
 
     companion object {
         private const val PARAM_USERNAME = "username"
         private const val PARAM_USERID = "userid"
         private const val PARAM_AVATAR = "avatar"
+        private const val PARAM_SESSION_ID = "session_id"
         private const val PARAM_EXTRAS = "extras"
         private const val PARAM_USER_PROPERTIES = "user_properties"
         private const val PARAM_MESSAGE = "message"
@@ -46,13 +48,14 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
 
         fun generateIntent(
             context: Context, username: String?, userId: String?, avatar: String?,
-            extras: JSONObject?, userProp: List<UserProperties>,
+            sessionId: String?, extras: JSONObject?, userProp: List<UserProperties>,
             qMessage: QMessage? = null, isAutomatic: Boolean = false
         ) {
             val intent = Intent(context, LoadingActivity::class.java)
             intent.putExtra(PARAM_USERNAME, username)
             intent.putExtra(PARAM_USERID, userId)
             intent.putExtra(PARAM_AVATAR, avatar)
+            intent.putExtra(PARAM_SESSION_ID, sessionId)
             intent.putExtra(PARAM_EXTRAS, extras?.toString() ?: "{}")
             intent.putExtra(PARAM_USER_PROPERTIES, ArrayList(userProp))
             intent.putExtra(PARAM_MESSAGE, qMessage)
@@ -69,10 +72,11 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
         presenter = LoadingPresenter(qiscusMultichannelWidget)
 
         intent?.let {
-            username = it.getStringExtra(PARAM_USERNAME).toString()
-            userId = it.getStringExtra(PARAM_USERID).toString()
-            extras = it.getStringExtra(PARAM_EXTRAS).toString()
-            avatar = it.getStringExtra(PARAM_AVATAR).toString()
+            username = it.getStringExtra(PARAM_USERNAME)
+            userId = it.getStringExtra(PARAM_USERID)
+            extras = it.getStringExtra(PARAM_EXTRAS)
+            avatar = it.getStringExtra(PARAM_AVATAR)
+            sessionId = it.getStringExtra(PARAM_SESSION_ID)
             userProp = it.getSerializableExtra(PARAM_USER_PROPERTIES) as ArrayList<UserProperties>
             autoSendMessage = it.getParcelableExtra(PARAM_MESSAGE)
             isAutoSendMEssage = it.getBooleanExtra(PARAM_AUTO_SEND_MESSAGE, false)
@@ -97,7 +101,11 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
         super.onResume()
         presenter.attachView(this)
 
-        presenter.initiateChat(username, userId, avatar, extras, userProp?.toList())
+        presenter.initiateChat(
+            username, userId, avatar, sessionId,
+            JSONObject(extras ?: "{}"),
+            userProp?.toList()
+        )
     }
 
     override fun onStop() {

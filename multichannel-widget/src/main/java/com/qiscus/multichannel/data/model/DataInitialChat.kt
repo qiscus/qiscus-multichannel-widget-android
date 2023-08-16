@@ -16,6 +16,9 @@ data class DataInitialChat(
     @field:SerializedName("user_id")
     val userId: String?,
 
+    @field:SerializedName("email")
+    val email: String?,
+
     @field:SerializedName("name")
     val name: String?,
 

@@ -49,24 +49,12 @@ interface MultichanelChatWidget {
 
     fun clearUser()
 
-    fun setUser(userId: String, name: String, avatar: String)
-
     fun setUser(
         userId: String,
         name: String,
         avatar: String,
-        userProperties: Map<String, String>?
-    )
-
-    fun loginMultiChannel(
-        name: String?,
-        userId: String?,
-        avatar: String?,
-        extras: String?,
-        sessionId: String?,
-        userProperties: List<UserProperties>?,
-        onSuccess: (QAccount) -> Unit,
-        onError: (Throwable) -> Unit
+        userProperties: Map<String, String>? = null,
+        extras: JSONObject = JSONObject()
     )
 
     fun isLoggedIn(): Boolean
@@ -89,6 +77,15 @@ interface MultichanelChatWidget {
     fun openChatRoomById(
         context: Context,
         roomId: Long,
+        qMessage: QMessage?,
+        isAutoSendMessage: Boolean,
+        clearTaskActivity: Boolean,
+        onError: (Throwable) -> Unit
+    )
+
+    fun openChatRoom(
+        context: Context,
+        qChatRoom: QChatRoom,
         qMessage: QMessage?,
         isAutoSendMessage: Boolean,
         clearTaskActivity: Boolean,

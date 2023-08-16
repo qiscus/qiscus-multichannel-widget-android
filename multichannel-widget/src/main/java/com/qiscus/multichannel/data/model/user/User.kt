@@ -1,5 +1,6 @@
 package com.qiscus.multichannel.data.model.user
 
+import org.json.JSONObject
 import java.io.Serializable
 
 /**
@@ -11,5 +12,7 @@ data class User(
     var userId: String = "",
     var name: String = "",
     var avatar: String = "",
-    val userProperties: Map<String, String>? = null
+    var sessionId: String? = null,
+    var userProperties: Map<String, String>? = null,
+    var extras: JSONObject = JSONObject()
 ) : Serializable

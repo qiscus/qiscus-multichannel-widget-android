@@ -31,7 +31,7 @@
             android:layout_marginRight="16dp"
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_action_delete"
+            app:layout_constraintEnd_toStartOf="@+id/btnActionDelete"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_copy_mc"
             tools:ignore="VectorDrawableCompat" />
@@ -44,7 +44,7 @@
             android:layout_marginRight="16dp"
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_action_copy"
+            app:layout_constraintEnd_toStartOf="@+id/btnActionCopy"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_reply_mc"
             tools:ignore="VectorDrawableCompat" />

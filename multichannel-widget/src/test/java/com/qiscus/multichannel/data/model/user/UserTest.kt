@@ -13,7 +13,7 @@ internal class UserTest {
         val userProperties = mutableMapOf<String, String>()
         userProperties["key"] = "value"
 
-        val user = User(userId, name, avatar, userProperties)
+        val user = User(userId, name, avatar, userProperties = userProperties)
 
         assertEquals(user.userId, userId)
         assertEquals(user.name, name)

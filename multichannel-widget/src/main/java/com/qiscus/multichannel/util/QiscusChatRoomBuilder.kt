@@ -14,7 +14,10 @@ import com.qiscus.sdk.chat.core.data.model.QMessage
  * Author     : Taufik Budi S
  * GitHub     : https://github.com/tfkbudi
  */
-class QiscusChatRoomBuilder internal constructor(private val multichannelWidget: MultichanelChatWidget) {
+class QiscusChatRoomBuilder internal constructor(
+    private val multichannelWidget: MultichanelChatWidget,
+    private val sessionSecure: SecureSession
+) {
 
     private var roomTitle: String? = null
     private var roomSubtitle: String? = null
@@ -113,18 +116,20 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
                     user.name,
                     user.userId,
                     user.avatar,
-                    null,
+                    user.sessionId,
+                    user.extras,
                     userProp,
                     qMessage,
                     isAutomatic
                 )
             } else {
                 initiateCallback?.onProgress()
-                multichannelWidget.loginMultiChannel(
+                sessionSecure.initiateChat(
                     user.name,
                     user.userId,
                     user.avatar,
-                    "{}",
+                    user.sessionId,
+                    user.extras,
                     userProp,
                     {
                         loadChatRoom(context, false, initiateCallback)
@@ -137,7 +142,7 @@ class QiscusChatRoomBuilder internal constructor(private val multichannelWidget:
     }
 
     private fun loadChatRoom(context: Context, isTest: Boolean, initiateCallback: InitiateCallback?) {
-        multichannelWidget.openChatRoomById(QiscusChatLocal.getRoomId(), {
+        sessionSecure.goToChatroom(QiscusChatLocal.getRoomId(), {
             val qiscusMessage: QMessage? = getQMessage(it.id)
 
             if (initiateCallback != null) {

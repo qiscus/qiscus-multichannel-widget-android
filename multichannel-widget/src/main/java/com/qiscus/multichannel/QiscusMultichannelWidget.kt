@@ -5,7 +5,7 @@ import android.content.Context
 import com.google.firebase.messaging.RemoteMessage
 import com.qiscus.jupuk.Jupuk
 import com.qiscus.multichannel.data.local.QiscusChatLocal
-import com.qiscus.multichannel.data.model.DataInitialChat
+import com.qiscus.multichannel.data.local.QiscusSessionLocal
 import com.qiscus.multichannel.data.model.user.User
 import com.qiscus.multichannel.data.model.user.UserProperties
 import com.qiscus.multichannel.ui.chat.ChatRoomActivity
@@ -13,6 +13,8 @@ import com.qiscus.multichannel.util.MultichanelChatWidget
 import com.qiscus.multichannel.util.MultichannelConst
 import com.qiscus.multichannel.util.PNUtil
 import com.qiscus.multichannel.util.QiscusChatRoomBuilder
+import com.qiscus.multichannel.util.SecureSession
+import com.qiscus.multichannel.util.SecureSessionImpl
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.QiscusCore
 import com.qiscus.sdk.chat.core.data.model.QAccount
@@ -103,13 +105,14 @@ class QiscusMultichannelWidget private constructor(
                 QiscusMultichannelWidgetComponent().create(config.isEnableLog()),
                 config,
                 color,
-                localPrefKey
+                localPrefKey,
             )
             return INSTANCE!!
         }
 
     }
 
+    private val sessionSecure: SecureSession
     private val chatRoomBuilder: QiscusChatRoomBuilder
     private var user: User? = null
 
@@ -120,7 +123,8 @@ class QiscusMultichannelWidget private constructor(
         Nirmana.init(application)
         Jupuk.init(application)
         config.prepare(application)
-        chatRoomBuilder = QiscusChatRoomBuilder(this)
+        sessionSecure = SecureSessionImpl(component, config)
+        chatRoomBuilder = QiscusChatRoomBuilder(this, sessionSecure)
     }
 
     private fun setCoreConfig(qiscusCore : QiscusCore) {
@@ -151,63 +155,7 @@ class QiscusMultichannelWidget private constructor(
 
     override fun getColor(): QiscusMultichannelWidgetColor = color
 
-    override fun loginMultiChannel(
-        name: String?,
-        userId: String?,
-        avatar: String?,
-        extras: String?,
-        sessionId: String?,
-        userProperties: List<UserProperties>?,
-        onSuccess: (QAccount) -> Unit,
-        onError: (Throwable) -> Unit
-    ) {
-
-        component.getChatroomRepository().loginMultichannel(
-            userId,
-            avatar,
-            extras,
-            userProperties,
-            {
-                component.getQiscusChatRepository().initiateChat(
-                    DataInitialChat(
-                        MultichannelConst.qiscusCore()!!.appId,
-                        userId,
-                        name,
-                        avatar,
-                        it.nonce,
-                        null,
-                        extras,
-                        userProperties,
-                        getConfig().getChannelId(),
-                        sessionId
-                    ), { response ->
-                        response.data.isSessional?.let { sessional ->
-                            config.setSessional(sessional)
-                        }
-
-                        response.data.customerRoom?.roomId?.toLong()?.let { id ->
-                            QiscusChatLocal.setRoomId(id)
-                        }
-
-                        response.data.identityToken?.let { token ->
-                            MultichannelConst.qiscusCore()?.setUserWithIdentityToken(token,
-                                object : QiscusCore.SetUserListener {
-                                    override fun onSuccess(qiscusAccount: QAccount) {
-                                        onSuccess(qiscusAccount)
-                                    }
-
-                                    override fun onError(throwable: Throwable) {
-                                        onError(throwable)
-                                    }
-                                })
-                        }
-                    }, { throwable ->
-                        onError(throwable)
-                    })
-            }) {
-            onError(it)
-        }
-    }
+    internal fun getSecureSession(): SecureSession = sessionSecure
 
     /**
      *
@@ -263,19 +211,17 @@ class QiscusMultichannelWidget private constructor(
     override fun clearUser() {
         MultichannelConst.qiscusCore()!!.clearUser()
         QiscusChatLocal.clearPreferences()
-    }
-
-    override fun setUser(userId: String, name: String, avatar: String) {
-        setUser(userId, name, avatar, null)
+        QiscusSessionLocal.clearPreferences()
     }
 
     override fun setUser(
         userId: String,
         name: String,
         avatar: String,
-        userProperties: Map<String, String>?
+        userProperties: Map<String, String>?,
+        extras: JSONObject
     ) {
-        this.user = User(userId, name, avatar, userProperties)
+        this.user = User(userId, name, avatar, QiscusSessionLocal.getSessionId(userId), userProperties, extras)
     }
 
     override fun isLoggedIn(): Boolean {
@@ -289,7 +235,6 @@ class QiscusMultichannelWidget private constructor(
         return false
     }
 
-
     override fun userCheck(onSuccess: (User, MutableList<UserProperties>) -> Unit) {
         if (user != null) {
             val userProp: MutableList<UserProperties> = ArrayList()
@@ -302,7 +247,7 @@ class QiscusMultichannelWidget private constructor(
 
             onSuccess(user!!, userProp)
         } else {
-            throw RuntimeException("please set user firt")
+            throw RuntimeException("please set user first")
         }
     }
 
@@ -323,18 +268,9 @@ class QiscusMultichannelWidget private constructor(
         clearTaskActivity: Boolean,
         onError: (Throwable) -> Unit
     ) {
-        if (!hasSetupUser()) {
-            onError(Throwable("Please set user first"))
-        }
-
         openChatRoomById(roomId, {
-            ChatRoomActivity.generateIntent(
-                context,
-                it,
-                qMessage,
-                isAutoSendMessage,
-                false,
-                clearTaskActivity
+            openChatRoom(
+                context, it, qMessage, isAutoSendMessage, clearTaskActivity, onError
             )
         }, {
             onError(it)
@@ -346,25 +282,67 @@ class QiscusMultichannelWidget private constructor(
         onSuccess: (QChatRoom) -> Unit,
         onError: (Throwable) -> Unit
     ) {
-        if (!hasSetupUser()) {
-            onError(Throwable("Please set user first"))
-        }
-        MultichannelConst.qiscusCore()!!.api.getChatRoomInfo(roomId)
-            .doOnNext {
-                MultichannelConst.qiscusCore()!!.dataStore.addOrUpdate(it)
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                onSuccess(it)
-            }, {
-                onError(it)
-            })
-    }
 
+        if (!hasSetupUser()) {
+            onError(Throwable("Please set user first!"))
+            return
+        }
+
+        if (QiscusSessionLocal.isInitiate()) {
+            getSecureSession().goToChatroom(QiscusChatLocal.getRoomId(), onSuccess, onError)
+        } else {
+            val userId = QiscusChatLocal.getUserId()
+            var userName = QiscusChatLocal.getUsername()
+
+            if (userName.isNullOrEmpty()
+                && MultichannelConst.qiscusCore()!!.dataStore.getChatRoom(roomId) != null
+            ) {
+                userName = MultichannelConst.qiscusCore()!!.dataStore.getChatRoom(roomId).name
+            }
+
+            getSecureSession().initiateChat(
+                userName,
+                userId,
+                QiscusChatLocal.getAvatar(),
+                QiscusSessionLocal.getSessionId(userId),
+                QiscusChatLocal.getExtras(),
+                QiscusChatLocal.getUserProps(),
+                {
+                    getSecureSession().goToChatroom(QiscusChatLocal.getRoomId(), onSuccess, onError)
+                }, onError
+            )
+        }
+    }
 
     override fun openChatRoom(context: Context) {
         openChatRoom(context, true)
+    }
+
+    override fun openChatRoom(
+        context: Context,
+        qChatRoom: QChatRoom,
+        qMessage: QMessage?,
+        isAutoSendMessage: Boolean,
+        clearTaskActivity: Boolean,
+        onError: (Throwable) -> Unit
+    ) {
+        if (!hasSetupUser()) {
+            onError(Throwable("Please set user first!"))
+            return
+        }
+
+        if (QiscusSessionLocal.isInitiate()) {
+            ChatRoomActivity.generateIntent(
+                context,
+                qChatRoom,
+                qMessage,
+                isAutoSendMessage,
+                false,
+                clearTaskActivity
+            )
+        } else {
+            onError.invoke(Throwable("Please, initiate chat first!"))
+        }
     }
 
     override fun openChatRoom(context: Context, clearTaskActivity: Boolean) {

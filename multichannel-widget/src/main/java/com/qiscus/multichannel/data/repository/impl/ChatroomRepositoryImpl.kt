@@ -67,9 +67,11 @@ class ChatroomRepositoryImpl : ChatroomRepository {
         getQiscusCore().pusherApi.subsribeCustomEvent(roomId)
     }
 
-    override fun loginMultichannel(
+    override fun getJwtNonce(
+        name: String?,
         userId: String?,
         avatar: String?,
+        sessionId: String?,
         extras: String?,
         userProp: List<UserProperties>?,
         onSuccess: (QiscusNonce) -> Unit,
@@ -81,6 +83,7 @@ class ChatroomRepositoryImpl : ChatroomRepository {
                 QiscusChatLocal.saveExtras(extras)
                 QiscusChatLocal.saveUserProps(userProp)
                 QiscusChatLocal.saveUserId(userId)
+                QiscusChatLocal.saveUsername(name)
                 QiscusChatLocal.saveAvatar(avatar)
             }
             .subscribeOn(Schedulers.io())
