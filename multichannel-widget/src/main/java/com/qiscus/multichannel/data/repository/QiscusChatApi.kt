@@ -2,6 +2,7 @@ package com.qiscus.multichannel.data.repository
 
 import com.qiscus.multichannel.data.model.DataInitialChat
 import com.qiscus.multichannel.data.model.response.ResponseInitiateChat
+import com.qiscus.multichannel.util.MultichannelConst
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -21,8 +22,7 @@ object QiscusChatApi {
 
         val retrofit: Retrofit = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-//            .baseUrl("https://qismo.qiscus.com/")
-            .baseUrl("https://qismo-stag.qiscus.com/")
+            .baseUrl(MultichannelConst.BASE_URL)
             .client(client.build())
             .build()
         return retrofit.create(Api::class.java)

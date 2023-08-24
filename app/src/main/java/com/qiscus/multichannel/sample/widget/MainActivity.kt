@@ -175,12 +175,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setButton() {
         binding.tvStart.text = if (qiscusMultichannelWidget.isLoggedIn()) "LOGOUT" else "START"
-        binding.tvSendMessage.text = if (qiscusMultichannelWidget.isLoggedIn()) "LOGOUT" else "SEND MESSAGE"
+        binding.sendMessage.visibility = if (qiscusMultichannelWidget.isLoggedIn()) View.GONE else View.VISIBLE
     }
 
     private fun seProgressSendMessage(isActive: Boolean) {
         binding.progressBarSendMessage.visibility = if (isActive) View.VISIBLE else View.GONE
-        binding.tvSendMessage.visibility =if (isActive) View.GONE else View.VISIBLE
+        binding.tvSendMessage.visibility = if (isActive) View.GONE else View.VISIBLE
     }
 
     override fun onResume() {

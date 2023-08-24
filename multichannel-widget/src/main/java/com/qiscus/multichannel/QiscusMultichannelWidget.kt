@@ -211,7 +211,6 @@ class QiscusMultichannelWidget private constructor(
     override fun clearUser() {
         MultichannelConst.qiscusCore()!!.clearUser()
         QiscusChatLocal.clearPreferences()
-        QiscusSessionLocal.clearPreferences()
     }
 
     override fun setUser(

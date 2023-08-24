@@ -22,6 +22,7 @@ internal object MultichannelConst {
     val RC_CAMERA_PERMISSION = 128
     val RC_FILE_PERMISSION = 130
     val ORIGIN = "android"
+    val BASE_URL = "https://qismo.qiscus.com/"
 
     private var qiscusCore: QiscusCore? = null
     private var allQiscusCore: MutableList<QiscusCore> = ArrayList()
