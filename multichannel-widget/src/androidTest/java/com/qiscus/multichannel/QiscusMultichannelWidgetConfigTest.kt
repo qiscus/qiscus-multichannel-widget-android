@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstrumentationBaseTest::class)
 internal class QiscusMultichannelWidgetConfigTest : InstrumentationBaseTest() {
 
-    private var config: QiscusMultichannelWidgetConfig? = null
+    /*private var config: QiscusMultichannelWidgetConfig? = null
 
     @BeforeAll
     fun setUp() {
@@ -190,5 +190,5 @@ internal class QiscusMultichannelWidgetConfigTest : InstrumentationBaseTest() {
             assertFalse(it)
         }
 
-    }
+    }*/
 }

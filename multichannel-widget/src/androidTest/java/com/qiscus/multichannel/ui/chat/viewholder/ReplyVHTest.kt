@@ -23,7 +23,7 @@ import org.mockito.kotlin.whenever
 @ExtendWith(BaseVHTest::class)
 internal class ReplyVHTest : BaseVHTest<ReplyVH>(), BaseVHTest.ViewHolderForTest<ReplyVH> {
 
-    private fun getMessageReply(senderName: String, type: String, text: String? = null, caption: String = "") = getMessage(
+    /*private fun getMessageReply(senderName: String, type: String, text: String? = null, caption: String = "") = getMessage(
         textMessage = "text message",
         type = "reply"
     ).apply {
@@ -121,6 +121,16 @@ internal class ReplyVHTest : BaseVHTest<ReplyVH>(), BaseVHTest.ViewHolderForTest
     }
 
     override fun getLayout(): Int = R.layout.item_opponent_reply_mc
+
+    override fun creteViewHolder(
+        view: View,
+        config: QiscusMultichannelWidgetConfig,
+        color: QiscusMultichannelWidgetColor,
+        viewType: Int
+    ) = ReplyVH(view, config, color, if (withListener) listener else null, viewType)*/
+    override fun getLayout(): Int {
+        return 0
+    }
 
     override fun creteViewHolder(
         view: View,

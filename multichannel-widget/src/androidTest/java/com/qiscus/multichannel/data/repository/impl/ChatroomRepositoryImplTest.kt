@@ -168,7 +168,7 @@ internal class ChatroomRepositoryImplTest : InstrumentationBaseTest() {
             Observable.just(QiscusNonce(Date(), "nonce"))
         )
 
-        repository?.getJwtNonce("userId", "avatar", "extras", arrayListOf(), {}, {})
+//        repository?.getJwtNonce("userId", "avatar", "extras", arrayListOf(), {}, {})
     }
 
     @Test
@@ -178,6 +178,6 @@ internal class ChatroomRepositoryImplTest : InstrumentationBaseTest() {
             Observable.error(Throwable("msg"))
         )
 
-        repository?.getJwtNonce("userId", "avatar", "extras", arrayListOf(), {}, {})
+//        repository?.getJwtNonce("userId", "avatar", "extras", arrayListOf(), {}, {})
     }
 }

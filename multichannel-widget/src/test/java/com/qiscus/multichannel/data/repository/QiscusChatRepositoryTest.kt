@@ -5,7 +5,6 @@ import com.qiscus.multichannel.data.model.response.ResponseInitiateChat
 import com.qiscus.multichannel.data.model.user.UserProperties
 import com.qiscus.multichannel.data.repository.impl.QiscusChatRepositoryImpl
 import okhttp3.Request
-import okhttp3.ResponseBody
 import org.junit.jupiter.api.*
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
@@ -45,7 +44,7 @@ internal class QiscusChatRepositoryTest {
         val userProp: List<UserProperties> = arrayListOf()
         val channelId = 0
         val data =
-            DataInitialChat(appId, userId, name, avatar, nonce, origin, extras, userProp, channelId)
+            DataInitialChat(appId, userId, name, "", avatar, nonce, origin, extras, userProp, channelId, "")
 
         val call = creteCallBack(
             ResponseInitiateChat(
@@ -69,7 +68,7 @@ internal class QiscusChatRepositoryTest {
         val userProp: List<UserProperties> = arrayListOf()
         val channelId = 0
         val data =
-            DataInitialChat(appId, userId, name, avatar, nonce, origin, extras, userProp, channelId)
+            DataInitialChat(appId, userId, name, "", avatar, nonce, origin, extras, userProp, channelId, "")
 
         val call = creteCallBack(
             ResponseInitiateChat(
@@ -93,7 +92,7 @@ internal class QiscusChatRepositoryTest {
         val userProp: List<UserProperties> = arrayListOf()
         val channelId = 0
         val data =
-            DataInitialChat(appId, userId, name, avatar, nonce, origin, extras, userProp, channelId)
+            DataInitialChat(appId, userId, name, "", avatar, nonce, origin, extras, userProp, channelId, "")
 
         val call = creteCallBack(
             ResponseInitiateChat(
@@ -117,7 +116,7 @@ internal class QiscusChatRepositoryTest {
         val userProp: List<UserProperties> = arrayListOf()
         val channelId = 0
         val data =
-            DataInitialChat(appId, userId, name, avatar, nonce, origin, extras, userProp, channelId)
+            DataInitialChat(appId, userId, name, "", avatar, nonce, origin, extras, userProp, channelId, "")
 
         val call = creteCallBack(
             ResponseInitiateChat(
