@@ -100,6 +100,28 @@ class ChatButtonView(
                 }
             }
         }
+
+        fun handleCardClick(
+            context: Context,
+            chatRoomId: Long,
+            jsonButton: JSONObject,
+            onPostBack: (QMessage) -> Unit
+        ) {
+            when (jsonButton.getString("type")) {
+                "link" -> WebViewHelper.launchUrl(
+                    context,
+                    Uri.parse(JSONObject(jsonButton.get("payload").toString()).getString("url"))
+                )
+                "postback" -> {
+                    val postBackMessage = QMessage.generatePostBackMessage(
+                        chatRoomId,
+                        jsonButton.getString("postback_text"),
+                        JSONObject(jsonButton.get("payload").toString())
+                    )
+                    onPostBack.invoke(postBackMessage)
+                }
+            }
+        }
     }
 
 }

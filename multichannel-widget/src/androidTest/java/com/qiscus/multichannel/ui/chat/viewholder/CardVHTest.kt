@@ -44,6 +44,7 @@ internal class CardVHTest : BaseVHTest<CardVH>(), BaseVHTest.ViewHolderForTest<C
                     "\"buttons\" : [" +
                     "{" +
                     "\"type\" : \"postback\" ," +
+                    "\"label\" : \"text\", " +
                     "\"postback_text\" : \"text\", " +
                     "\"payload\" :  { \"url\" : \"https://www.url.com\"}" +
                     "}, {" +
@@ -65,6 +66,7 @@ internal class CardVHTest : BaseVHTest<CardVH>(), BaseVHTest.ViewHolderForTest<C
         getViewHolder().onChatButtonClick(
             JSONObject("{" +
                     "\"type\" : \"postback\" ," +
+                    "\"label\" : \"text\", " +
                     "\"postback_text\" : \"text\", " +
                     "\"payload\" :  { \"url\" : \"https://www.url.com\"}" +
                     "}")

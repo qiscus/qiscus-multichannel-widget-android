@@ -168,7 +168,7 @@ class CardVH(
     }*/
 
     override fun onChatButtonClick(jsonButton: JSONObject) {
-        ChatButtonView.handleButtonClick(itemView.context, chatRoomId, jsonButton) {
+        ChatButtonView.handleCardClick(itemView.context, chatRoomId, jsonButton) {
            sendComment(it)
         }
     }

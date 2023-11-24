@@ -33,6 +33,7 @@ internal class ButtonVHTest : BaseVHTest<ButtonVH>(), BaseVHTest.ViewHolderForTe
             payload = "{ \"buttons\" : [" +
                     "{" +
                     "\"type\" : \"postback\" ," +
+                    "\"label\" : \"text\", " +
                     "\"postback_text\" : \"text\", " +
                     "\"payload\" :  { \"url\" : \"https://www.url.com\"}" +
                     "}, {" +
@@ -84,6 +85,7 @@ internal class ButtonVHTest : BaseVHTest<ButtonVH>(), BaseVHTest.ViewHolderForTe
         withListener = true
         val payload = "{" +
                 "\"type\" : \"postback\" ," +
+                "\"label\" : \"text\", " +
                 "\"postback_text\" : \"text\", " +
                 "\"payload\" :  { \"url\" : \"https://www.url.com\"}" +
                 "}"
