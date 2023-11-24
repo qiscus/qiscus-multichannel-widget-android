@@ -60,7 +60,7 @@ dependencies {
 
     //implementation 2 library, 1 from multichannel-widget & 1 from androidx.multidex
     implementation project(":multichannel-widget") //from local
-//    implementation 'com.qiscus.multichannel:multichannel-widget:2.0.6-beta.1' //from artifactory
+//    implementation 'com.qiscus.multichannel:multichannel-widget:2.2.0' //from artifactory
 }
 
 apply plugin: 'com.google.gms.google-services'

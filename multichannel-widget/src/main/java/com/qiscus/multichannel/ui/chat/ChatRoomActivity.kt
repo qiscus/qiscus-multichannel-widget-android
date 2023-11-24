@@ -25,6 +25,7 @@ import com.qiscus.multichannel.data.local.QiscusSessionLocal
 import com.qiscus.multichannel.databinding.ActivityChatRoomMcBinding
 import com.qiscus.multichannel.util.MultichanelChatWidget
 import com.qiscus.multichannel.util.MultichannelConst
+import com.qiscus.multichannel.util.QiscusPermissionsUtil
 import com.qiscus.multichannel.util.ResourceManager
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
@@ -145,6 +146,14 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
                     .dontAnimate()
             )
             .into(binding.ivAvatar)
+
+        requestNotificationPermission()
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            QiscusPermissionsUtil.requestNotificationPermission(this)
+        }
     }
 
     private fun initColor() {

@@ -93,7 +93,7 @@ class ChatButtonView(
                 "postback" -> {
                     val postBackMessage = QMessage.generatePostBackMessage(
                         chatRoomId,
-                        jsonButton.getString("postback_text"),
+                        jsonButton.getString("label"),
                         JSONObject(jsonButton.get("payload").toString())
                     )
                     onPostBack.invoke(postBackMessage)

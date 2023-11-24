@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.qiscus.multichannel">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <queries>
 
         <!-- Browser -->

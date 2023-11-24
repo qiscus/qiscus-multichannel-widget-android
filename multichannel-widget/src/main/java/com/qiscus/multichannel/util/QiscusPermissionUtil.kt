@@ -1,5 +1,6 @@
 package com.qiscus.multichannel.util
 
+import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
@@ -9,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -23,6 +25,13 @@ import java.util.*
  * GitHub     : https://github.com/tfkbudi
  */
 object QiscusPermissionsUtil {
+
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    val NOTIFICATION_PERMISSION = arrayOf(
+        Manifest.permission.POST_NOTIFICATIONS
+    )
+    const val REQUEST_NOTIFICATION_PERMISSION = 6
 
     private val TAG = "QiscusPermissionsUtil"
 
@@ -246,6 +255,20 @@ object QiscusPermissionsUtil {
         // Make sure Object implements callbacks
         if (obj !is PermissionCallbacks) {
             throw IllegalArgumentException("Caller must implement PermissionCallbacks.")
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    fun requestNotificationPermission(obj: Any) {
+        val activity = getActivity(obj) ?: return
+        val isGranted = activity.shouldShowRequestPermissionRationale(
+            QiscusPermissionsUtil.NOTIFICATION_PERMISSION[0]
+        )
+        if (!isGranted) {
+            activity.requestPermissions(
+                QiscusPermissionsUtil.NOTIFICATION_PERMISSION,
+                QiscusPermissionsUtil.REQUEST_NOTIFICATION_PERMISSION
+            )
         }
     }
 
