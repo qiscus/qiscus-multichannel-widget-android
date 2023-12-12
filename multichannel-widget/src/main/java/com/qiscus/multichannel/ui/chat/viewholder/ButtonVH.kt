@@ -8,6 +8,7 @@ import com.qiscus.multichannel.QiscusMultichannelWidgetColor
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.ui.chat.CommentsAdapter
+import com.qiscus.multichannel.util.DateUtil
 import com.qiscus.multichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import org.json.JSONException
@@ -44,7 +45,7 @@ class ButtonVH(
             ), color.getLeftBubbleColor()
         )
         contents.setTextColor(color.getLeftBubbleTextColor())
-        tvTime.setTextColor(color.getLeftBubbleTextColor())
+        tvTime.setTextColor(color.getTimeLabelTextColor())
     }
 
     override fun bind(comment: QMessage) {
@@ -63,7 +64,7 @@ class ButtonVH(
             // ignored
         }
         contents.text = comment.text
-        tvTime.text = comment.timestamp.toString()
+        tvTime.text = DateUtil.getTimeStringFromDate(comment.timestamp)//comment.timestamp.toString()
     }
 
     override fun onChatButtonClick(jsonButton: JSONObject) {

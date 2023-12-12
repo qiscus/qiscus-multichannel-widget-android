@@ -17,9 +17,7 @@
         android:paddingLeft="@dimen/margin_normal"
         android:paddingTop="@dimen/margin_chat_message"
         android:paddingBottom="@dimen/margin_chat_message"
-        android:ellipsize="marquee"
         android:gravity="center"
-        android:maxLength="20"
         android:padding="10dp"
         android:textStyle="bold"
         android:textSize="14sp" />

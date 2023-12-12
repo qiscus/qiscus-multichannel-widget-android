@@ -5,6 +5,7 @@ import com.qiscus.multichannel.data.model.response.ResponseInitiateChat
 import com.qiscus.multichannel.data.model.user.UserProperties
 import com.qiscus.multichannel.data.repository.impl.QiscusChatRepositoryImpl
 import okhttp3.Request
+import okio.Timeout
 import org.junit.jupiter.api.*
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
@@ -157,6 +158,10 @@ internal class QiscusChatRepositoryTest {
 
         override fun request(): Request {
             return mock()
+        }
+
+        override fun timeout(): Timeout {
+            TODO("Not yet implemented")
         }
 
     }
