@@ -36,8 +36,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
@@ -65,7 +65,7 @@ dependencies {
 
     //implementation 2 library, 1 from multichannel-widget & 1 from androidx.multidex
     implementation project(":multichannel-widget") //from local
-//    implementation 'com.qiscus.multichannel:multichannel-widget:2.2.2' //from artifactory
+    //implementation 'com.qiscus.multichannel:multichannel-widget:2.2.2' //from artifactory
 }
 
 apply plugin: 'com.google.gms.google-services'
