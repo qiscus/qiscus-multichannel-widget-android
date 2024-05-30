@@ -19,12 +19,12 @@ import com.qiscus.multichannel.R
 import com.qiscus.multichannel.ui.chat.CommentsAdapter
 import com.qiscus.multichannel.ui.view.AudioMessageView
 import com.qiscus.multichannel.ui.view.QiscusProgressView
+import com.qiscus.multichannel.util.Action
 import com.qiscus.multichannel.util.AudioHandler
 import com.qiscus.multichannel.util.MultichannelConst
 import com.qiscus.multichannel.util.ResourceManager
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.util.QiscusAndroidUtil
-import io.reactivex.functions.Action
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import rx.Observable
@@ -253,7 +253,7 @@ class AudioVH(
     private fun getDuration(path: String, onDataReady: Action) {
         if (path.isEmpty()) {
             duration = 0
-            onDataReady.run()
+            onDataReady.call()
             return
         }
         subscriptionDuration = Observable.just(path)
@@ -271,7 +271,7 @@ class AudioVH(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ duration: Int ->
                 this.duration = duration
-                onDataReady.run()
+                onDataReady.call()
             }) { obj: Throwable -> obj.printStackTrace() }
     }
 

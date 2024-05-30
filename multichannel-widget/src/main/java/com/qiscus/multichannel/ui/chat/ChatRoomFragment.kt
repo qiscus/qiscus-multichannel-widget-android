@@ -48,8 +48,6 @@ import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import com.qiscus.sdk.chat.core.util.QiscusFileUtil
-import com.qiscus.sdk.chat.core.util.QiscusTextUtil
-import id.zelory.compressor.Compressor
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
@@ -845,22 +843,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     private fun sendFile(file: File, caption: String) {
-        val compressedFile = if (QiscusFileUtil.isImage(file.path) && !file.name.endsWith(".gif")) {
-            try {
-                Compressor(MultichannelConst.qiscusCore()!!.apps).compressToFile(file)
-            } catch (e: NullPointerException) {
-                showError(QiscusTextUtil.getString(R.string.qiscus_corrupted_file_mc))
-                return
-            } catch (e: IOException) {
-                showError(QiscusTextUtil.getString(R.string.qiscus_corrupted_file_mc))
-                return
-            }
-
-        } else {
-            QiscusFileUtil.saveFile(file)
-        }
-
-        presenter.sendFile(compressedFile, caption, JSONObject())
+        QiscusFileUtil.saveFile(file)
+        presenter.sendFile(file, caption, JSONObject())
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
