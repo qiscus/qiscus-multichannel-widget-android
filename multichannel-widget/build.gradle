@@ -99,7 +99,6 @@ dependencies {
 
     // test
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.7.21'
-    implementation 'androidx.core:core-ktx:+'
     testImplementation testDependencies
     testImplementation 'junit:junit:4.12'
     testRuntimeOnly runtimeTestDependencies
