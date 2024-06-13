@@ -38,6 +38,10 @@ class QiscusChatRoomBuilder internal constructor(
         this.showLoading = showLoading
     }
 
+    fun onCompleted(onCompleted: SessionCompleteListener) = apply {
+        sessionSecure.setCompleteListener(onCompleted)
+    }
+
     fun setChannelId(channelId: Int) = apply {
         this.channelId = channelId
     }

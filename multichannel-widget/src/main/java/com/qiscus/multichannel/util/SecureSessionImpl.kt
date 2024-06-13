@@ -16,9 +16,15 @@ import rx.schedulers.Schedulers
 internal class SecureSessionImpl(
     private val component: QWidgetComponent,
     private var config: QiscusMultichannelWidgetConfig
-    ): SecureSession {
+) : SecureSession {
 
-     override fun initiateChat(
+    private var onCompleted: SessionCompleteListener? = null
+
+    override fun setCompleteListener(onCompleted: SessionCompleteListener) {
+        this.onCompleted = onCompleted
+    }
+
+    override fun initiateChat(
         name: String?,
         userId: String?,
         avatar: String?,
@@ -28,31 +34,34 @@ internal class SecureSessionImpl(
         onSuccess: (QAccount) -> Unit,
         onError: (Throwable) -> Unit
     ) {
-         QiscusSessionLocal.removeInitiate()
+        QiscusSessionLocal.removeInitiate()
 
-         component.getChatroomRepository().getJwtNonce(
-             name, userId, avatar, sessionId, extras?.toString() ?: "{}", userProperties,
-             {
-                 runInitiateChat(
-                     DataInitialChat(
-                         MultichannelConst.qiscusCore()!!.appId,
-                         userId,
-                         getIfEmail(userId),
-                         name,
-                         avatar,
-                         it.nonce,
-                         MultichannelConst.ORIGIN,
-                         extras?.toString() ?: "{}",
-                         userProperties,
-                         config.getChannelId(),
-                         sessionId
-                     ),
-                     onSuccess,
-                     onError
-                 )
-             }) {
-             onError(it)
-         }
+        component.getChatroomRepository().getJwtNonce(
+            name, userId, avatar, sessionId, extras?.toString() ?: "{}", userProperties,
+            {
+                runInitiateChat(
+                    DataInitialChat(
+                        MultichannelConst.qiscusCore()!!.appId,
+                        userId,
+                        getIfEmail(userId),
+                        name,
+                        avatar,
+                        it.nonce,
+                        MultichannelConst.ORIGIN,
+                        extras?.toString() ?: "{}",
+                        userProperties,
+                        config.getChannelId(),
+                        sessionId
+                    ),
+                    {
+                        onCompleted?.onCompleted()
+                        onSuccess.invoke(it)
+                    },
+                    onError
+                )
+            }) {
+            onError(it)
+        }
     }
 
     private fun runInitiateChat(
@@ -126,6 +135,9 @@ internal class SecureSessionImpl(
 }
 
 internal interface SecureSession {
+
+    fun setCompleteListener(onCompleted: SessionCompleteListener)
+
     fun initiateChat(
         name: String?,
         userId: String?,
