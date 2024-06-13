@@ -8,6 +8,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.sample.widget.QiscusMultiChatEngine.Companion.MULTICHANNEL_CORE
 import com.qiscus.multichannel.sample.widget.SampleApp
+import com.qiscus.sdk.chat.core.QiscusCore
 import com.qiscus.sdk.chat.core.util.QiscusAndroidUtil
 
 
@@ -29,7 +30,6 @@ class FirebaseServices : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-
         if (QiscusMultichannelWidget.instance.isMultichannelMessage(
                 remoteMessage, qiscusMultiChatEngine.getAll()
             )
@@ -40,6 +40,24 @@ class FirebaseServices : FirebaseMessagingService() {
     }
 
     fun getCurrentDeviceToken() {
+        val qiscusCore = qiscusMultiChatEngine.get(MULTICHANNEL_CORE)
+        val token: String? = qiscusCore.fcmToken
+        if (token != null) {
+            FirebaseMessaging.getInstance().deleteToken()
+                .addOnCompleteListener {
+                    qiscusCore.removeDeviceToken(token)
+                    getTokenFcm(qiscusCore)
+                }
+                .addOnFailureListener {
+                    qiscusCore.registerDeviceToken(token)
+                }
+        } else {
+            getTokenFcm(qiscusCore)
+        }
+    }
+
+
+    private fun getTokenFcm(qiscusCore: QiscusCore) {
         QiscusAndroidUtil.runOnBackgroundThread({
             FirebaseMessaging.getInstance().token
                 .addOnCompleteListener OnCompleteListener@{ task: Task<String?> ->
@@ -51,9 +69,7 @@ class FirebaseServices : FirebaseMessagingService() {
                     if (task.isSuccessful && task.result != null) {
                         val currentToken = task.result
                         currentToken?.let {
-                            QiscusMultichannelWidget.instance.registerDeviceToken(
-                                qiscusMultiChatEngine.get(MULTICHANNEL_CORE), it
-                            )
+                            QiscusMultichannelWidget.instance.registerDeviceToken(qiscusCore, it)
                         }
                     }
                 }
