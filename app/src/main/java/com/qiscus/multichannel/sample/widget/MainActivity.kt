@@ -28,6 +28,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // always call when active app
+        if (qiscusMultichannelWidget.hasSetupUser()) {
+            FirebaseServices().registerDeviceToken()
+        }
+
         binding.login.setOnClickListener {
             validateAndSetUser(object : OnValidSetUser {
                 override fun call() {
@@ -47,10 +52,14 @@ class MainActivity : AppCompatActivity() {
             setButton()
         }
 
-        if (qiscusMultichannelWidget.isLoggedIn()) {
-            // always call before open chatroom
-            FirebaseServices().getCurrentDeviceToken()
+        binding.openChat.setOnClickListener {
             qiscusMultichannelWidget.openChatRoom(this)
+        }
+
+        if (qiscusMultichannelWidget.isLoggedIn()) {
+            binding.openChat.visibility = View.VISIBLE
+        } else {
+            binding.openChat.visibility = View.GONE
         }
     }
 
@@ -93,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onCompleted() {
                     // only 1 after initiateChat
                     if (qiscusMultichannelWidget.hasSetupUser()) {
-                        FirebaseServices().getCurrentDeviceToken()
+                        FirebaseServices().registerDeviceToken()
                     }
                 }
             })
@@ -154,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onCompleted() {
                     // only 1 after initiateChat
                     if (qiscusMultichannelWidget.hasSetupUser()) {
-                        FirebaseServices().getCurrentDeviceToken()
+                        FirebaseServices().registerDeviceToken()
                     }
                 }
             })

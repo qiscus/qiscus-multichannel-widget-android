@@ -1,6 +1,8 @@
 package com.qiscus.multichannel.sample.widget
 
 import android.content.Context
+import android.graphics.Color
+import androidx.annotation.ColorInt
 import androidx.multidex.MultiDexApplication
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.QiscusMultichannelWidgetColor
@@ -81,6 +83,13 @@ class SampleApp : MultiDexApplication() {
         super.onCreate()
         //just 1 in 1 lifecircle
         qiscusMultiChatEngine = QiscusMultiChatEngine()
+
+        PNUtil.pnBuilder = PNUtil.PNBuilder(
+            R.drawable.ic_notification,
+            R.drawable.ic_launcher_foreground,
+            Color.GREEN,
+            MainActivity::class.java
+        )
 
         qiscusMultichannelWidget = QiscusMultichannelWidget.setup(
             this,

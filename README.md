@@ -33,7 +33,7 @@ Then add this to your app build.gradle
 ```
 dependencies {
     ...
-    implementation 'com.qiscus.multichannel:multichannel-widget:2.2.0'
+    implementation 'com.qiscus.multichannel:multichannel-widget:2.3.2'
 ```
 
 ## How To Use
@@ -98,6 +98,14 @@ qiscusMultichannelWidget.initiateChat()
                 QiscusMultichannelWidgetConfig.RoomSubtitle.EDITABLE,
                 "Custom subtitle"
             )
+    .onCompleted(object : SessionCompleteListener {
+            override fun onCompleted() {
+                // call register device token after initiachat completed
+                if (qiscusMultichannelWidget.hasSetupUser()) {
+                    FirebaseServices().registerDeviceToken()
+                }
+            }
+        })
     .startChat(Context)
 ```
 
@@ -269,22 +277,44 @@ class FirebaseServices : FirebaseMessagingService() {
 * You need to make sure every time open the app, the FCM token always needs to be registered in Qiscus  Multicahnnel Widget. To retrieve the current FCM token, you can see below code:
 
 ```
- FirebaseMessaging.getInstance().token
-            .addOnCompleteListener OnCompleteListener@{ task: Task<String?> ->
-                if (!task.isSuccessful) {
-                    Log.e("Qiscus", "getCurrentDeviceToken Failed : " + task.exception)
-                    return@OnCompleteListener
+    // call this function every time open the app
+    fun registerDeviceToken(qiscusCore: QiscusCore) {
+        // check if device token is already registered
+        val token: String? = qiscusCore.fcmToken
+        if (token != null) {
+            FirebaseMessaging.getInstance().deleteToken()
+                .addOnCompleteListener {
+                    // need remove token before register again
+                    qiscusCore.removeDeviceToken(token)
+                    getTokenFcm(qiscusCore)
                 }
+                .addOnFailureListener {
+                    qiscusCore.registerDeviceToken(token)
+                }
+        } else {
+            getTokenFcm(qiscusCore)
+        }
+    }
 
-                if (task.isSuccessful && task.result != null) {
-                    val currentToken = task.result
-                    currentToken?.let {
-                        QiscusMultichannelWidget.instance.registerDeviceToken(
-                            qiscusMultiChatEngine.get(MULTICHANNEL_CORE), it
-                        )
+    // get new fcm token
+    private fun getTokenFcm(qiscusCore: QiscusCore) {
+        // delay to get valid token from firebase
+        QiscusAndroidUtil.runOnBackgroundThread({
+            FirebaseMessaging.getInstance().token
+                .addOnCompleteListener OnCompleteListener@{ task: Task<String?> ->
+                    if (!task.isSuccessful) {
+                        return@OnCompleteListener
+                    }
+
+                    if (task.isSuccessful && task.result != null) {
+                        val currentToken = task.result
+                        currentToken?.let {
+                            QiscusMultichannelWidget.instance.registerDeviceToken(qiscusCore, it)
+                        }
                     }
                 }
-            }
+        }, 2000)
+    }
 ```
 
 * Add the **service.FirebaseServices** in Manifest, for example:

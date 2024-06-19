@@ -29,6 +29,9 @@
 
     <application>
         <activity
+            android:name=".ui.chat.NotificationTrampolineActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.loading.LoadingActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
@@ -48,6 +51,7 @@
                 <action android:name="com.qiscus.OPEN_COMMENT_PN" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".ui.test.BlankForTestActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />

@@ -39,12 +39,14 @@ class FirebaseServices : FirebaseMessagingService() {
         }
     }
 
-    fun getCurrentDeviceToken() {
+    // call this function every time open the app
+    fun registerDeviceToken() {
         val qiscusCore = qiscusMultiChatEngine.get(MULTICHANNEL_CORE)
         val token: String? = qiscusCore.fcmToken
         if (token != null) {
             FirebaseMessaging.getInstance().deleteToken()
                 .addOnCompleteListener {
+                    // need remove token before register again
                     qiscusCore.removeDeviceToken(token)
                     getTokenFcm(qiscusCore)
                 }
@@ -58,6 +60,7 @@ class FirebaseServices : FirebaseMessagingService() {
 
 
     private fun getTokenFcm(qiscusCore: QiscusCore) {
+        // delay to get valid token from firebase
         QiscusAndroidUtil.runOnBackgroundThread({
             FirebaseMessaging.getInstance().token
                 .addOnCompleteListener OnCompleteListener@{ task: Task<String?> ->
@@ -75,4 +78,5 @@ class FirebaseServices : FirebaseMessagingService() {
                 }
         }, 2000)
     }
+
 }
