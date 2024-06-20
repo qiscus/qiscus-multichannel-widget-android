@@ -98,7 +98,7 @@ qiscusMultichannelWidget.initiateChat()
                 QiscusMultichannelWidgetConfig.RoomSubtitle.EDITABLE,
                 "Custom subtitle"
             )
-    .onCompleted(object : SessionCompleteListener {
+     .onCompleted(object : SessionCompleteListener {
             override fun onCompleted() {
                 // call register device token after initiachat completed
                 if (qiscusMultichannelWidget.hasSetupUser()) {
@@ -315,6 +315,22 @@ class FirebaseServices : FirebaseMessagingService() {
                 }
         }, 2000)
     }
+```
+
+* For Example to use register device token you can call in onCompleted initiate chat
+  
+```
+qiscusMultichannelWidget.initiateChat()
+    ...
+    .onCompleted(object : SessionCompleteListener {
+            override fun onCompleted() {
+                // call register device token after initiachat completed
+                if (qiscusMultichannelWidget.hasSetupUser()) {
+                    FirebaseServices().registerDeviceToken()
+                }
+            }
+        })
+   ...
 ```
 
 * Add the **service.FirebaseServices** in Manifest, for example:
