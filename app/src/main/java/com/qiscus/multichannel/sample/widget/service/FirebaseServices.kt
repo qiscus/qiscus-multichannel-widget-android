@@ -8,6 +8,8 @@ import com.google.firebase.messaging.RemoteMessage
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.sample.widget.QiscusMultiChatEngine.Companion.MULTICHANNEL_CORE
 import com.qiscus.multichannel.sample.widget.SampleApp
+import com.qiscus.sdk.chat.core.QiscusCore
+import com.qiscus.sdk.chat.core.util.QiscusAndroidUtil
 
 
 /**
@@ -28,7 +30,6 @@ class FirebaseServices : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-
         if (QiscusMultichannelWidget.instance.isMultichannelMessage(
                 remoteMessage, qiscusMultiChatEngine.getAll()
             )
@@ -38,22 +39,44 @@ class FirebaseServices : FirebaseMessagingService() {
         }
     }
 
-    fun getCurrentDeviceToken() {
-        FirebaseMessaging.getInstance().token
-            .addOnCompleteListener OnCompleteListener@{ task: Task<String?> ->
-                if (!task.isSuccessful) {
-                    Log.e("Qiscus", "getCurrentDeviceToken Failed : " + task.exception)
-                    return@OnCompleteListener
+    // call this function every time open the app
+    fun registerDeviceToken() {
+        val qiscusCore = qiscusMultiChatEngine.get(MULTICHANNEL_CORE)
+        val token: String? = qiscusCore.fcmToken
+        if (token != null) {
+            FirebaseMessaging.getInstance().deleteToken()
+                .addOnCompleteListener {
+                    // need remove token before register again
+                    qiscusCore.removeDeviceToken(token)
+                    getTokenFcm(qiscusCore)
                 }
+                .addOnFailureListener {
+                    qiscusCore.registerDeviceToken(token)
+                }
+        } else {
+            getTokenFcm(qiscusCore)
+        }
+    }
 
-                if (task.isSuccessful && task.result != null) {
-                    val currentToken = task.result
-                    currentToken?.let {
-                        QiscusMultichannelWidget.instance.registerDeviceToken(
-                            qiscusMultiChatEngine.get(MULTICHANNEL_CORE), it
-                        )
+
+    private fun getTokenFcm(qiscusCore: QiscusCore) {
+        // delay to get valid token from firebase
+        QiscusAndroidUtil.runOnBackgroundThread({
+            FirebaseMessaging.getInstance().token
+                .addOnCompleteListener OnCompleteListener@{ task: Task<String?> ->
+                    if (!task.isSuccessful) {
+                        Log.e("Qiscus", "getCurrentDeviceToken Failed : " + task.exception)
+                        return@OnCompleteListener
+                    }
+
+                    if (task.isSuccessful && task.result != null) {
+                        val currentToken = task.result
+                        currentToken?.let {
+                            QiscusMultichannelWidget.instance.registerDeviceToken(qiscusCore, it)
+                        }
                     }
                 }
-            }
+        }, 2000)
     }
+
 }

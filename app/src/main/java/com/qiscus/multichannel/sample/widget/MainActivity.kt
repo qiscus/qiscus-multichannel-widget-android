@@ -13,6 +13,7 @@ import com.qiscus.multichannel.sample.R
 import com.qiscus.multichannel.sample.databinding.ActivityMainBinding
 import com.qiscus.multichannel.sample.widget.service.FirebaseServices
 import com.qiscus.multichannel.util.QiscusChatRoomBuilder
+import com.qiscus.multichannel.util.SessionCompleteListener
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import com.qiscus.sdk.chat.core.data.model.QMessage
 import org.json.JSONObject
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         // always call when active app
         if (qiscusMultichannelWidget.hasSetupUser()) {
-            FirebaseServices().getCurrentDeviceToken()
+            FirebaseServices().registerDeviceToken()
         }
 
         binding.login.setOnClickListener {
@@ -51,8 +52,14 @@ class MainActivity : AppCompatActivity() {
             setButton()
         }
 
-        if (qiscusMultichannelWidget.isLoggedIn()) {
+        binding.openChat.setOnClickListener {
             qiscusMultichannelWidget.openChatRoom(this)
+        }
+
+        if (qiscusMultichannelWidget.isLoggedIn()) {
+            binding.openChat.visibility = View.VISIBLE
+        } else {
+            binding.openChat.visibility = View.GONE
         }
     }
 
@@ -91,6 +98,14 @@ class MainActivity : AppCompatActivity() {
     private fun initChat(channelId: Int) {
         configureInitiateChat(channelId)
             .showLoadingWhenInitiate(true) // if showLoadingWhenInitiate is true it doesn't trigger the callback
+            .onCompleted(object : SessionCompleteListener {
+                override fun onCompleted() {
+                    // only 1 after initiateChat
+                    if (qiscusMultichannelWidget.hasSetupUser()) {
+                        FirebaseServices().registerDeviceToken()
+                    }
+                }
+            })
             .startChat(this, object : QiscusChatRoomBuilder.InitiateCallback {
                 override fun onProgress() {
                     Log.i("InitiateCallback", "onProgress: ")
@@ -139,22 +154,20 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
             })
-
-        // only 1 after initiateChat
-        if (qiscusMultichannelWidget.hasSetupUser()) {
-            FirebaseServices().getCurrentDeviceToken()
-        }
     }
 
     private fun initChatWithSendMessage(channelId: Int, textMessage: String) {
         configureInitiateChat(channelId)
             .automaticSendMessage(textMessage)
+            .onCompleted(object : SessionCompleteListener {
+                override fun onCompleted() {
+                    // only 1 after initiateChat
+                    if (qiscusMultichannelWidget.hasSetupUser()) {
+                        FirebaseServices().registerDeviceToken()
+                    }
+                }
+            })
             .startChat(this)
-
-        // only 1 after initiateChat
-        if (qiscusMultichannelWidget.hasSetupUser()) {
-            FirebaseServices().getCurrentDeviceToken()
-        }
     }
 
     private fun configureInitiateChat(channelId: Int) = qiscusMultichannelWidget.initiateChat()
