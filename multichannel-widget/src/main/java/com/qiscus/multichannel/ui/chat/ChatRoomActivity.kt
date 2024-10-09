@@ -119,7 +119,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             )
             .commit()
 
-        setAlarmManager()
+        //setAlarmManager()
 
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
