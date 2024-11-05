@@ -1,180 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_login"
-    tools:context=".widget.MainActivity">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_login"
+        tools:context=".widget.MainActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                app:srcCompat="@drawable/logo" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvDisplayName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DISPLAY NAME" />
-
-            <EditText
-                android:id="@+id/etDisplayName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Display Name"
-                android:inputType="textPersonName|text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginBottom="50dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="USER EMAIL" />
-
-            <EditText
-                android:id="@+id/etUserEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="User Email"
-                android:inputType="textEmailAddress" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <LinearLayout
-                android:id="@+id/login"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/bt_qiscus_radius_sdk"
-                android:clickable="true"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvStart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="5dp"
-                    android:text="START"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="18sp" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="7dp"
-                    android:indeterminate="true"
-                    android:indeterminateTint="@color/colorWhite"
-                    android:indeterminateTintMode="src_atop"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/sendMessage"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:background="@drawable/bt_qiscus_radius_sdk"
-                android:clickable="true"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvSendMessage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="5dp"
-                    android:text="SEND MESSAGE"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="18sp" />
-
-                <ProgressBar
-                    android:id="@+id/progressBarSendMessage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="7dp"
-                    android:indeterminate="true"
-                    android:indeterminateTint="@color/colorWhite"
-                    android:indeterminateTintMode="src_atop"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/openChat"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:background="@drawable/bt_qiscus_radius_sdk"
-                android:clickable="true"
-                android:gravity="center"
-                android:visibility="gone"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvOpenChat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="5dp"
-                    android:text="OPEN CHAT ROOM"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="18sp" />
+                android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/img"
-                    android:layout_width="15dp"
+                    android:id="@+id/imageView"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    app:srcCompat="@drawable/logo" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvDisplayName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_arrow"
-                    app:tint="@color/colorWhite" />
+                    android:text="DISPLAY NAME" />
+
+                <EditText
+                    android:id="@+id/etDisplayName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Display Name"
+                    android:inputType="textPersonName|text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="50dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="USER EMAIL" />
+
+                <EditText
+                    android:id="@+id/etUserEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="User Email"
+                    android:inputType="textEmailAddress" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/login"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bt_qiscus_radius_sdk"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvStart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5dp"
+                        android:text="START"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="18sp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="7dp"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/colorWhite"
+                        android:indeterminateTintMode="src_atop"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sendMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:background="@drawable/bt_qiscus_radius_sdk"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvSendMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5dp"
+                        android:text="SEND MESSAGE"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="18sp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBarSendMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="7dp"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/colorWhite"
+                        android:indeterminateTintMode="src_atop"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/openChat"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:background="@drawable/bt_qiscus_radius_sdk"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvOpenChat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5dp"
+                        android:text="OPEN CHAT ROOM"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/img"
+                        android:layout_width="15dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_arrow"
+                        app:tint="@color/colorWhite" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-</RelativeLayout>
+</ScrollView>

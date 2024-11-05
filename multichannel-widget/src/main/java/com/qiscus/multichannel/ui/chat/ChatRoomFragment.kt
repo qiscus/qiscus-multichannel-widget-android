@@ -561,7 +561,9 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     fun copyComment() {
         clearSelectedComment()
         commentsAdapter.getSelectedComment()?.let {
-            val obj = JSONObject(it.payload)
+            val payload = if (it.payload.isNullOrEmpty()) "{}" else it.payload!!
+            val obj = JSONObject(payload)
+
             val textCopied = when (it.type) {
                 QMessage.Type.FILE -> it.attachmentName
                 QMessage.Type.IMAGE -> obj.getString("caption")
