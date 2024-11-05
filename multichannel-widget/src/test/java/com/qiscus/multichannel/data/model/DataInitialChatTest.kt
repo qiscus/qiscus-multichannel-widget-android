@@ -18,10 +18,10 @@ internal class DataInitialChatTest {
         val userProp: List<UserProperties> = arrayListOf()
         val channelId = 0
 
-        val data =
+        /*val data =
             DataInitialChat(appId, userId, name, "", avatar, nonce, origin, extras, userProp, channelId, "")
 
-        /*assertEquals(data.appId, appId)
+        assertEquals(data.appId, appId)
         assertEquals(data.userId, userId)
         assertEquals(data.name, name)
         assertEquals(data.avatar, avatar)
