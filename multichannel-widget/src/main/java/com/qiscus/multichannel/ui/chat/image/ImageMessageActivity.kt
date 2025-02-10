@@ -21,6 +21,9 @@ import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -69,6 +72,19 @@ class ImageMessageActivity : AppCompatActivity(),
     private var ubcritionResultFiles: Subscription? = null
     private var currentPosition = 0
     private val color = QiscusMultichannelWidget.instance.getColor()
+    private val maxMediaPickerCount = 30
+    private val pickMedia = registerForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia(maxMediaPickerCount)
+    ) { uris ->
+        if (uris == null) showToast("Failed to open image file!")
+        uris?.let {
+            val list: Array<String?> = arrayOfNulls(it.size)
+            for (i in 0 until it.size) {
+                list[i] = QiscusFileUtil.from(it[i]).absolutePath
+            }
+            toList(list)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,13 +153,27 @@ class ImageMessageActivity : AppCompatActivity(),
         for (path in i.getStringArrayExtra(DATA)!!) {
             dataList.add(ImageToSend(path = path))
         }
-        if (dataList.size < 30) {
+        if (dataList.size < maxMediaPickerCount) {
             setAddImageButton()
         }
     }
 
+    private fun setRemoveImageButton() {
+        val pathAddImage = getString(R.string.add_image)
+        for (i in 0 until dataList.size) {
+           if (dataList[i].path == pathAddImage) {
+               dataList.removeAt(i)
+               break
+           }
+        }
+    }
+
     private fun setAddImageButton() {
-        dataList.add(ImageToSend(path = getString(R.string.add_image)))
+        synchronized(this) {
+            val lastPosition = dataList.size
+            dataList.add(ImageToSend(path = getString(R.string.add_image)))
+            adapter?.notifyItemChanged(lastPosition)
+        }
     }
 
     private fun setRoomData() {
@@ -365,21 +395,18 @@ class ImageMessageActivity : AppCompatActivity(),
     }
 
     private fun pickImageUsingJupuk() {
-        JupukBuilder().setMaxCount(30)
+        JupukBuilder().setMaxCount(maxMediaPickerCount)
             .enableVideoPicker(true)
             .pickPhoto(this)
     }
 
+    /**
+     * open images using default gallery for android 11 or higher
+     * */
     private fun pickImageUsingIntentSystem() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            intent.action = Intent.ACTION_GET_CONTENT
-        }
-
-        startActivityForResult(intent, MultichannelConst.IMAGE_GALLERY_REQUEST)
+        pickMedia.launch(
+            PickVisualMediaRequest(PickVisualMedia.ImageAndVideo)
+        )
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -501,7 +528,7 @@ class ImageMessageActivity : AppCompatActivity(),
     private fun toList(imagePaths: Array<String?>) {
         val dataImages: MutableList<ImageToSend> = ArrayList()
         for (imagePath in imagePaths) {
-            if (dataList.size < 30 && imagePath != null) {
+            if (dataList.size < maxMediaPickerCount && imagePath != null) {
                 dataImages.add(ImageToSend(path = imagePath))
             } else {
                 break
@@ -512,16 +539,20 @@ class ImageMessageActivity : AppCompatActivity(),
     }
 
     private fun setToList() {
-        if (dataList.size < 31 && dataList[dataList.size - 1].path != getString(R.string.add_image)
-        ) {
-            setAddImageButton()
-        } else {
-            showToast(getString(R.string.max_image_selected))
-        }
-        adapter!!.notifyDataSetChanged()
-        pagerAdapter!!.notifyDataSetChanged()
+        setRemoveImageButton()
+        pagerAdapter?.notifyDataSetChanged()
+        adapter?.notifyDataSetChanged()
         binding.rvImagePrev.scrollToPosition(dataList.size - 1)
         binding.imageContainer.currentItem = dataList.size - 1
+
+
+        binding.rvImagePrev.postDelayed({
+            if (dataList.size < maxMediaPickerCount + 1) {
+                setAddImageButton()
+            } else showToast(
+                getString(R.string.max_image_selected)
+            )
+        }, 200)
     }
 
     override fun onDestroy() {

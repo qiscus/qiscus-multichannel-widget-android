@@ -13,12 +13,16 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.text.HtmlCompat
@@ -77,6 +81,19 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     private var userTypingListener: OnUserTypingListener? = null
     private var selectedComment: QMessage? = null
     private var isTyping = false
+    private val maxMediaPickerCount = 30
+    private val pickMedia = registerForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia(maxMediaPickerCount)
+    ) { uris ->
+        if (uris == null) showError("Failed to open image file!")
+        uris?.let {
+            val list: Array<String?> = arrayOfNulls(it.size)
+            for (i in 0 until it.size) {
+                list[i] = QiscusFileUtil.from(it[i]).absolutePath
+            }
+            openImagePreview(list)
+        }
+    }
 
     companion object {
 
@@ -409,22 +426,16 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
      * open images using default gallery for android 11 or higher
      * */
     private fun pickImageUsingIntentSystem() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/* video/*"
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            intent.action = Intent.ACTION_GET_CONTENT
-        }
-
-        startActivityForResult(intent, MultichannelConst.IMAGE_GALLERY_REQUEST)
+        pickMedia.launch(
+            PickVisualMediaRequest(PickVisualMedia.ImageAndVideo)
+        )
     }
 
     /**
      * open images using jupuk gallery for android under 11 version
      * */
     private fun pickImageUsingJupuk() {
-        JupukBuilder().setMaxCount(30)
+        JupukBuilder().setMaxCount(maxMediaPickerCount)
             .enableVideoPicker(true)
             .pickPhoto(this)
     }
@@ -794,13 +805,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
                         list = arrayOf(QiscusFileUtil.from(it.data!!).absolutePath)
                     }
 
-                    startActivityForResult(
-                        ImageMessageActivity.generateIntent(
-                            ctx,
-                            qiscusChatRoom!!, list
-                        ),
-                        SEND_PICTURE_CONFIRMATION_REQUEST
-                    )
+                    openImagePreview(list)
                 }
 
 //                val imageFile = QiscusFileUtil.from(data?.data!!)
@@ -842,6 +847,13 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             setChatNoEmpty(true)
         }
 
+    }
+
+    private fun openImagePreview(list: Array<String?>) {
+        startActivityForResult(
+            ImageMessageActivity.generateIntent(ctx, qiscusChatRoom!!, list),
+            SEND_PICTURE_CONFIRMATION_REQUEST
+        )
     }
 
     private fun sendFile(file: File, caption: String) {
