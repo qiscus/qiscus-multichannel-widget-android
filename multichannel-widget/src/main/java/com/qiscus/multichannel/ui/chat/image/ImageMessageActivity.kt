@@ -172,7 +172,7 @@ class ImageMessageActivity : AppCompatActivity(),
         synchronized(this) {
             val lastPosition = dataList.size
             dataList.add(ImageToSend(path = getString(R.string.add_image)))
-            adapter?.notifyItemChanged(lastPosition)
+            adapter?.notifyItemInserted(lastPosition)
         }
     }
 

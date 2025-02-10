@@ -86,6 +86,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         ActivityResultContracts.PickMultipleVisualMedia(maxMediaPickerCount)
     ) { uris ->
         if (uris == null) showError("Failed to open image file!")
+        if (uris.isEmpty()) return@registerForActivityResult
         uris?.let {
             val list: Array<String?> = arrayOfNulls(it.size)
             for (i in 0 until it.size) {
@@ -790,6 +791,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             }
             setChatNoEmpty(true)
         } else if (requestCode == MultichannelConst.IMAGE_GALLERY_REQUEST) {
+            if (data == null || (data.clipData != null && data.clipData!!.itemCount == 0)) return
+
             try {
                 data?.let {
                     val list: Array<String?>
