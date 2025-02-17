@@ -413,11 +413,16 @@ class ChatRoomPresenter(
                 .subscribe({ file1 ->
                     val type = qiscusComment.type
                     if (type == QMessage.Type.FILE || type == QMessage.Type.VIDEO) {
-                        view!!.onFileDownloaded(
-                            file1,
-                            MimeTypeMap.getSingleton()
-                                .getMimeTypeFromExtension(qiscusComment.extension)
-                        )
+                        try {
+                            view!!.onFileDownloaded(
+                                file1,
+                                MimeTypeMap.getSingleton()
+                                    .getMimeTypeFromExtension(qiscusComment.extension)
+                            )
+                        } catch (e: IllegalArgumentException) {
+                            qiscusComment.isDownloading = false
+                            view!!.showError(QiscusTextUtil.getString(R.string.qiscus_corrupted_file_mc))
+                        }
                     }
                 }, {
                     qiscusComment.isDownloading = false
@@ -427,15 +432,16 @@ class ChatRoomPresenter(
 //            if (qiscusComment.getType() == QMessage.Type.IMAGE) {
 //                view.startPhotoViewer(qiscusComment)
 //            else {
-            view!!.onFileDownloaded(
-                file,
-                MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-                    QiscusFileUtil.getExtension(
-                        fileName
+            try {
+                view!!.onFileDownloaded(file,
+                    MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                        QiscusFileUtil.getExtension(fileName)
                     )
                 )
-            )
-
+            } catch (e: IllegalArgumentException) {
+                qiscusComment.isDownloading = false
+                view!!.showError(QiscusTextUtil.getString(R.string.qiscus_corrupted_file_mc))
+            }
         }
     }
 

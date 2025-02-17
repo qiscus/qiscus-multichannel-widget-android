@@ -9,7 +9,7 @@ class BlankForTestActivity : AppCompatActivity(), QiscusPermissionsUtil.Permissi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_blank_for_test)
+        setContentView(R.layout.activity_blank_for_test_mc)
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {

@@ -39,7 +39,7 @@ class ImagePreviewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        return Holder(inflater.inflate(R.layout.item_image_preview, parent, false), color)
+        return Holder(inflater.inflate(R.layout.item_image_preview_mc, parent, false), color)
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {

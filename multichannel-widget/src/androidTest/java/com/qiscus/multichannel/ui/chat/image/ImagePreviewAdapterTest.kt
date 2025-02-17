@@ -15,7 +15,6 @@ import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.QiscusCore
 import org.junit.jupiter.api.AfterAll
 
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -127,7 +126,7 @@ internal class ImagePreviewAdapterTest : InstrumentationBaseTest() {
         runOnMainThread {
             addItem(2, false)
             val holder = ImagePreviewAdapter.Holder(
-                LayoutInflater.from(activity).inflate(R.layout.item_image_preview, parent, false),
+                LayoutInflater.from(activity).inflate(R.layout.item_image_preview_mc, parent, false),
                 QiscusMultichannelWidgetColor()
             )
             adapter.onBindViewHolder(holder, 1)
@@ -142,7 +141,7 @@ internal class ImagePreviewAdapterTest : InstrumentationBaseTest() {
         runOnMainThread {
             addItem(2, true)
             val holder = ImagePreviewAdapter.Holder(
-                LayoutInflater.from(activity).inflate(R.layout.item_image_preview, parent, false),
+                LayoutInflater.from(activity).inflate(R.layout.item_image_preview_mc, parent, false),
                 QiscusMultichannelWidgetColor()
             )
             adapter.onBindViewHolder(holder, 2)
@@ -154,7 +153,7 @@ internal class ImagePreviewAdapterTest : InstrumentationBaseTest() {
         runOnMainThread {
             addItem(32, true)
             val holder = ImagePreviewAdapter.Holder(
-                LayoutInflater.from(activity).inflate(R.layout.item_image_preview, parent, false),
+                LayoutInflater.from(activity).inflate(R.layout.item_image_preview_mc, parent, false),
                 QiscusMultichannelWidgetColor()
             )
             adapter.onBindViewHolder(holder, dataList.size - 1)
@@ -166,7 +165,7 @@ internal class ImagePreviewAdapterTest : InstrumentationBaseTest() {
         runOnMainThread {
             addItem(2, true)
             val holder = ImagePreviewAdapter.Holder(
-                LayoutInflater.from(activity).inflate(R.layout.item_image_preview, parent, false),
+                LayoutInflater.from(activity).inflate(R.layout.item_image_preview_mc, parent, false),
                 QiscusMultichannelWidgetColor()
             )
             adapter.onBindViewHolder(holder, 0)

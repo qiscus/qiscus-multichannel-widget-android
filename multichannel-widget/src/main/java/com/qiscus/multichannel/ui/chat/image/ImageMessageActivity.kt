@@ -40,8 +40,7 @@ import com.qiscus.jupuk.JupukConst
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.data.model.ImageToSend
-import com.qiscus.multichannel.databinding.ActivityImageMessageBinding
-import com.qiscus.multichannel.ui.chat.image.ImagePagerAdapter
+import com.qiscus.multichannel.databinding.ActivityImageMessageMcBinding
 import com.qiscus.multichannel.util.*
 import com.qiscus.nirmana.Nirmana
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
@@ -62,7 +61,7 @@ class ImageMessageActivity : AppCompatActivity(),
     ImagePagerAdapter.ImagePagerListener, ImagePreviewAdapter.ImagePreviewListener,
     QiscusPermissionsUtil.PermissionCallbacks {
 
-    private lateinit var binding: ActivityImageMessageBinding
+    private lateinit var binding: ActivityImageMessageMcBinding
     private val dataList: MutableList<ImageToSend> = ArrayList()
     private var chatRoom: QChatRoom? = null
     private var pagerAdapter: ImagePagerAdapter? = null
@@ -88,7 +87,7 @@ class ImageMessageActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityImageMessageBinding.inflate(layoutInflater)
+        binding = ActivityImageMessageMcBinding.inflate(layoutInflater)
         setContentView(binding.root)
         window.setBackgroundDrawable(null)
         initComponent()

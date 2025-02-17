@@ -41,7 +41,7 @@
 
         <include
             android:id="@+id/rootViewSender"
-            layout="@layout/message_layout_reply" />
+            layout="@layout/message_layout_reply_mc" />
 
         <LinearLayout
             android:id="@+id/messageInputPanel"

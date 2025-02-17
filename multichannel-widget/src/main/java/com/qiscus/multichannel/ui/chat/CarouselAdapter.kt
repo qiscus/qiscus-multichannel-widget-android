@@ -29,7 +29,7 @@ class CarouselAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return CardVH(
-            LayoutInflater.from(parent.context).inflate(R.layout.view_card_item, parent, false),
+            LayoutInflater.from(parent.context).inflate(R.layout.view_card_item_mc, parent, false),
             config, color, listener
         )
     }

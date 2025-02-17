@@ -13,7 +13,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -693,6 +692,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         userTypingListener?.onUserTyping(email, isTyping)
     }
 
+    @Throws(java.lang.IllegalArgumentException::class)
     override fun onFileDownloaded(file: File, mimeType: String?) {
         val intent = Intent(Intent.ACTION_VIEW)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -700,11 +700,7 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         } else {
             intent.setDataAndType(
-                FileProvider.getUriForFile(
-                    ctx,
-                    getAuthority(),
-                    file
-                ), mimeType
+                FileProvider.getUriForFile(ctx, getAuthority(), file), mimeType
             )
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -859,8 +855,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         )
     }
 
-    private fun sendFile(file: File, caption: String) {
-        QiscusFileUtil.saveFile(file)
+    private fun sendFile(rawFile: File, caption: String) {
+        val file = QiscusFileUtil.saveFile(rawFile)
         presenter.sendFile(file, caption, JSONObject())
     }
 

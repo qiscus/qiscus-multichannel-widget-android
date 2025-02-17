@@ -8,9 +8,8 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.data.model.user.UserProperties
-import com.qiscus.multichannel.databinding.ActivityLoadingBinding
+import com.qiscus.multichannel.databinding.ActivityLoadingMcBinding
 import com.qiscus.multichannel.ui.chat.ChatRoomActivity
-import com.qiscus.multichannel.util.MultichanelChatWidget
 import com.qiscus.multichannel.util.showToast
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
 import com.qiscus.sdk.chat.core.data.model.QMessage
@@ -24,7 +23,7 @@ import org.json.JSONObject
 
 class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
 
-    private lateinit var binding: ActivityLoadingBinding
+    private lateinit var binding: ActivityLoadingMcBinding
     private lateinit var presenter: LoadingPresenter
     private var username: String? = null
     private var userId: String? = null
@@ -66,7 +65,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoadingBinding.inflate(layoutInflater)
+        binding = ActivityLoadingMcBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initColor()
         presenter = LoadingPresenter(qiscusMultichannelWidget)

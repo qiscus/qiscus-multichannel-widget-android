@@ -22,7 +22,7 @@ class ChatButtonView(
 ) : View.OnClickListener {
 
     private val itemView: View =
-        LayoutInflater.from(context).inflate(R.layout.view_chat_button, null)
+        LayoutInflater.from(context).inflate(R.layout.view_chat_button_mc, null)
     private var chatButtonClickListener: ChatButtonClickListener? = null
     private val button: TextView = itemView.findViewById(R.id.button)
     private val liner: View = itemView.findViewById(R.id.liner)

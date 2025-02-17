@@ -13,7 +13,7 @@
         android:id="@+id/container_date_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout="@layout/item_chat_date_indicator" />
+        android:layout="@layout/item_chat_date_indicator_mc" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvEvent"
