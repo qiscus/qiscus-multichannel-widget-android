@@ -518,31 +518,30 @@ class ChatRoomPresenter(
         } else {
             roomEventHandler.onGotComment(qiscusComment)
         }
-
-
     }
 
     private fun checkRoomStatus() {
-        MultichannelConst.qiscusCore()!!.api.getChatRoomInfo(room.id)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { chatRoom ->
-                checkIsSessional(chatRoom.extras)
-            }
+        qiscusChatRepository.getCustomerRoomById(room.id,
+            { room ->
+                room.data?.customerRoom?.let {
+                    checkIsSessional(it.isResolved)
+                }
+            }) {
+            // do nothing
+        }
     }
 
-    private fun checkIsSessional(extras: JSONObject) {
+    private fun checkIsSessional(isResolved: Boolean) {
         qiscusChatRepository.checkSessional(
             MultichannelConst.qiscusCore()!!.appId,
             {
                 it.data.isSessional?.let { isSessional ->
                     view!!.onSessionalChange(isSessional)
-                    view!!.showNewChatButton(extras.getBoolean("is_resolved"))
+                    view!!.showNewChatButton(isResolved)
                 }
-            },
-            {
+            }) {
                 // do nothing
-            })
+            }
     }
 
     private fun handleIsResolvedMsg(qiscusComment: QMessage) {

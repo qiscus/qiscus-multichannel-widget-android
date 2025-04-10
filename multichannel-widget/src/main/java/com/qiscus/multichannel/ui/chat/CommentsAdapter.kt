@@ -32,6 +32,11 @@ class CommentsAdapter(
     private var lastDeliveredCommentId: Long = 0
     private var lastReadCommentId: Long = 0
     private var selectedComment: QMessage? = null
+    private val userLoginId: String
+
+    init {
+        userLoginId = MultichannelConst.qiscusCore()!!.qiscusAccount.id
+    }
 
     override val itemClass: Class<QMessage>
         get() = QMessage::class.java
@@ -52,41 +57,40 @@ class CommentsAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val me = MultichannelConst.qiscusCore()!!.qiscusAccount.id
         val comment = data.get(position)
         when (comment.type) {
             QMessage.Type.TEXT -> {
                 return if (comment.isAttachment) {
-                    if (comment.isMyComment(me)) TYPE_MY_IMAGE else TYPE_OPPONENT_IMAGE
+                    if (comment.isMyComment(userLoginId)) TYPE_MY_IMAGE else TYPE_OPPONENT_IMAGE
                 } else {
-                    if (comment.isMyComment(me)) TYPE_MY_TEXT else TYPE_OPPONENT_TEXT
+                    if (comment.isMyComment(userLoginId)) TYPE_MY_TEXT else TYPE_OPPONENT_TEXT
                 }
             }
             QMessage.Type.LINK -> {
                 return if (isSticker(comment.text)) {
-                    if (comment.isMyComment(me)) TYPE_MY_STICKER else TYPE_OPPONENT_STICKER
-                } else if (comment.isMyComment(me)) TYPE_MY_TEXT else TYPE_OPPONENT_TEXT
+                    if (comment.isMyComment(userLoginId)) TYPE_MY_STICKER else TYPE_OPPONENT_STICKER
+                } else if (comment.isMyComment(userLoginId)) TYPE_MY_TEXT else TYPE_OPPONENT_TEXT
             }
             QMessage.Type.REPLY -> {
-                return if (comment.isMyComment(me)) TYPE_MY_REPLY else TYPE_OPPONENT_REPLY
+                return if (comment.isMyComment(userLoginId)) TYPE_MY_REPLY else TYPE_OPPONENT_REPLY
             }
             QMessage.Type.IMAGE -> {
-                return if (comment.isMyComment(me)) TYPE_MY_IMAGE else TYPE_OPPONENT_IMAGE
+                return if (comment.isMyComment(userLoginId)) TYPE_MY_IMAGE else TYPE_OPPONENT_IMAGE
             }
             QMessage.Type.VIDEO -> {
-                return if (comment.isMyComment(me)) TYPE_MY_VIDEO else TYPE_OPPONENT_VIDEO
+                return if (comment.isMyComment(userLoginId)) TYPE_MY_VIDEO else TYPE_OPPONENT_VIDEO
             }
             QMessage.Type.FILE -> {
-                return if (comment.isMyComment(me)) TYPE_MY_FILE else TYPE_OPPONENT_FILE
+                return if (comment.isMyComment(userLoginId)) TYPE_MY_FILE else TYPE_OPPONENT_FILE
             }
             QMessage.Type.AUDIO -> {
-                return if (comment.isMyComment(me)) TYPE_MY_AUDIO else TYPE_OPPONENT_AUDIO
+                return if (comment.isMyComment(userLoginId)) TYPE_MY_AUDIO else TYPE_OPPONENT_AUDIO
             }
             QMessage.Type.CUSTOM -> {
-                return if (comment.isMyComment(me)) TYPE_MY_STICKER else TYPE_OPPONENT_STICKER
+                return if (comment.isMyComment(userLoginId)) TYPE_MY_STICKER else TYPE_OPPONENT_STICKER
             }
             QMessage.Type.LOCATION -> {
-                return if (comment.isMyComment(me)) TYPE_MY_LOCATION else TYPE_OPPONENT_LOCATION
+                return if (comment.isMyComment(userLoginId)) TYPE_MY_LOCATION else TYPE_OPPONENT_LOCATION
             }
             QMessage.Type.SYSTEM_EVENT -> return TYPE_EVENT
             QMessage.Type.CARD -> return TYPE_CARD
