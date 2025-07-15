@@ -714,7 +714,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
     }
 
     override fun showNewChatButton(it: Boolean) {
-        if (it && qiscusMultichannelWidget.getConfig().isSessional()) {
+        val isSessional = qiscusMultichannelWidget.getConfig().isSessional()
+        if (it && isSessional) {
             binding.newChatPanel.visibility = View.VISIBLE
             binding.messageInputPanel.visibility = View.GONE
         } else {

@@ -1,6 +1,7 @@
 package com.qiscus.multichannel.data.repository
 
 import com.qiscus.multichannel.data.model.DataInitialChat
+import com.qiscus.multichannel.data.model.customerroom.DataCustomerRoom
 import com.qiscus.multichannel.data.model.response.ResponseInitiateChat
 import com.qiscus.multichannel.util.MultichannelConst
 import okhttp3.OkHttpClient
@@ -35,6 +36,9 @@ object QiscusChatApi {
 
         @GET("{appCode}/get_session")
         fun sessionalCheck(@Path("appCode") appCode: String?): Call<ResponseInitiateChat>
+
+        @GET("api/v2/customer_rooms/{room_id}")
+        fun getCustomerRoomById(@Path("room_id") roomId: Long): Observable<DataCustomerRoom>
 
         /*@GET("api/v1/qiscus/room/{room_id}/user_info")
         fun getUserInfo(@Path("room_id") roomId: Long?): Observable<UserInfo?>?*/
