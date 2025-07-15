@@ -12,12 +12,13 @@ def getMultichannelAppId() {
 }
 
 android {
-    compileSdkVersion 34
+    compileSdk 35
+    namespace "com.qiscus.multichannel.sample.widget"
     //buildToolsVersion "31.0.0"
     defaultConfig {
         applicationId "com.qiscus.multichannel.sample.widget"
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 4
         versionName "2.3.3"
         multiDexEnabled true
