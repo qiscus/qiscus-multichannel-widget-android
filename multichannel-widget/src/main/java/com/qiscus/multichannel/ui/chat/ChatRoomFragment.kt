@@ -426,9 +426,13 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
      * open images using default gallery for android 11 or higher
      * */
     private fun pickImageUsingIntentSystem() {
-        pickMedia.launch(
-            PickVisualMediaRequest(PickVisualMedia.ImageAndVideo)
-        )
+        try {
+            pickMedia.launch(
+                PickVisualMediaRequest(PickVisualMedia.ImageAndVideo)
+            )
+        } catch (e: Exception) {
+            pickImageUsingJupuk()
+        }
     }
 
     /**

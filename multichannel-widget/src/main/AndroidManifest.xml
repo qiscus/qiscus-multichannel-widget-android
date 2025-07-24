@@ -28,22 +28,6 @@
     </queries>
 
     <application>
-        <activity
-            android:name=".ui.chat.NotificationTrampolineActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.loading.LoadingActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
-            android:name=".ui.chat.image.ImageMessageActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
-            android:name=".ui.chat.ChatRoomActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
-            android:name=".ui.webview.WebViewActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
         <receiver
             android:name=".util.NotificationClickReceiver"
             android:exported="false">
@@ -51,10 +35,30 @@
                 <action android:name="com.qiscus.OPEN_COMMENT_PN" />
             </intent-filter>
         </receiver>
-
+        <activity
+            android:name=".ui.chat.NotificationTrampolineActivity"
+            android:theme="@style/QiscusWidgetTheme"
+            android:exported="false" />
+        <activity
+            android:name=".ui.loading.LoadingActivity"
+            android:theme="@style/QiscusWidgetTheme"
+            android:exported="false" />
+        <activity
+            android:name=".ui.chat.image.ImageMessageActivity"
+            android:theme="@style/QiscusWidgetTheme"
+            android:exported="false" />
+        <activity
+            android:name=".ui.chat.ChatRoomActivity"
+            android:theme="@style/QiscusWidgetTheme"
+            android:exported="false" />
+        <activity
+            android:name=".ui.webview.WebViewActivity"
+            android:theme="@style/QiscusWidgetTheme"
+            android:exported="false" />
         <activity
             android:name=".ui.test.BlankForTestActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/QiscusWidgetTheme"
+            android:exported="false" />
     </application>
 
 </manifest>
