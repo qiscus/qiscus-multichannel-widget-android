@@ -14,7 +14,7 @@ apply from: rootProject.file('jacoco.gradle')
 apply from: rootProject.file('testdependencies.gradle')
 
 android {
-    compileSdk 34
+    compileSdk 35
     namespace "com.qiscus.multichannel"
 //    buildToolsVersion "31.0.0"
     defaultConfig {
