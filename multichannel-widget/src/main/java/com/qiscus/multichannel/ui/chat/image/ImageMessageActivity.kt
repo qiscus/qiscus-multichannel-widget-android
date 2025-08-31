@@ -27,6 +27,8 @@ import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -89,11 +91,20 @@ class ImageMessageActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         binding = ActivityImageMessageMcBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        onWindow()
         window.setBackgroundDrawable(null)
         initComponent()
         initColor()
         initView()
         listener()
+    }
+
+    private fun onWindow() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v: View, insets: WindowInsetsCompat ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
     }
 
     private fun initColor() {

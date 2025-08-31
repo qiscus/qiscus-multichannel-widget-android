@@ -70,7 +70,7 @@
                 android:paddingBottom="18dp"
                 android:src="@drawable/ic_qiscus_doc" />
 
-            <EditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etMessage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
