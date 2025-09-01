@@ -15,8 +15,11 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.request.RequestOptions
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
@@ -68,7 +71,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             qiscusMessage: QMessage?,
             isAutoSendMessage: Boolean,
             isTest: Boolean,
-            clearTaskActivity: Boolean
+            clearTaskActivity: Boolean,
         ) {
             val intent = Intent(context, ChatRoomActivity::class.java)
             if (clearTaskActivity) intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -84,6 +87,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         super.onCreate(savedInstanceState)
         binding = ActivityChatRoomMcBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        onWindow()
 
         QiscusSessionLocal.removeInitiate()
         ResourceManager.setUp(this, qiscusMultichannelWidget.getColor())
@@ -148,6 +152,14 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             .into(binding.ivAvatar)
 
         requestNotificationPermission()
+    }
+
+    private fun onWindow() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v: View, insets: WindowInsetsCompat ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
     }
 
     private fun requestNotificationPermission() {

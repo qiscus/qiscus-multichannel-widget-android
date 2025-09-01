@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.qiscus.multichannel.databinding.ActivityWebViewMcBinding
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -55,6 +58,7 @@ class WebViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWebViewMcBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        onWindow()
 
         webViewClient = WebViewClient()
         val url = intent.getStringExtra("url")
@@ -69,6 +73,14 @@ class WebViewActivity : AppCompatActivity() {
 
         binding.webview.webViewClient = mWebViewClient
         binding.btnBack.setOnClickListener { finish() }
+    }
+
+    private fun onWindow() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v: View, insets: WindowInsetsCompat ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
     }
 
 }

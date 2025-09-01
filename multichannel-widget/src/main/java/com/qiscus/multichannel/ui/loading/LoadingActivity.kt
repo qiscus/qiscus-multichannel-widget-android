@@ -4,8 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.data.model.user.UserProperties
 import com.qiscus.multichannel.databinding.ActivityLoadingMcBinding
@@ -67,6 +70,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
         super.onCreate(savedInstanceState)
         binding = ActivityLoadingMcBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        onWindow()
         initColor()
         presenter = LoadingPresenter(qiscusMultichannelWidget)
 
@@ -79,6 +83,14 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
             userProp = it.getSerializableExtra(PARAM_USER_PROPERTIES) as ArrayList<UserProperties>
             autoSendMessage = it.getParcelableExtra(PARAM_MESSAGE)
             isAutoSendMEssage = it.getBooleanExtra(PARAM_AUTO_SEND_MESSAGE, false)
+        }
+    }
+
+    private fun onWindow() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.container) { v: View, insets: WindowInsetsCompat ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
     }
 
