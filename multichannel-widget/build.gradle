@@ -14,12 +14,11 @@ apply from: rootProject.file('jacoco.gradle')
 apply from: rootProject.file('testdependencies.gradle')
 
 android {
-    compileSdk 35
+    compileSdk 36
     namespace "com.qiscus.multichannel"
-//    buildToolsVersion "31.0.0"
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 35
+        targetSdkVersion 36
         multiDexEnabled true
         // test
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -82,9 +81,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.core:core-ktx:1.0.2'
     implementation 'androidx.multidex:multidex:2.0.1'
-
-    //compressor
-//    implementation 'id.zelory:compressor:2.1.1'
 
     //qiscus
     api 'com.qiscus.sdk:chat-core:3.0.0-beta.33'

@@ -28,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.bumptech.glide.load.DecodeFormat
@@ -89,6 +90,7 @@ class ImageMessageActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false);
         binding = ActivityImageMessageMcBinding.inflate(layoutInflater)
         setContentView(binding.root)
         onWindow()
@@ -100,17 +102,26 @@ class ImageMessageActivity : AppCompatActivity(),
     }
 
     private fun onWindow() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v: View, insets: WindowInsetsCompat ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            binding.toolbar.setPadding(
+                binding.toolbar.paddingLeft, systemBars.top,
+                binding.toolbar.paddingRight, binding.toolbar.paddingBottom
+            )
+            v.setPadding(
+                systemBars.left, 0, systemBars.right, maxOf(imeInsets.bottom, systemBars.bottom)
+            )
+            WindowInsetsCompat.CONSUMED
         }
     }
 
     private fun initColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = color.getStatusBarColor()
+        } else {
+            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
         }
         binding.toolbar.setBackgroundColor(color.getNavigationColor())
         binding.toolbar.setTitleTextColor(color.getNavigationTitleColor())

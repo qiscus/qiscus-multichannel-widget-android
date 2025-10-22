@@ -1,5 +1,6 @@
 package com.qiscus.multichannel.sample.widget
 
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -8,6 +9,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.qiscus.multichannel.QiscusMultichannelWidgetConfig
 import com.qiscus.multichannel.sample.R
 import com.qiscus.multichannel.sample.databinding.ActivityMainBinding
@@ -25,8 +29,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false);
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        onWindow()
+        setSupportActionBar(binding.toolbar)
 
         // always call when active app
         if (qiscusMultichannelWidget.hasSetupUser()) {
@@ -60,6 +67,21 @@ class MainActivity : AppCompatActivity() {
             binding.openChat.visibility = View.VISIBLE
         } else {
             binding.openChat.visibility = View.GONE
+        }
+    }
+
+    private fun onWindow() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            binding.toolbar.setPadding(
+                binding.toolbar.paddingLeft, systemBars.top,
+                binding.toolbar.paddingRight, binding.toolbar.paddingBottom
+            )
+            v.setPadding(
+                systemBars.left, 0, systemBars.right, maxOf(imeInsets.bottom, systemBars.bottom)
+            )
+            WindowInsetsCompat.CONSUMED
         }
     }
 
