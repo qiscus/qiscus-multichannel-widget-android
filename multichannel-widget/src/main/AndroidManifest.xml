@@ -46,10 +46,14 @@
         <activity
             android:name=".ui.chat.image.ImageMessageActivity"
             android:theme="@style/QiscusWidgetTheme"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false" />
         <activity
             android:name=".ui.chat.ChatRoomActivity"
             android:theme="@style/QiscusWidgetTheme"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false" />
         <activity
             android:name=".ui.webview.WebViewActivity"

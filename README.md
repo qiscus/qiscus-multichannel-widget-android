@@ -3,7 +3,7 @@
 
 * Android Studio v4.1.3 or latest
 * Min sdk 21
-* Target sdk 34
+* Target sdk 36
 * compailer Java 11
 * Kotlin v1.8.0
 * build gradle 8.3.1
@@ -33,7 +33,7 @@ Then add this to your app build.gradle
 ```
 dependencies {
     ...
-    implementation 'com.qiscus.multichannel:multichannel-widget:2.4.2'
+    implementation 'com.qiscus.multichannel:multichannel-widget:2.4.3'
 ```
 
 ## How To Use

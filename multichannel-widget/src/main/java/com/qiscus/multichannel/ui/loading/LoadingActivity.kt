@@ -8,6 +8,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.data.model.user.UserProperties
@@ -68,6 +69,7 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false);
         binding = ActivityLoadingMcBinding.inflate(layoutInflater)
         setContentView(binding.root)
         onWindow()
@@ -95,9 +97,11 @@ class LoadingActivity : AppCompatActivity(), LoadingPresenter.LoadingView {
     }
 
     private fun initColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = qiscusMultichannelWidget.getColor().getStatusBarColor()
+        } else {
+            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
         }
 
         binding.container.setBackgroundColor(
