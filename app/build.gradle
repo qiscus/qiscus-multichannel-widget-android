@@ -12,7 +12,7 @@ def getMultichannelAppId() {
 }
 
 android {
-    compileSdk 35
+    compileSdk 36
     namespace "com.qiscus.multichannel.sample.widget"
     defaultConfig {
         applicationId "com.qiscus.multichannel.sample.widget"

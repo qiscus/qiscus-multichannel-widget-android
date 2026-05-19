@@ -39,6 +39,7 @@ import com.qiscus.multichannel.data.local.QiscusSessionLocal
 import com.qiscus.multichannel.databinding.FragmentChatRoomMcBinding
 import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.AUTO_MESSAGE_KEY
 import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.CHATROOM_KEY
+import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.IS_FROM_NOTIF
 import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.MESSAGE_KEY
 import com.qiscus.multichannel.ui.chat.image.ImageMessageActivity
 import com.qiscus.multichannel.ui.chat.image.ImageMessageActivity.Companion.CAPTION_COMMENT_IMAGE
@@ -99,13 +100,14 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
         fun newInstance(
             qiscusChatRoom: QChatRoom, autoQiscusMessage: QMessage?,
-            isAutoSendMessage: Boolean
+            isAutoSendMessage: Boolean, isFromNotif: Boolean
         ): ChatRoomFragment {
             val chatRoomFragment = ChatRoomFragment()
             val bundle = Bundle()
             bundle.putParcelable(CHATROOM_KEY, qiscusChatRoom)
             bundle.putParcelable(MESSAGE_KEY, autoQiscusMessage)
             bundle.putBoolean(AUTO_MESSAGE_KEY, isAutoSendMessage)
+            bundle.putBoolean(IS_FROM_NOTIF, isFromNotif)
             chatRoomFragment.arguments = bundle
             return chatRoomFragment
         }
@@ -127,10 +129,12 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
 
         var autoQiscusMessage: QMessage? = null
         var isAutoSendMessage = false
+        var isFromNotif = false
         arguments?.let {
             qiscusChatRoom = it.getParcelable(CHATROOM_KEY)
             autoQiscusMessage = it.getParcelable(MESSAGE_KEY)
             isAutoSendMessage = it.getBoolean(AUTO_MESSAGE_KEY)
+            isFromNotif = it.getBoolean(IS_FROM_NOTIF)
         }
 
         if (qiscusChatRoom == null) {
@@ -178,6 +182,8 @@ class ChatRoomFragment : Fragment(), QiscusChatScrollListener.Listener,
         if (Build.VERSION.SDK_INT <= 28) {
             requestFilePermission()
         }
+
+        if (isFromNotif) return
 
         autoQiscusMessage?.let {
             if (isAutoSendMessage) {
