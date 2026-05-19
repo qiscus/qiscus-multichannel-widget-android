@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.TaskStackBuilder
+import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.AUTO_MESSAGE_KEY
+import com.qiscus.multichannel.ui.chat.ChatRoomActivity.Companion.IS_TEST_MODE
 import com.qiscus.multichannel.util.MultichannelConst
 import com.qiscus.multichannel.util.PNUtil
 import com.qiscus.multichannel.util.showToast
@@ -53,10 +55,10 @@ class NotificationTrampolineActivity : AppCompatActivity() {
     }
 
     private fun getChatRoom(qChatRoom: QChatRoom?, qMessage: QMessage?): Intent {
-        val intent = Intent(this, ChatRoomActivity::class.java)
-        intent.putExtra(ChatRoomActivity.CHATROOM_KEY, qChatRoom)
-        intent.putExtra(ChatRoomActivity.MESSAGE_KEY, qMessage)
-        return intent
+        return Intent(this, ChatRoomActivity::class.java)
+            .putExtra(ChatRoomActivity.CHATROOM_KEY, qChatRoom)
+            .putExtra(ChatRoomActivity.MESSAGE_KEY, qMessage)
+            .putExtra(ChatRoomActivity.IS_FROM_NOTIF, true)
     }
 
     private fun showError(throwable: Throwable) {

@@ -64,6 +64,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         const val MESSAGE_KEY = "message_key"
         const val AUTO_MESSAGE_KEY = "auto_message_key"
         const val IS_TEST_MODE = "is_test_mode"
+        const val IS_FROM_NOTIF = "is_from_notif"
 
         fun generateIntent(
             context: Context,
@@ -79,6 +80,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
             intent.putExtra(MESSAGE_KEY, qiscusMessage)
             intent.putExtra(AUTO_MESSAGE_KEY, isAutoSendMessage)
             intent.putExtra(IS_TEST_MODE, isTest)
+            intent.putExtra(IS_FROM_NOTIF, false)
             context.startActivity(intent)
         }
     }
@@ -97,6 +99,7 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         val room = intent.getParcelableExtra<QChatRoom>(CHATROOM_KEY)
         val qMessage = intent.getParcelableExtra<QMessage>(MESSAGE_KEY)
         val isAutoSendMessage = intent.getBooleanExtra(AUTO_MESSAGE_KEY, false)
+        val isFromNotif = intent.getBooleanExtra(IS_FROM_NOTIF, false)
         val isTest = intent.getBooleanExtra(IS_TEST_MODE, false)
 
         if (isTest || room == null) {
@@ -119,7 +122,9 @@ class ChatRoomActivity : AppCompatActivity(), ChatRoomFragment.CommentSelectedLi
         supportFragmentManager.beginTransaction()
             .replace(
                 R.id.fragmentContainer,
-                ChatRoomFragment.newInstance(qiscusChatRoom, qMessage, isAutoSendMessage),
+                ChatRoomFragment.newInstance(
+                    qiscusChatRoom, qMessage, isAutoSendMessage, isFromNotif
+                ),
                 ChatRoomFragment::class.java.name
             )
             .commit()
