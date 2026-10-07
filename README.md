@@ -33,7 +33,7 @@ Then add this to your app build.gradle
 ```
 dependencies {
     ...
-    implementation 'com.qiscus.multichannel:multichannel-widget:2.4.4'
+    implementation 'com.qiscus.multichannel:multichannel-widget:2.4.5'
 ```
 
 ## How To Use
@@ -152,6 +152,9 @@ qiscusWidget.initiateChat()
             .startChat(Context)
 ```
 
+> **NOTE**
+> Since 2.4.5, system events (agent added/removed, conversation resolved, etc.) never show a push notification to the customer. setShowSystemMessage only controls whether the system event is shown inside the chat room.
+
 ## Customization
 
 We provide several functions to customize the User Interface.
@@ -252,6 +255,16 @@ val config = QiscusMultichannelWidgetConfig()
      })
     .setNotificationIcon(R.drawable.*ic_notification*)
 ```
+
+> **NOTE**
+> If you set your own NotificationListener, the widget does not show the notification for you. Call PNUtil.showPn(context, qiscusComment) to use the widget notification, or skip system events yourself when you build your own notification:
+>
+> ```
+> override fun handleMultichannelListener(context: Context?, qiscusComment: QMessage?) {
+>     if (qiscusComment == null || qiscusComment.type == QMessage.Type.SYSTEM_EVENT) return
+>     // show your notification here
+> }
+> ```
 
 * set configuration before calling QiscusMultichannelWidget.setup(), for example:
 
