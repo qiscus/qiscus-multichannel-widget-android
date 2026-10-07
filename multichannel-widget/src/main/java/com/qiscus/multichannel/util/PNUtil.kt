@@ -18,7 +18,6 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.IconCompat
-import com.qiscus.multichannel.QiscusMultichannelWidget
 import com.qiscus.multichannel.R
 import com.qiscus.multichannel.ui.chat.NotificationTrampolineActivity
 import com.qiscus.sdk.chat.core.data.model.QChatRoom
@@ -51,10 +50,7 @@ class PNUtil {
 
             val isMyMessage = qiscusComment.isMyComment(MultichannelConst.qiscusCore()?.qiscusAccount?.id)
 
-            val isNotShowSystemMessage = !QiscusMultichannelWidget.instance.getConfig().isShowSystemMessage()
-                    && qiscusComment.type == QMessage.Type.SYSTEM_EVENT
-
-            if (isChatRoomActive || isMyMessage || isNotShowSystemMessage) return
+            if (!shouldShowPn(qiscusComment, isChatRoomActive, isMyMessage)) return
 
             val notificationChannelId = getNotificationId()
             var activeNotification: Notification? = null
@@ -89,6 +85,17 @@ class PNUtil {
             notificationBuilder(
                 context, qiscusComment, notificationChannelId, activeNotification
             )
+        }
+
+        /**
+         * System events (add/remove agent, resolve, ...) never notify the customer,
+         * the event text still shows inside the chat room.
+         */
+        internal fun shouldShowPn(
+            qiscusComment: QMessage, isChatRoomActive: Boolean, isMyMessage: Boolean
+        ): Boolean {
+            return !isChatRoomActive && !isMyMessage
+                    && qiscusComment.type != QMessage.Type.SYSTEM_EVENT
         }
 
         private fun getNotificationId() =
